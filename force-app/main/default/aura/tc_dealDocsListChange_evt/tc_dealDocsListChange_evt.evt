@@ -1,0 +1,7 @@
+<!--
+ - Created  on 2/3/18.
+ -->
+
+<aura:event type="COMPONENT" description="tc_dealDocsListChange_evt">
+    <aura:attribute name="files" type="Object"/>
+</aura:event>

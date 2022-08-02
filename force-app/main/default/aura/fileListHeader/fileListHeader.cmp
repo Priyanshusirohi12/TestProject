@@ -1,0 +1,14 @@
+<aura:component access="global"
+                implements="forceCommunity:availableForAllPageTypes,flexipage:availableForRecordHome"
+                controller="FileListHeaderCtrl">
+    
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    
+    <aura:attribute name="heading" type="String"/>
+    
+	<div class="slds-box">
+        <div class="slds-text-heading_large">
+            <ui:outputText value="{!v.heading}" />
+        </div>
+    </div>
+</aura:component>

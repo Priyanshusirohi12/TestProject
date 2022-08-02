@@ -1,0 +1,29 @@
+<aura:component description="List of Files" 
+                access="global"
+                implements="forceCommunity:availableForAllPageTypes,flexipage:availableForRecordHome"
+                controller="FileListCtrl">
+    
+    <aura:attribute name="password" type="String"/>
+    <aura:attribute name="token" type="String"/>
+    <aura:attribute name="authorized" type="Boolean" default="false"/>
+    
+    <aura:attribute name="mydata" type="Object" access="global"/>
+    <aura:attribute name="mycolumns" type="List" access="global"/>
+    
+    <lightning:spinner variant="brand" size="large" aura:id="spinner"/>
+    
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    
+	<!--<aura:if isTrue="{!v.authorized}">    -->
+        <lightning:card title="Files">
+            <lightning:datatable data="{!v.mydata}" columns="{!v.mycolumns}" keyField="Id" /><!--
+            <lightning:button variant="brand" label="Download Files" onclick="{!c.openMultipleFiles }" />-->
+        </lightning:card>
+    <!--</aura:if>-->
+    <!--<aura:if isTrue="{!!v.authorized}"> 
+        Unauthorized
+    </aura:if>-->
+    
+                         
+	
+</aura:component>

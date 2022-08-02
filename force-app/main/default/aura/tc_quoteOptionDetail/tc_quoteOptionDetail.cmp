@@ -1,0 +1,36 @@
+<!--
+ - Created  on 12/27/17.
+ -->
+
+<aura:component description="tc_quoteOptionDetail">
+    <aura:attribute name="quoteOption" type="Quote_Option__c" default="{}"/>
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+
+
+    <dl class="slds-list_horizontal slds-wrap">
+        <dt class="slds-item_label slds-text-color_weak">Finance Amount:</dt>
+        <dd class="slds-item_detail">
+            <ui:outputCurrency value="{!v.quoteOption.Finance_Amount__c}"/>
+        </dd>
+        <dt class="slds-item_label slds-text-color_weak slds-truncate">Term:</dt>
+        <dd class="slds-item_detail slds-truncate">{!v.quoteOption.Term_Months__c}</dd>
+        <dt class="slds-item_label slds-text-color_weak slds-truncate">Payment Amount:</dt>
+        <dd class="slds-item_detail slds-truncate">
+            <ui:outputCurrency value="{!v.quoteOption.Payment_Amount__c}"/>
+        </dd>
+        <aura:if isTrue="{!v.quoteOption.Interest_Rate__c}">
+            <dt class="slds-item_label slds-text-color_weak slds-truncate">Interest Rate:
+            </dt>
+            <dd class="slds-item_detail slds-truncate">{!v.quoteOption.Interest_Rate__c}</dd>
+        </aura:if>
+
+        <aura:if isTrue="{!v.quoteOption.Rate_Factor__c}">
+            <dt class="slds-item_label slds-text-color_weak slds-truncate">Rate Factor:</dt>
+            <dd class="slds-item_detail slds-truncate">{!v.quoteOption.Rate_Factor__c}</dd>
+        </aura:if>
+    </dl>
+
+
+
+    <lightning:button onclick="{!c.closeModal}" label="Close"/>
+</aura:component>

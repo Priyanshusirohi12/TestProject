@@ -1,0 +1,9 @@
+<!--
+ - Created  on 2019-04-03.
+ -->
+
+<design:component label="Owner Operator Application">
+    <design:attribute name="partnerCode" label="Partner Code"/>
+    <design:attribute name="leadSourceId" label="Vendor Id"/>
+
+</design:component>

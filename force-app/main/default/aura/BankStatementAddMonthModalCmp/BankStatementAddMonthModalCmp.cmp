@@ -1,0 +1,64 @@
+<aura:component controller="TC_ScoringMatrixBankInfoCtrl" access="global">
+    <aura:registerEvent name="refreshRecords" type="c:BankStatementRefreshRecords"/>
+    <aura:handler event="c:BankStatementAddMonthEvent" action="{!c.handleAddMonthEvent}"/>
+    
+    <aura:attribute name="month" type="String"/>
+    <aura:attribute name="year" type="String"/>
+    <aura:attribute name="bankInfoId" type="String"/>
+    <aura:attribute name="errorMsg" type="String"/>
+    
+    <div role="dialog" tabindex="-1" aria-labelledby="header43" class="slds-modal" aura:id="dialogPanel">
+        <div class="slds-modal__container">
+            <div class="slds-modal__header">
+                <button class="slds-button slds-button--icon-inverse slds-modal__close" onclick="{!c.closeModalDialog}">
+                    
+                    <c:SVGIcon svgPath="/resource/slds202_cp/assets/icons/utility-sprite/svg/symbols.svg#close" category="utility" size="small" name="close" />
+                    
+                    <span class="slds-assistive-text">Close</span>
+                </button>
+                <h2 id="header43" class="slds-text-heading--medium">Add Bank Statement</h2>
+                
+                <div class="slds-notify_container slds-hidden" aura:id="alertMsgPanel">
+                    <div class="slds-notify slds-notify--alert slds-theme--alert-texture" role="alert">
+                        <button class="slds-button slds-button--icon-inverse slds-notify__close" onclick="{!c.closeAlert}">
+                            <!--https://www.lightningdesignsystem.com/resources/lightning-svg-icon-component-helper/-->
+                            <c:SVGIcon svgPath="/resource/slds202_cp/assets/icons/utility-sprite/svg/symbols.svg#close" category="utility" size="small" name="close" />
+                            <span class="slds-assistive-text">Close</span>
+                        </button>
+                        <span class="slds-assistive-text">Info</span>
+                        <h2>{!v.errorMsg}</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-modal__content slds-p-around--medium">
+                <div>
+                    <div class="slds-form--stacked">
+                        <div class="slds-form-element">
+                            <label class="slds-form-element__label" for="text-input-01">
+                                <abbr class="slds-required" title="required">*</abbr>
+                                Enter Month</label>
+                            <div class="slds-form-element__control">
+                                <ui:inputNumber aura:id="monthInput" required="true" maxlength="2" value="{!v.month}" class="slds-input" format="0" placeholder="MM"/>
+                            </div>
+                        </div>
+                        
+                        <div class="slds-form-element">
+                            <label class="slds-form-element__label" for="text-input-01">
+                                <abbr class="slds-required" title="required">*</abbr>
+                                Enter Year</label>
+                            <div class="slds-form-element__control">
+                                <ui:inputNumber aura:id="yearInput" value="{!v.year}" required="true" maxlength="4"  class="slds-input" format="0" placeholder="YYYY"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-modal__footer">
+                
+                <button class="slds-button slds-button--neutral" onclick="{!c.closeModalDialog}">Cancel</button>
+                <button class="slds-button slds-button--neutral slds-button--brand" onclick="{!c.saveNewStatement}">Save</button>
+            </div>
+        </div>
+    </div>
+    <div class="slds-backdrop" aura:id="backdropPanel"></div>
+</aura:component>

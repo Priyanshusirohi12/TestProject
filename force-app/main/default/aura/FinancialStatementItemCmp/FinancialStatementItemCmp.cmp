@@ -1,0 +1,57 @@
+<aura:component access="global" controller="TC_FinancialStatementsMatrixCtrl">
+    <aura:attribute name="errorMsg" type="String"/>
+    
+    <div class="slds-notify_container slds-hidden" aura:id="alertMsgPanel">
+        <div class="slds-notify slds-notify--alert slds-theme--alert-texture" role="alert">
+            <button class="slds-button slds-button--icon-inverse slds-notify__close" onclick="{!c.closeAlert}">
+                <!--https://www.lightningdesignsystem.com/resources/lightning-svg-icon-component-helper/-->
+                <c:SVGIcon svgPath="/resource/slds202_cp/assets/icons/utility-sprite/svg/symbols.svg#close" category="utility" size="small" name="close" />
+                <span class="slds-assistive-text">Close</span>
+            </button>
+            <span class="slds-assistive-text">Info</span>
+            <h2>{!v.errorMsg}</h2>
+        </div>
+    </div>
+    
+    <aura:attribute name="financialStatement" type="Financial_Statement__c"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <ui:inputText class="slds-input slds-text-heading--label slds-text-align--center" disabled="true" value="Statement"/>
+    <ui:inputSelect class="dropDown slds-size_1-of-1" value="{!v.financialStatement.Type__c}">
+        <ui:inputSelectOption text="Year Ended" label="Year Ended"/>
+        <ui:inputSelectOption text="Interim Period" label="Interim Period"/>
+        <ui:inputSelectOption text="Prior Year Comparable" label="Prior Year Comparable"/>
+    </ui:inputSelect>
+    <ui:inputSelect class="dropDown slds-size_1-of-1" value="{!v.financialStatement.Quality__c}">
+        <ui:inputSelectOption text="Audit" label="Audit"/>
+        <ui:inputSelectOption text="Internal" label="Internal"/>
+    </ui:inputSelect>
+    <ui:inputDate class="slds-input" aura:id="fiscalYearEndedDate" value="{!v.financialStatement.Fiscal_Year_Ended__c}" format="MM/DD/YYYY" change="{!c.validateDate}" />
+    <ui:inputText class="slds-input slds-text-heading--label slds-text-align--center" disabled="true" value="Balance Sheet Data"/>
+    <ui:inputCurrency class="slds-input" value="{!v.financialStatement.Cash__c}" />
+    <ui:inputCurrency class="slds-input" value="{!v.financialStatement.Current_Assets__c}" />
+    <ui:inputCurrency class="slds-input" value="{!v.financialStatement.Total_Assets__c}" />
+    <ui:inputCurrency class="slds-input" value="{!v.financialStatement.Current_Liabilities__c}" />
+    <ui:inputCurrency class="slds-input" value="{!v.financialStatement.Total_Liabilities__c}" />
+    <ui:inputCurrency class="slds-input" value="{!v.financialStatement.Retained_Earnings__c}" />
+    <ui:inputCurrency class="slds-input" value="{!v.financialStatement.Net_Worth__c}" />
+    <ui:inputCurrency class="slds-input" value="{!v.financialStatement.Tangible_Net_Worth__c}" />
+    <ui:inputCurrency class="slds-input" value="{!v.financialStatement.Total_LT_Term_Debt__c}" />
+    <ui:inputCurrency class="slds-input" value="{!v.financialStatement.CPLTD_w_o_Revolver__c}" />
+    <ui:inputCurrency class="slds-input" value="{!v.financialStatement.CPLTD_w_Revolver__c}" />
+    <ui:inputText class="slds-input slds-text-heading--label slds-text-align--center" disabled="true" value="Income Statement Data"/>
+    <ui:inputCurrency class="slds-input" value="{!v.financialStatement.Revenue__c}" />
+    <ui:inputCurrency class="slds-input" value="{!v.financialStatement.Gross_Profit__c}" />
+    <ui:inputCurrency class="slds-input" value="{!v.financialStatement.Net_Income__c}" />
+    <ui:inputCurrency class="slds-input" value="{!v.financialStatement.Taxes__c}" />
+    <ui:inputCurrency class="slds-input" value="{!v.financialStatement.Interest_Expense__c}" />
+    <ui:inputCurrency class="slds-input" value="{!v.financialStatement.Depreciation_Amort__c}" />
+    <ui:inputCurrency class="slds-input readOnlyInput" disabled="true" value="{!v.financialStatement.EBITDA_Calculated__c}" />
+    <ui:inputCurrency class="slds-input" value="{!v.financialStatement.Extraordinary_Gain__c}" />
+    <ui:inputCurrency class="slds-input" value="{!v.financialStatement.Extraordinary_Loss__c}" />
+    <ui:inputCurrency class="slds-input readOnlyInput" disabled="true" value="{!v.financialStatement.Adjusted_Net_Income__c}" />
+    <ui:inputText class="slds-input slds-text-heading--label slds-text-align--center" disabled="true" value="Ratios"/>
+    <ui:inputNumber class="slds-input readOnlyInput" disabled="true" value="{!v.financialStatement.Debt_Service_Coverage__c}" />
+    <ui:inputNumber class="slds-input readOnlyInput" disabled="true" value="{!v.financialStatement.Fixed_Charge_Coverage__c}" />
+    <ui:inputNumber class="slds-input readOnlyInput" disabled="true" value="{!v.financialStatement.Current_Ratio__c}" />
+    <ui:inputNumber class="slds-input readOnlyInput" disabled="true" value="{!v.financialStatement.Debt_TNW_Leverage__c}" />
+</aura:component>

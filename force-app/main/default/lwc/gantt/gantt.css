@@ -1,0 +1,15 @@
+.high{
+    background-color:red;
+}
+.normal{
+    background-color:green;
+}
+.low{
+    background-color:blue;
+}
+.gantt_tree_icon {
+    background-position: right;
+}
+.nested_task .gantt_add{
+    display: none !important;
+}

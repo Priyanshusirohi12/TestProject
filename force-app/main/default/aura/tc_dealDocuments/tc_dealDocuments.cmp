@@ -1,0 +1,67 @@
+<!--
+ - Created  on 12/28/17.
+ -->
+
+<aura:component description="tc_dealDocuments" controller="TC_LoanApplicationCtrl"
+                implements="forceCommunity:availableForAllPageTypes,force:hasRecordId,flexipage:availableForRecordHome">
+    <aura:attribute name="deal" type="Opportunity"/>
+    <aura:attribute name="isGuest" type="Boolean" default="{!false}"/>
+    <aura:attribute name="fileList" type="List" default="[]"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <!--<aura:handler name="tc_dealDocsListChange_evt" event="c:tc_dealDocsListChange_evt" action="{!c.handleUploadFinished}"/>-->
+
+    <div class="slds-p-vertical_x-small slds-small-size_1-of-1 slds-large-size_1-of-3 slds-m-around_small">
+        <lightning:button label="Next" onclick="{!c.goToNext}" variant="brand" iconName="utility:forward" iconPosition="right" aura:id="nextButton"/>
+    </div>
+
+    <aura:if isTrue="{!v.deal.Id}">
+        <div class="slds-p-around_small slds-m-around_small">
+            <div class="slds-section slds-is-open">
+                <h3 class="slds-section__title">
+                    <lightning:button class="slds-button slds-section__title-action">
+                        <span class="slds-truncate" title="Section Title">Upload Documents</span>
+                    </lightning:button>
+                </h3>
+                <div class="slds-section__content slds-p-around_small">
+
+                    <aura:if isTrue="{!v.isGuest}">
+                        <c:lightningUploader fileList="{!v.fileList}" recordDetails="{!v.deal}"/>
+                        <aura:set attribute="else">
+                            <lightning:fileUpload class="slds-size_1-of-1" label="Attach Document"
+                                                  multiple="true"
+
+                                                  recordId="{!v.deal.Id}"
+                                                  onuploadfinished="{!c.handleUploadFinished}"/>
+
+                        </aura:set>
+
+                    </aura:if>
+
+                </div>
+            </div>
+
+            <div class="slds-section slds-is-open">
+                <h3 class="slds-section__title">
+                    <lightning:button class="slds-button slds-section__title-action">
+                        <span class="slds-truncate" title="Section Title">Docs</span>
+                    </lightning:button>
+                </h3>
+                <div class="slds-section__content">
+
+                    <c:tc_dealDocsDataTable fileList="{!v.fileList}"/>
+
+                </div>
+            </div>
+        </div>
+
+
+        <aura:set attribute="else">
+            Docs cannot be added until saved/submitted
+        </aura:set>
+    </aura:if>
+
+    <div class="slds-p-vertical_x-small slds-small-size_1-of-1 slds-large-size_1-of-3 slds-m-around_small">
+        <lightning:button label="Next" onclick="{!c.goToNext}" variant="brand" iconName="utility:forward" iconPosition="right" aura:id="nextButton"/>
+    </div>
+</aura:component>

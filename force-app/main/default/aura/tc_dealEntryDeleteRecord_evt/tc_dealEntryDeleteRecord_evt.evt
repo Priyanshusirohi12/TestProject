@@ -1,0 +1,3 @@
+<aura:event type="COMPONENT" description="tc_dealEntryDeleteRecord_evt">
+    
+</aura:event>

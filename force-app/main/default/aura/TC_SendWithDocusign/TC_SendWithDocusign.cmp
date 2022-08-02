@@ -1,0 +1,142 @@
+<!--
+- Author: sfdc, Tamarack Consulting, Inc.
+- Date: 2019-08-21
+- Description:
+-->
+
+
+<aura:component controller="TC_SendWithDocusignCtrl" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,force:lightningQuickAction,force:hasSObjectName" access="GLOBAL">
+    <aura:attribute name="recordId" type="String"/>
+    <aura:attribute name="templates" type="TC_DocusignEnvelopeTemplate.EnvelopeTemplate[]"/>
+    <aura:attribute name="templateIds" type="List" default="[]" access="global"/>
+    <aura:attribute name="deal" type="Opportunity"/>
+    <aura:attribute name="subject" type="String"/>
+    <aura:attribute name="body" type="String"/>
+    <aura:attribute name="showSpinner" type="Boolean" default="{!true}"/>
+    <aura:attribute name="JSON" type="Boolean" default="{!false}"/>
+    <aura:attribute name="recipient" type="TC_DocusignEnvelope.Recipient" access="global"/>
+    <aura:attribute name="relList" type="Relationship__c[]" default="[]" access="global"/>
+    <aura:attribute name="selectedRel" type="Relationship__c[]" default="[]" access="global"/>
+    <aura:attribute name="equipment" type="Equipment__c[]" default="[]" access="global"/>
+    <aura:attribute name="selectedEq" type="Equipment__c[]" default="[]" access="global"/>
+    <aura:attribute name="counterSigner" type="String" access="global"/>
+    <aura:attribute name="account" type="Account" access="global"/>
+    <aura:attribute name="partnerAccountId" type="Account" access="global"/>
+    <aura:attribute name="counterSignerName" type="String" access="global"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <div>
+    <lightning:card title="Templates">
+        <aura:if isTrue="{!v.templates.length == 0}">
+            No Results.
+            <aura:set attribute="else">
+                <aura:if isTrue="{!v.templates.length > 3}">
+                    <div  class="slds-scrollable_y" style="height:7rem">
+                        <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+                            <tbody>
+                            <aura:iteration items="{!v.templates}" var="t">
+                                <c:TC_DocusignTemplate temp="{!t}" templateIds="{!v.templateIds}"
+                                                       templateName="{!t.name}" templateId="{!t.templateId}"/>
+                            </aura:iteration>
+                            </tbody>
+                        </table>
+                    </div>
+                    <aura:set attribute="else">
+                        <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+                            <tbody>
+                            <aura:iteration items="{!v.templates}" var="t">
+                                <c:TC_DocusignTemplate temp="{!t}" templateIds="{!v.templateIds}"
+                                                       templateName="{!t.name}" templateId="{!t.templateId}"/>
+                            </aura:iteration>
+                            </tbody>
+                        </table>
+                    </aura:set>
+                </aura:if>
+            </aura:set>
+        </aura:if>
+    </lightning:card>
+    <lightning:card title="Signers">
+        <aura:if isTrue="{!v.relList.length == 0}">
+            No Results.
+            <aura:set attribute="else">
+                <div>
+                    <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+                        <tbody>
+                        <aura:iteration items="{!v.relList}" var="rel">
+                            <c:TC_DocusignLists obj="{!rel}" objList="{!v.relList}" selectedObj="{!v.selectedRel}"
+                                                objName="{!rel.Contact_Name__c}" objId="{!v.rel.Id}"/>
+                        </aura:iteration>
+                        </tbody>
+                    </table>
+                </div>
+            </aura:set>
+        </aura:if>
+    </lightning:card>
+    <lightning:card title="Counter-Signer">
+        <aura:if isTrue="{!(v.partnerAccountId == '')}">
+            <div>
+                Testing
+                <c:tc_recordLookup fieldLabel="Name"
+                                   objectAPIName="User"
+                                   subHeadingFieldsAPI=""
+                                   placeholder="{!v.counterSignerName}"
+                                   chosenRecordLabel="{!v.counterSignerName}"
+                                   chosenRecordId="{!v.counterSigner}"
+                                   aura:id="lookupid"
+                                   showCreateNew="false"
+                                   showLabel="false"
+                                   inputClass="slds-size_1-of-1"
+                                   iconCategoryName="custom31"
+                                   filterArray="{!'IsActive = true AND Email != null AND Profile.UserLicense.LicenseDefinitionKey = \'SFDC\''}"/>
+            </div>
+            <aura:set attribute="else">
+                <div>
+                    <c:tc_recordLookup fieldLabel="Name"
+                                       objectAPIName="User"
+                                       subHeadingFieldsAPI=""
+                                       placeholder="{!v.account.Counter_Signer_for_Docusign__r.Name}"
+                                       chosenRecordLabel="{!v.account.Counter_Signer_for_Docusign__r.Name}"
+                                       chosenRecordId="{!v.counterSigner}"
+                                       aura:id="lookupid"
+                                       showCreateNew="false"
+                                       showLabel="false"
+                                       inputClass="slds-size_1-of-1"
+                                       iconCategoryName="custom31"
+                                       filterArray="{!'IsActive = true AND Partner_Account_Id__c=\'' + v.partnerAccountId + '\''}"/>
+                </div>
+            </aura:set>
+        </aura:if>
+    </lightning:card>
+    <!--<aura:if isTrue="{!v.equipment != null}">
+        <lightning:card title="Equipment">
+            <div>
+                <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+                    <tbody>
+                        <aura:iteration items="{!v.equipment}" var="equip">
+                            <c:TC_DocusignLists obj="{!equip}" objList="{!v.equipment}" selectedObj="{!v.selectedEq}"
+                                                objName="{!equip.Name}" objId="{!v.equip.Id}"/>
+                        </aura:iteration>
+                    </tbody>
+                </table>
+            </div>
+        </lightning:card>
+    </aura:if>-->
+    <lightning:card title="Email Contents">
+        <div>
+            <lightning:input label="Email Subject" value="{!v.subject}"/>
+            <lightning:textarea label="Email Body" value="{!v.body}"/>
+            <!--<ui:inputCheckbox label="Generate JSON Only" value="{!v.JSON}"/>-->
+        </div>
+        <div style="padding-top:1em;" class="slds-align_absolute-center">
+            <lightning:button label="Send" onclick="{!c.sendForSignature}"/>
+        </div>
+    </lightning:card>
+
+        <aura:if isTrue="{!v.showSpinner}">
+            <div role="status" class="slds-spinner slds-spinner_medium">
+                <span class="slds-assistive-text">Sending</span>
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
+            </div>
+        </aura:if>
+    </div>
+</aura:component>

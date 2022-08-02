@@ -1,0 +1,25 @@
+<!--
+ - Author: sfdc, Tamarack Consulting, Inc. 
+ - Date: 2019-08-28
+ - Description: 
+ -->
+
+
+<aura:component description="TC_DocusignTemplate" controller="TC_SendWithDocusignCtrl" access="global">
+    <aura:attribute name="temp" type="TC_DocusignEnvelopeTemplate.EnvelopeTemplate"/>
+    <aura:attribute name="templateId" type="String" access="global"/>
+    <aura:attribute name="templateName" type="String" access="global"/>
+    <aura:attribute name="selected" type="Boolean" default="{!false}"/>
+    <aura:attribute name="templateIds" type="List" default="[]" access="global"/>
+
+    <tr>
+        <td>
+            <div>{!v.temp.name}</div>
+        </td>
+        <td>
+            <div class="slds-float--right">
+                <ui:inputCheckbox value="{!v.selected}" change="{!c.onChange}"/>
+            </div>
+        </td>
+    </tr>
+</aura:component>

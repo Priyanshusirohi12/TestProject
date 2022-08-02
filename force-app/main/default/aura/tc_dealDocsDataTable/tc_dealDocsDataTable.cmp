@@ -1,0 +1,73 @@
+<!--
+ - Created  on 1/5/18.
+ -->
+
+<aura:component description="tc_dealDocsDataTable">
+    <aura:attribute name="fileList" type="List" default="[]"/>
+    <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+        <thead>
+            <tr class="slds-text-title_caps">
+                <th scope="col">
+                    <div class="slds-truncate"></div>
+                </th>
+                <th scope="col">
+                    <div class="slds-truncate">File Name</div>
+                </th>
+                <th scope="col">
+                    <div class="slds-truncate">Size</div>
+                </th>
+                <th scope="col">
+                    <div class="slds-truncate">File Type</div>
+                </th>
+
+                <th scope="col">
+                    <div class="slds-truncate"></div>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <aura:if isTrue="{!v.fileList.length == 0}">
+                <tr>
+                    <th scope="row">
+                        <div class="slds-truncate"></div>
+                    </th>
+                    <td></td>
+                    <td></td>
+                    <td>
+                        No items added.
+                    </td>
+                    <td></td>
+                </tr>
+            </aura:if>
+            <aura:iteration items="{!v.fileList}" var="item" indexVar="i">
+                <tr>
+                    <td>{!i+1}</td>
+                    <td>
+                        <div class="slds-truncate">
+                            {!item.Title}
+                        </div>
+                    </td>
+                    <td>
+                        <div>
+                            {!item.ContentSize/1000} kB
+                        </div>
+                    </td>
+                    <td>
+                        <div>
+                            {!item.FileType}
+                        </div>
+                    </td>
+                    <td>
+                        <div class="slds-truncate">
+                            <a onclick="{!c.removeTempFile}" data-rowindex="{!i}" class="slds-button slds-button_neutral">
+                                <lightning:icon class="slds-button__icon slds-button__icon_left slds-icon_inverse" iconName="utility:delete" size="x-small"/>
+
+                                Remove
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+            </aura:iteration>
+        </tbody>
+    </table>
+</aura:component>

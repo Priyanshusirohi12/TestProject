@@ -1,0 +1,7 @@
+<!--
+ - Created  on 12/23/17.
+ -->
+
+<aura:event type="APPLICATION" description="tc_radioButtonTileGroupChange_evt">
+    <aura:attribute name="radioValue" type="Object"/>
+</aura:event>

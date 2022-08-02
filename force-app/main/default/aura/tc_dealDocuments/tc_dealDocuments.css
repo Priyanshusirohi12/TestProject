@@ -1,0 +1,19 @@
+/**
+ * Created  on 12/28/17.
+ */
+.THIS {
+    background: white;
+}
+
+.THIS .slds-file-selector__dropzone {
+    width: 100%;
+}
+
+
+.THIS .slds-file-selector {
+    width: 100%;
+}
+
+.THIS .slds-file-selector__body {
+    margin: 1rem;
+}

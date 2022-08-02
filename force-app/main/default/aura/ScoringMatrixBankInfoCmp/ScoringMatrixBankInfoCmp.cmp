@@ -1,0 +1,168 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes" access="global" controller="TC_ScoringMatrixBankInfoCtrl">
+    <ltng:require styles="{!$Resource.slds202_cp +'/assets/styles/salesforce-lightning-design-system-ltng.css'}"/>
+    <aura:registerEvent name="addMonthEvent" type="c:BankStatementAddMonthEvent"/>
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" /> 
+    <aura:handler event="aura:waiting" action="{!c.waiting}"/>
+    <aura:handler event="aura:doneWaiting" action="{!c.doneWaiting}"/>
+    <aura:handler event="c:BankStatementRefreshRecords" action="{!c.handleRefreshData}"/>
+    
+    
+    <aura:attribute name="bankInfoId" type="String"/>
+    <aura:attribute name="errorMsg" type="String"/>
+    <aura:attribute name="bankStatements" type="Bank_Statement__c[]"/>
+    <aura:attribute name="dayLabels" type="String[]"/>
+    
+    <!-- spinner -->
+    <div aura:id="spinner" class="slds-spinner_container slds-hidden">
+        <div class="slds-spinner slds-spinner--large" aria-hidden="false" role="alert">
+            <div class="slds-spinner__dot-a"></div>
+            <div class="slds-spinner__dot-b"></div>
+        </div>
+    </div>
+    <!-- end spinner -->
+    
+    <!-- add month modal -->
+    <c:BankStatementAddMonthModalCmp />
+    <!-- end add month modal -->
+    
+    
+    <div class="slds-notify_container slds-hidden" aura:id="alertMsgPanel">
+        <div class="slds-notify slds-notify--alert slds-theme--alert-texture" role="alert">
+            <button class="slds-button slds-button--icon-inverse slds-notify__close" onclick="{!c.closeAlert}">
+                <!--https://www.lightningdesignsystem.com/resources/lightning-svg-icon-component-helper/-->
+                <c:SVGIcon svgPath="/resource/slds202_cp/assets/icons/utility-sprite/svg/symbols.svg#close" category="utility" size="small" name="close" />
+                <span class="slds-assistive-text">Close</span>
+            </button>
+            <span class="slds-assistive-text">Info</span>
+            <h2>{!v.errorMsg}</h2>
+        </div>
+    </div>
+    
+    <section class="slds-clearfix">
+        
+        <div class="slds-grid slds-float--right slds-m-vertical--medium slds-grid--pull-padded">
+            <div class="slds-col--padded">
+                <div class="slds-popover" role="dialog">
+                    <div class="slds-popover__body">
+                        <div class="slds-form--inline">
+                            <div class="slds-form-element">
+                                <label class="slds-form-element__label" for="bankInfoName">Bank Name</label>
+                                <div class="slds-form-element__control">
+                                    <ui:outputText aura:id="bankInfoName" value="{!v.bankStatements[0].Bank_Info__r.Name}"/>
+                                </div>
+                            </div>
+                            <div class="slds-form-element">
+                                <label class="slds-form-element__label" for="bankInfoName">Average Ending Balance</label>
+                                <div class="slds-form-element__control">
+                                    <ui:outputCurrency aura:id="bankInfoAvgEndBalance" value="{!v.bankStatements[0].Bank_Info__r.Average_Ending_Balance__c}"/>
+                                </div>
+                            </div>
+                            <div class="slds-form-element">
+                                <label class="slds-form-element__label" for="bankInfoName">Average Deposits</label>
+                                <div class="slds-form-element__control">
+                                    <ui:outputCurrency aura:id="bankInfoAvgDeposits" value="{!v.bankStatements[0].Bank_Info__r.Average_Deposits__c}"/>
+                                </div>
+                            </div>
+                            <div class="slds-form-element">
+                                <label class="slds-form-element__label" for="bankInfoName">Average # of Deposits</label>
+                                <div class="slds-form-element__control">
+                                    <ui:outputNumber aura:id="bankInfoAvgNumDeposits" value="{!v.bankStatements[0].Bank_Info__r.Average_of_Deposits__c}"/>
+                                </div>
+                            </div>
+                            <div class="slds-form-element">
+                                <label class="slds-form-element__label" for="bankInfoName">Average # of Deposits Stdev</label>
+                                <div class="slds-form-element__control">
+                                    <ui:outputNumber aura:id="bankInfoAvgNumDeposits" value="{!v.bankStatements[0].Bank_Info__r.Average_of_Deposits_Stdev__c}"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-col--padded">
+                <div class="slds-popover" role="dialog">
+                    <div class="slds-popover__body">
+                        <div class="slds-form--inline">
+                            <div class="slds-form-element">
+                                <label class="slds-form-element__label" for="bankInfoName">Days Last 3 Months</label>
+                                <div class="slds-form-element__control">
+                                    <ui:outputCurrency aura:id="bankInfoDaysLast3Months" value="{!v.bankStatements[0].Bank_Info__r.Average_Average_Daily_Bank_Balance__c}"/> | <ui:outputCurrency aura:id="bankInfoDaysLast3MonthsRounded" value="{!v.bankStatements[0].Bank_Info__r.Avg_Avg_Daily_Bank_Balance_Rounded__c}"/>
+                                </div>
+                            </div>
+                            <div class="slds-form-element">
+                                <label class="slds-form-element__label" for="bankInfoName">Neg. Days Last 3 Months</label>
+                                <div class="slds-form-element__control">
+                                    <ui:outputNumber aura:id="bankInfoNegDaysLast3Months" value="{!v.bankStatements[0].Bank_Info__r.Neg_Days_Last_3_Months__c}"/>
+                                </div>
+                            </div>
+                            <div class="slds-form-element">
+                                <label class="slds-form-element__label" for="bankInfoName">NSF/OD # Last 3 Mos</label>
+                                <div class="slds-form-element__control">
+                                    <ui:outputNumber aura:id="bankInfoNSFODNumLast3Mos" value="{!v.bankStatements[0].Bank_Info__r.NSF_OD_Last_3_Months__c}"/>
+                                </div>
+                            </div>
+                            <div class="slds-form-element">
+                                <label class="slds-form-element__label" for="bankInfoName">2nd Highest</label>
+                                <div class="slds-form-element__control">
+                                    <ui:outputCurrency aura:id="bankInfo2ndHighest" value="{!v.bankStatements[0].Bank_Info__r.X2nd_Highest__c}"/>
+                                </div>
+                            </div>
+                            <div class="slds-form-element">
+                                <label class="slds-form-element__label" for="bankInfoName">2nd Lowest</label>
+                                <div class="slds-form-element__control">
+                                    <ui:outputCurrency aura:id="bankInfo2ndLowest" value="{!v.bankStatements[0].Bank_Info__r.X2nd_Lowest__c}"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    
+    <!-- buttons -->
+    
+    <div class="slds-grid slds-grid--pull-padded slds-grid--align-center">
+        
+        <div class="slds-col slds-col-padded slds-m-vertical--small">
+            <button aura:id="saveAllButton" onclick="{!c.saveStatements}" class="slds-button--neutral slds-button slds-theme--success">
+                Save All
+            </button>
+            <button aura:id="saveCloseButton" onclick="{!c.saveStatementsAndClose}" class="slds-button--neutral slds-button">
+                Save &amp; Close
+            </button>
+            <button aura:id="cancelButton" onclick="{!c.cancelAndClose}" class="slds-button--neutral slds-button slds-theme--error">
+                Cancel
+            </button>
+            <button aura:id="addColButton" onclick="{!c.addStatement}" class="slds-button--neutral slds-button slds-theme--offline">
+                Add Column
+            </button>
+        </div>
+        
+    </div>
+    
+    <!-- end buttons -->
+    
+    <div class="slds-grid">
+        <div class="slds-col slds-size--1-of-24">
+            <aura:iteration items="{!v.dayLabels}" var="dayLabel">
+                <div class="slds-grid slds-text-align--right labelCol">
+                    <div class="slds-col">
+                        <ui:inputText class="slds-input slds-text-heading--label slds-text-align--right" disabled="true" value="{!dayLabel}"/>
+                        
+                        
+                    </div>
+                </div>
+            </aura:iteration>
+        </div>
+        
+        <aura:iteration items="{!v.bankStatements}" var="statement">
+            <div class="{!statement.Name + ' slds-col slds-size--1-of-12'}">
+                <c:BankStatementItemCmp bankStatement="{!statement}"/>
+            </div>
+        </aura:iteration>
+    </div>
+    
+</aura:component>

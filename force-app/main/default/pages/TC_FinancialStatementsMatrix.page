@@ -1,0 +1,16 @@
+<apex:page standardController="Account" title="Financial Statements Spread" sidebar="false" showHeader="false" standardStylesheets="false" docType="html-5.0"> 
+    <apex:includeLightning />
+    
+    <div id="financialStatementsApp" class="cp"/>
+    
+    <script type="text/javascript">
+    var accountId = "{!$CurrentPage.parameters.id}";
+    $Lightning.use("c:FinancialStatementsMatrixApp", function() {
+        $Lightning.createComponent ("c:FinancialStatementsMatrixCmp", { "accountId" : accountId },
+                                    "financialStatementsApp", 
+                                    function(cmp) {
+                                        console.log("{!$CurrentPage.parameters.id}");
+                                    });
+    });    
+    </script>
+</apex:page>

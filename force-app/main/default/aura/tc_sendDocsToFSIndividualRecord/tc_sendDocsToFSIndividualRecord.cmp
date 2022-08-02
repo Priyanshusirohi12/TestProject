@@ -1,0 +1,61 @@
+<!--
+ - Created by szheng on 2019-11-25.
+ -->
+
+<aura:component description="tc_sendDocsToFSIndividualRecord" controller="TC_sendDocsToFundingSourceCTRL"
+                implements="force:lightningQuickActionWithoutHeader,force:hasRecordId,lightning:isUrlAddressable">
+
+    <aura:attribute name="fsWrapper" type="TC_sendDocsToFundingSourceCTRL.fsWrapper"/>
+    <aura:attribute name="recordId" type="Id"/>
+
+    <div>
+        <h3 class="slds-section__title slds-theme_shade slds-m-top_x-small">
+            <span class="slds-truncate slds-p-horizontal_small" title="Section Title">
+                <aura:if isTrue="{!not(empty(v.fsWrapper.lender))}">
+                    {!v.fsWrapper.lender.Name} ({!v.fsWrapper.email})
+                    <aura:set attribute="else">{!v.fsWrapper.email}</aura:set>
+                </aura:if>
+            </span>
+        </h3>
+
+        <aura:if isTrue="{!empty(v.fsWrapper.lender)}">
+
+            <div class="slds-p-around_small">
+                <i>Email is not associated with any Lender Account for Funding Source creation.</i>
+            </div>
+
+        </aura:if>
+
+        <aura:if isTrue="{!v.fsWrapper.newRecordBoolean}">
+            <lightning:recordEditForm objectApiName="Funding_Source__c" density="comfy">
+                <div class="slds-grid slds-wrap slds-gutters">
+                    <div class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3">
+                        <lightning:inputField fieldName="Funding_Source__c" disabled="true" value="{!v.fsWrapper.fs.Funding_Source__c}"/>
+                    </div>
+                    <div class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3">
+                        <lightning:inputField fieldName="Status__c" value="{!v.fsWrapper.fs.Status__c}"/>
+                    </div>
+                    <div class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3">
+                        <lightning:inputField fieldName="Submission_Status__c" value="{!v.fsWrapper.fs.Submission_Status__c}"/>
+                    </div>
+                </div>
+            </lightning:recordEditForm>
+        </aura:if>
+
+        <aura:if isTrue="{!not(empty(v.fsWrapper.lender))}">
+
+            <div class="slds-p-around_small">
+                <aura:if isTrue="{!not(v.fsWrapper.newRecordBoolean)}">
+                    <lightning:button label="Create New Funding Source Record" iconName="utility:add"
+                                      onclick="{!c.addFSRecord}" variant="neutral"/>
+                    <aura:set attribute="else">
+                        <lightning:button label="Do Not Create New Funding Source Record" iconName="utility:delete"
+                                          onclick="{!c.deleteFSRecord}" variant="neutral"/>
+                    </aura:set>
+                </aura:if>
+            </div>
+
+        </aura:if>
+    </div>
+
+</aura:component>

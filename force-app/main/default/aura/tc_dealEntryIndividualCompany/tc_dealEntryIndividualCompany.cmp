@@ -1,0 +1,168 @@
+<aura:component description="Deal Entry Wizard - Company Individual" access="global"
+				implements="forceCommunity:availableForAllPageTypes,force:hasRecordId,flexipage:availableForRecordHome,force:appHostable"
+                controller="TC_DealEntryCompanyCtrl">
+    
+    <aura:attribute name="wrapper" type="TC_DealEntryWizardCtrl.TC_DealWizardWrapper" access="global"/>
+
+    <aura:attribute name="toggleAdditionalDetails" type="Boolean" default="false" access="global"/>
+
+    <!-- For State and Country picklists -->
+    <aura:attribute name="billingBoolean" type="Boolean" default="false"/>
+    <aura:attribute name="tempBillingState" type="String"/>
+    <aura:handler name="change" value="{!v.tempBillingState}" action="{!c.onBillingStateChange}"/>
+
+    <aura:attribute name="shippingBoolean" type="Boolean" default="false"/>
+    <aura:attribute name="tempShippingState" type="String"/>
+    <aura:handler name="change" value="{!v.tempShippingState}" action="{!c.onShippingStateChange}"/>
+
+    <aura:attribute name="shippingSameAsBilling" type="Boolean" default="false"/>
+    <!-- For State and Country picklists -->
+
+    <aura:handler name="init" action="{!c.doInit}" value="{!this}"/>
+    <aura:method name="addressChangeChooseEvent" action="{!c.addressChangeChooseEvent}"/>
+    <aura:method name="setShippingAddress" action="{!c.setShippingAddress}"/>
+
+    <aura:registerEvent name="deleteRecord"
+                        type="c:tc_dealEntryDeleteRecord_evt"
+                        description="Event used to send a delete company trigger to the individual company component"/>
+
+    <lightning:recordEditForm objectApiName="Account" recordId="" density="comfy">
+    <div class="slds-grid slds-wrap slds-gutters">
+
+        <lightning:input label="Customer Name" value="{!v.wrapper.companyWrapper.company.Name}" type="text" required="true"
+                         class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3"
+                         disabled="{!v.wrapper.companyWrapper.readOnly}" aura:id="requiredField"/>
+
+        <div class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-1 slds-m-top_small">
+            <div class="slds-box slds-box_xx-small slds-theme_shade"
+                 style="cursor: pointer;"
+                 onclick="{!c.toggleAdditionalSection}">
+                <section class="slds-clearfix">
+                    <div class="slds-float--left ">
+                        <lightning:icon class="slds-show" aura:id="additionalSection" iconName="utility:add" size="x-small"
+                                        alternativeText="Indicates add"/>
+                        <lightning:icon class="slds-hide" aura:id="additionalSection" iconName="utility:dash" size="x-small"
+                                        alternativeText="Indicates dash"/>
+                    </div>
+                    <div class="slds-m-left--large">Additional Details</div>
+                </section>
+            </div>
+        </div>
+
+        <aura:if isTrue="{!v.toggleAdditionalDetails}">
+            <lightning:input label="Years in Business" value="{!v.wrapper.companyWrapper.company.Years_in_Business__c}" type="number"
+                             class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3"
+                             disabled="{!v.wrapper.companyWrapper.readOnly}"/>
+            <lightning:input label="DBA" value="{!v.wrapper.companyWrapper.company.DBA__c}" type="text"
+                             class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3"
+                             disabled="{!v.wrapper.companyWrapper.readOnly}"/>
+            <lightning:input label="Phone" value="{!v.wrapper.companyWrapper.company.Phone}" type="text"
+                             class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3"
+                             disabled="{!v.wrapper.companyWrapper.readOnly}"
+                             onchange="{!c.onPhoneChange}" maxlength="12" minlength="12" placeholder="xxx-xxx-xxxx" />
+            <lightning:input label="Fax" value="{!v.wrapper.companyWrapper.company.Fax}" type="text"
+                             class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3"
+                             disabled="{!v.wrapper.companyWrapper.readOnly}"/>
+            <lightning:input label="Website" value="{!v.wrapper.companyWrapper.company.Website}" type="text"
+                             class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3"
+                             disabled="{!v.wrapper.companyWrapper.readOnly}"/>
+
+            <div class="slds-col slds-text-title_caps slds-size_1-of-1 slds-m-vertical_medium">
+                Billing Address
+            </div>
+            <c:tc_addressLookup class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-1"
+                                street="{!v.wrapper.companyWrapper.company.BillingStreet}"
+                                city="{!v.wrapper.companyWrapper.company.BillingCity}"
+                                stateCode="{!v.tempBillingState}"
+                                postalCode="{!v.wrapper.companyWrapper.company.BillingPostalCode}"
+                                countryCode="{!v.wrapper.companyWrapper.company.BillingCountryCode}"
+                                placeholder="Enter Address"
+                                disabled="{!v.wrapper.companyWrapper.readOnly}"/>
+
+            <lightning:input type="text" label="Street" value="{!v.wrapper.companyWrapper.company.BillingStreet}"
+                             class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-2"
+                             disabled="{!v.wrapper.companyWrapper.readOnly}"/>
+            <lightning:input type="text" label="City" value="{!v.wrapper.companyWrapper.company.BillingCity}"
+                             class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-2"
+                             disabled="{!v.wrapper.companyWrapper.readOnly}"/>
+            <aura:if isTrue="{!v.billingBoolean}">
+                <div class="slds-col slds-x-small-size_1-of-3">
+                    <lightning:inputField fieldName="State_Dummy__c" value="{!v.tempBillingState}"
+                                          disabled="{!v.wrapper.companyWrapper.readOnly}"/>
+                </div>
+                <aura:set attribute="else">
+                    <div class="slds-col slds-x-small-size_1-of-3">
+                        <lightning:inputField fieldName="State_Dummy__c" value="{!v.tempBillingState}"
+                                              disabled="{!v.wrapper.companyWrapper.readOnly}"/>
+                    </div>
+                </aura:set>
+            </aura:if>
+            <lightning:input type="text" label="Postal" value="{!v.wrapper.companyWrapper.company.BillingPostalCode}"
+                             class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3"
+                             disabled="{!v.wrapper.companyWrapper.readOnly}"/>
+            <div class="slds-col slds-x-small-size_1-of-3">
+                <lightning:inputField fieldName="Country_Dummy__c" value="{!v.wrapper.companyWrapper.company.BillingCountryCode}"
+                                      disabled="{!v.wrapper.companyWrapper.readOnly}"/>
+            </div>
+
+
+            <div class="slds-col slds-text-title_caps slds-size_1-of-1 slds-m-vertical_medium">
+                Shipping Address
+            </div>
+
+            <div  class="slds-col slds-size_1-of-1 slds-m-bottom_small">
+                <lightning:input type="checkbox" label="Same as Billing Address?"
+                                 name="shippingCheckbox" checked="{!v.shippingSameAsBilling}"
+                                 disabled="{!v.wrapper.companyWrapper.readOnly}"/>
+            </div>
+
+            <aura:if isTrue="{!not(v.shippingSameAsBilling)}">
+                <c:tc_addressLookup class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-1"
+                                    street="{!v.wrapper.companyWrapper.company.ShippingStreet}"
+                                    city="{!v.wrapper.companyWrapper.company.ShippingCity}"
+                                    stateCode="{!v.tempShippingState}"
+                                    postalCode="{!v.wrapper.companyWrapper.company.ShippingPostalCode}"
+                                    countryCode="{!v.wrapper.companyWrapper.company.ShippingCountryCode}"
+                                    placeholder="Enter Address"
+                                    disabled="{!v.wrapper.companyWrapper.readOnly}"/>
+
+                <lightning:input type="text" label="Street" value="{!v.wrapper.companyWrapper.company.ShippingStreet}"
+                                 class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-2"
+                                 disabled="{!v.wrapper.companyWrapper.readOnly}"/>
+                <lightning:input type="text" label="City" value="{!v.wrapper.companyWrapper.company.ShippingCity}"
+                                 class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-2"
+                                 disabled="{!v.wrapper.companyWrapper.readOnly}"/>
+                <aura:if isTrue="{!v.shippingBoolean}">
+                    <div class="slds-col slds-x-small-size_1-of-3">
+                        <lightning:inputField fieldName="State_Dummy_2__c" value="{!v.tempShippingState}"
+                                              disabled="{!v.wrapper.companyWrapper.readOnly}"/>
+                    </div>
+                    <aura:set attribute="else">
+                        <div class="slds-col slds-x-small-size_1-of-3">
+                            <lightning:inputField fieldName="State_Dummy_2__c" value="{!v.tempShippingState}"
+                                                  disabled="{!v.wrapper.companyWrapper.readOnly}"/>
+                        </div>
+                    </aura:set>
+                </aura:if>
+                <lightning:input type="text" label="Postal" value="{!v.wrapper.companyWrapper.company.ShippingPostalCode}"
+                                 class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3"
+                                 disabled="{!v.wrapper.companyWrapper.readOnly}"/>
+                <div class="slds-col slds-x-small-size_1-of-3">
+                    <lightning:inputField fieldName="Country_Dummy_2__c" value="{!v.wrapper.companyWrapper.company.ShippingCountryCode}"
+                                          disabled="{!v.wrapper.companyWrapper.readOnly}"/>
+                </div>
+            </aura:if>
+
+        </aura:if>
+
+    </div>
+    </lightning:recordEditForm>
+
+    <div class="slds-m-left_xx-large slds-p-vertical_medium slds-small-size_1-of-1 slds-large-size_1-of-1">
+        <lightning:button label="Clear Customer" iconName="utility:clear" variant="neutral" onclick="{!c.clearCompany}"
+                          class="slds-m-left_small"/>
+        <lightning:button label="Remove Customer Item" iconName="utility:delete" variant="neutral" onclick="{!c.deleteCompanyEvent}"
+                          class="slds-m-left_small"/>
+    </div>
+	
+</aura:component>

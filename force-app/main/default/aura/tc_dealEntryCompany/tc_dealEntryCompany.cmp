@@ -1,0 +1,61 @@
+<aura:component description="Deal Entry Wizard - Company" access="global"
+				implements="forceCommunity:availableForAllPageTypes,force:hasRecordId,flexipage:availableForRecordHome,force:appHostable"
+                controller="TC_DealEntryCompanyCtrl">
+
+    <aura:attribute name="wrapper" type="TC_DealEntryWizardCtrl.TC_DealWizardWrapper" access="global"/>
+
+    <aura:handler name="lookupChoose" event="c:tc_dealEntryLookupChoose_evt" action="{!c.handleCompanyChooseEvent}"
+                  description="Event handler to get the selected record from LookupItem component."/>
+    <aura:handler name="deleteRecord" event="c:tc_dealEntryDeleteRecord_evt" action="{!c.handleDeleteRecordEvent}"
+                  description="Event handler to clear a record if deleted."/>
+
+    <aura:registerEvent name="changeTab"
+                        type="c:tc_dealEntryNavigate_evt"
+                        description="Event used to navigate to a different tab"/>
+
+    <div class="slds-p-around__medium">
+        <lightning:button label="Previous" onclick="{!c.saveAndPrevious}" variant="brand" iconName="utility:back"
+                          iconPosition="left"/>
+        <lightning:button label="Next" onclick="{!c.saveAndNext}" variant="brand" iconName="utility:forward"
+                          iconPosition="right"/>
+        <lightning:button label="Review &amp; Save" onclick="{!c.reviewAndSave}" variant="brand" iconName="utility:save"
+                          iconPosition="right"/>
+        <div class="slds-float_right">
+            <lightning:button label="Cancel" onclick="{!c.clearAllEvent}" variant="destructive" iconName="utility:clear"
+                              iconPosition="right"/>
+        </div>
+    </div>
+
+    <div class="slds-grid slds-wrap slds-gutters slds-p-top_medium">
+
+        <div class="slds-col slds-large-size_1-of-3">
+            <c:tc_dealEntryLookup fieldLabel="Existing Customer?"
+                                  objectAPIName="Account"
+                                  subHeadingFieldsAPI="Years_in_Business__c,DBA__c,Phone,Fax,Website,BillingAddress,ShippingAddress"
+                                  placeholder="Search Borrower Customers"
+                                  chosenRecordId="Account"
+                                  aura:id="dealEntryLookup"
+                                  showCreateNew="false"
+                                  showLabel="false"
+                                  inputClass="slds-size_1-of-1"
+                                  iconCategoryName="standard:account"
+                                  filterArray="{!v.wrapper.companyWrapper.recordFilter}"
+                                  clearSearchOnSelect="true"/>
+        </div>
+
+        <div class="slds-col slds-large-size_1-of-3 slds-p-top_xx-small">
+            <div class="slds-text-title">New Customer?</div>
+            <div class="slds-p-top_xx-small">
+                <lightning:button label="Add Customer" iconName="utility:add" onclick="{!c.addCompany}" variant="neutral"
+                                  disabled="{!and(v.wrapper.companyWrapper.company != null, not(empty(v.wrapper.companyWrapper.company)))}"/>
+            </div>
+        </div>
+
+    </div>
+
+    <aura:if isTrue="{!and(v.wrapper.companyWrapper.company != null, not(empty(v.wrapper.companyWrapper.company)))}">
+        <c:tc_dealEntryIndividualCompany wrapper="{!v.wrapper}"
+                                         aura:id="childLightningComponent"/>
+    </aura:if>
+
+</aura:component>

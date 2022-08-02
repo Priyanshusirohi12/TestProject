@@ -1,0 +1,10 @@
+.THIS {
+
+}
+
+@media print
+{
+    .THIS.no-print {
+        display: none;
+    }
+}

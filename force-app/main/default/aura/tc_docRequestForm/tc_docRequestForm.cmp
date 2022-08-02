@@ -1,0 +1,392 @@
+<aura:component implements="flexipage:availableForAllPageTypes,lightning:isUrlAddressable,force:hasRecordId,force:appHostable"
+                access="global"
+                controller="TC_DocRequestFormCtrlLtng" >
+
+	<aura:attribute name="recordId" type="String" access="global"/>
+    <aura:attribute name="wrapper" type="TC_DocRequestFormCtrlLtng.docWrapper"/>
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+
+    <div class="notPrinted no-print" title="" style="padding:20px">
+        <lightning:button label="Print" iconName="utility:print" onclick="{!c.handlePrint}" class="slds-float_right" /><br/><br/>
+    </div>
+    
+    <div style="padding:20px;background-color:white">
+
+        <div class="docHeader">
+            <img id="clientLogo" style="max-height:4rem" src="{!v.wrapper.logoURL}"/>
+            <div class="slds-text-align_right" style="float:right">
+                <div class="slds-text-heading_large">
+                    <b>Document Request Form</b>
+                </div>
+                <div class="slds-text-heading_small">
+                    <b>Contract ID Number:&nbsp;{!v.wrapper.fundingSource.Application_Number__c}</b>
+                </div>
+                <div class="slds-text-heading_small">
+                    <b>{!v.wrapper.fundingSource.Funding_Source__r.Name}</b>
+                </div>
+            </div>
+        </div><br/><br/>
+    
+        <div class="accountDetails" style="padding-bottom:20px">
+            <div class="slds-text-heading_medium" style="padding-bottom:10px">
+                <b>Customer Details</b>
+            </div>
+            <p><b>Lessee (Legal Name):&nbsp;</b>{!v.wrapper.account.Name}</p>
+            <p><b>DBA/OA (Name):&nbsp;</b>{!v.wrapper.account.DBA__c}</p>
+            <div style="display:flex">
+                <b>Corporate Billing Address:&nbsp;</b>
+                <lightning:formattedAddress
+                        street="{!v.wrapper.account.BillingStreet}"
+                        city="{!v.wrapper.account.BillingCity}"
+                        province="{!v.wrapper.account.BillingState}"
+                        country="{!v.wrapper.account.BillingCountry}"
+                        postalCode="{!v.wrapper.account.BillingPostalCode}"
+                        disabled="true"
+                />
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <b>Equipment Location:&nbsp;</b>
+                <lightning:formattedAddress
+                        street="{!v.wrapper.account.ShippingStreet}"
+                        city="{!v.wrapper.account.ShippingCity}"
+                        province="{!v.wrapper.account.ShippingState}"
+                        country="{!v.wrapper.account.ShippingCountry}"
+                        postalCode="{!v.wrapper.account.ShippingPostalCode}"
+                        disabled="true"
+                />
+            </div>
+            <p><b>Tax ID #:&nbsp;</b>{!v.wrapper.account.Fed_Tax_ID__c}</p>
+            <p><b>Primary Contact:&nbsp;</b>{!v.wrapper.account.Primary_Contact__r.Name}
+                <aura:if isTrue="{!not(empty(v.wrapper.account.Primary_Contact__r.Phone))}">
+                    &nbsp;(PH:&nbsp;{!v.wrapper.account.Primary_Contact__r.Phone})
+                </aura:if>
+            </p>
+        </div>
+
+        <aura:if isTrue="{!not(and(empty(v.wrapper.principalContacts), empty(v.wrapper.otherContacts)))}">
+        <div class="signorDetails" style="padding-bottom:20px">
+            <div class="slds-text-heading_medium" style="padding-bottom:10px">
+                <b>Guarantors</b>
+            </div>
+            <div>
+                <b>Personal Guarantors</b>
+            </div>
+            <div class="slds-p-left_small">
+                <table>
+                    <tbody>
+                    <aura:if isTrue="{!not(empty(v.wrapper.principalContacts))}">
+                        <aura:iteration var="signerInfo" items="{!v.wrapper.principalContacts}" indexVar="i">
+                            <tr >
+                                <td style="width:150px">Principle Signer {!i+1}</td>
+                                <td class="slds-float_left">{!signerInfo.Person__r.Name}</td>
+                            </tr>
+                        </aura:iteration>
+                    </aura:if>
+                    <aura:if isTrue="{!not(empty(v.wrapper.otherContacts))}">
+                        <aura:iteration var="signerInfo" items="{!v.wrapper.otherContacts}" indexVar="i">
+                            <tr>
+                                <td style="width:150px">Signer {!i+1}</td>
+                                <td class="slds-float_left">{!signerInfo.Person__r.Name}</td>
+                            </tr>
+                        </aura:iteration>
+                    </aura:if>
+                    </tbody>
+                </table>
+            </div>
+            <div>
+                <b>Corporate Guarantors</b>
+            </div>
+            <div class="slds-p-left_small">
+                <table>
+                    <tbody>
+                    <aura:if isTrue="{!not(empty(v.wrapper.corpGuarantors))}">
+                        <aura:iteration var="guarantor" items="{!v.wrapper.corpGuarantors}" indexVar="i">
+                            <tr >
+                                <td style="width:150px">Corporate Guarantor {!i+1}</td>
+                                <td class="slds-float_left">{!guarantor.Business__r.Name}</td>
+                            </tr>
+                        </aura:iteration>
+                    </aura:if>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        </aura:if>
+        
+        <div class="equipmentInformation" style="padding-bottom:20px">
+            <div class="slds-text-heading_medium" style="padding-bottom:10px">
+                <b>Equipment Information</b>
+            </div>
+            <div style="padding-left:150px;width:450px">
+                <table>
+                    <tbody>
+                        <tr>
+                            <td scope="row" style="width:200px"><b>Total Equipment Cost: </b></td>
+                            <td scope="row" style="text-align:right">
+                                <p><lightning:formattedNumber value="{!v.wrapper.opportunity.Total_Equipment_Cost__c}" style="currency" currencyCode="USD"/></p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td scope="row" style="width:200px"><b>+ Upfront Tax Financed: </b></td>
+                            <td scope="row" style="text-align:right">
+                                <p><lightning:formattedNumber value="{!v.wrapper.opportunity.Upfront_Tax_Financed__c}" style="currency" currencyCode="USD"/></p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td scope="row" style="width:200px"><b>+ Other Upfront Financed: </b></td>
+                            <td scope="row" style="text-align:right">
+                                <p><lightning:formattedNumber value="{!v.wrapper.opportunity.Other_Upfront_Financed__c}" style="currency" currencyCode="USD"/></p>
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td scope="row" style="width:200px"><b>- Down Payment: </b></td>
+                            <td scope="row" style="text-align:right">
+                                <p><lightning:formattedNumber value="{!v.wrapper.opportunity.Down_Payment__c}" style="currency" currencyCode="USD"/></p>
+                            </td>
+                        </tr>
+                        <tr style="border-top: thin solid">
+                            <td scope="row" style="width:200px"><b>Total Finance Amount: </b></td>
+                            <td scope="row" style="text-align:right">
+                                <p><lightning:formattedNumber value="{!v.wrapper.opportunity.Total_Finance_Amount__c}" style="currency" currencyCode="USD"/></p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <aura:if isTrue="{!not(empty(v.wrapper.opportunity.Opportunity_Assets__r))}">
+            <div class="equipmentDetails" style="padding-bottom:10px">
+                <table class="slds-table slds-table_bordered slds-table_col-bordered">
+                    <thead>
+                    <tr class="slds-line-height_reset">
+                        <th class="" scope="col">
+                            <div class="slds-truncate">Qty</div>
+                        </th>
+                        <th class="" scope="col">
+                            <div class="slds-truncate">Vendor Name</div>
+                        </th>
+                        <th class="" scope="col">
+                            <div class="slds-truncate">Cost Per Unit</div>
+                        </th>
+                        <th class="" scope="col">
+                            <div class="slds-truncate">Vendor Comment</div>
+                        </th>
+                        <th class="" scope="col">
+                            <div class="slds-truncate">Equipment Description</div>
+                        </th>
+                        <th class="" scope="col">
+                            <div class="slds-truncate">S/N</div>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <aura:iteration var="equipInfo" items="{!v.wrapper.opportunity.Opportunity_Assets__r}" indexVar="i">
+                        <tr>
+                            <td>
+                                <div class="slds-truncate slds-grow slds-cell-wrap">{!equipInfo.Quantity__c}</div>
+                            </td>
+                            <td>
+                                <div class="slds-truncate slds-grow slds-cell-wrap">{!equipInfo.Vendor_Name__c}</div>
+                            </td>
+                            <td>
+                                <div class="slds-truncate slds-grow slds-cell-wrap">
+                                    <lightning:formattedNumber value="{!equipInfo.Cost_Per_Unit__c}" style="currency" currencyCode="USD"/>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="slds-truncate slds-grow slds-cell-wrap">{!equipInfo.Vendor_Information__c}</div>
+                            </td>
+                            <td>
+                                <div class="slds-truncate slds-grow slds-cell-wrap">{!equipInfo.Name}</div>
+                            </td>
+                            <td>
+                                <div class="slds-truncate slds-grow slds-cell-wrap">{!equipInfo.Serial_Numbers__c}</div>
+                            </td>
+                        </tr>
+                    </aura:iteration>
+                    </tbody>
+
+                </table><br/>
+            </div>
+        </aura:if>
+        
+        <div class="fundingTerms" style="padding-bottom:20px">
+            <div class="slds-text-heading_medium" style="padding-bottom:10px">
+                <b>Funding Terms</b>
+            </div>
+            <table>
+                <tr>
+                    <td><b>Term:&nbsp;</b>{!v.wrapper.opportunity.Term__c}</td>
+                    <td><b># of Advance Payments:&nbsp;</b>{!v.wrapper.opportunity.Number_of_Advance_Payments__c}</td>
+                    <td>
+                        <b>Monthly Payment:&nbsp;</b>
+                        <lightning:formattedNumber value="{!v.wrapper.opportunity.Total_Payment__c}" style="currency" currencyCode="USD"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>Approved Rate:&nbsp;</b>
+                        <aura:if isTrue="{!not(empty(v.wrapper.opportunity.Approved_Rate__c))}">
+                            {!v.wrapper.opportunity.Approved_Rate__c}%
+                        </aura:if>
+                    </td>
+                    <td><b>Product:&nbsp;</b>{!v.wrapper.opportunity.Product__c}</td>
+                    <td>
+                        <b>Advanced $ Amount: </b>
+                        <lightning:formattedNumber value="{!v.wrapper.opportunity.Advanced_Amount_Calculated__c}" style="currency" currencyCode="USD"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>Commission:&nbsp;</b>
+                        <lightning:formattedNumber value="{!v.wrapper.fundingSource.Commission__c}" style="currency" currencyCode="USD"/>
+                    </td>
+                    <td>
+                        <b>Security Deposit: </b>
+                        <lightning:formattedNumber value="{!v.wrapper.opportunity.Security_Deposit__c}" style="currency" currencyCode="USD"/>
+                    </td>
+                </tr>
+            </table>
+            <div>
+                <b>Funding Instructions:&nbsp;</b>
+                {!v.wrapper.opportunity.Funding_Instructions__c}
+            </div>
+            <div class="slds-clearfix">
+                <div class="slds-float_left" style="display:flex">
+                    <b>Payment Structure:&nbsp;</b>
+                </div>
+                <div style="display:flex">
+                    <lightning:formattedRichText value="{!v.wrapper.opportunity.Payment_Structure_Rich__c}"/>
+                </div>
+            </div>
+        </div>
+
+        <div class="feeSection" style="padding-bottom:20px">
+            <div class="slds-text-heading_medium" style="padding-bottom:10px">
+                <b>Fees</b>
+            </div>
+            <div style="padding-left:150px;width:450px">
+                <table>
+                    <tbody>
+                    <!--<aura:iteration var="feeInfo" items="{!v.wrapper.opportunity.Fees__r}" indexVar="i">
+                        <tr>
+                            <td scope="row" style="width:200px"><b>{!feeInfo.Fee_Type__c}:</b></td>
+                            <td scope="row" style="text-align:right">
+                                <p><lightning:formattedNumber value="{!feeInfo.Amount__c}" style="currency" currencyCode="USD"/></p>
+                            </td>
+                        </tr>
+                    </aura:iteration>
+                    <tr style="border-top: thin solid">
+                        <td scope="row" style="width:200px"><b>Total Fee Due: </b></td>
+                        <td scope="row" style="text-align:right">
+                            <p><lightning:formattedNumber value="{!v.wrapper.totalFeeDue}" style="currency" currencyCode="USD"/></p>
+                        </td>
+                    </tr>-->
+                    <tr>
+                        <td scope="row" style="width:200px"><b>Broker Doc Fee</b></td>
+                        <td scope="row" style="width:200px">
+                                <p><lightning:formattedNumber value="{!v.wrapper.fundingSource.Broker_Doc_Fee__c}" style="currency" currencyCode="USD"/></p>
+                        </td>
+                    </tr>
+                        <td scope="row" style="width:200px"><b>Source Doc Fee</b></td>
+                        <td scope="row" style="width:200px">
+                            <p><lightning:formattedNumber value="{!v.wrapper.fundingSource.Source_Doc_Fee__c}" style="currency" currencyCode="USD"/></p>
+                        </td>
+                    <tr style="border-top: thin solid">
+                        <td scope="row" style="width:200px"><b>Total Fee Due: </b></td>
+                        <td scope="row" style="text-align:right">
+                            <p><lightning:formattedNumber value="{!v.wrapper.fundingSource.Total_Doc_Fees__c}" style="currency" currencyCode="USD"/></p>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="totalDueSection" style="padding-bottom:20px">
+            <div class="slds-text-heading_medium" style="padding-bottom:10px">
+                <b>Total Due</b>
+            </div>
+            <div style="padding-left:150px;width:450px">
+                <table>
+                    <tbody>
+                    <tr>
+                        <td scope="row" style="width:200px"><b>Total Fees:</b></td>
+                        <td scope="row" style="text-align:right">
+                            <p><lightning:formattedNumber value="{!v.wrapper.fundingSource.Total_Doc_Fees__c}" style="currency" currencyCode="USD"/></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td scope="row" style="width:200px"><b>Advanced $ Amount:</b></td>
+                        <td scope="row" style="text-align:right">
+                            <p><lightning:formattedNumber value="{!v.wrapper.opportunity.Advanced_Amount_Calculated__c}" style="currency" currencyCode="USD"/></p>
+                        </td>
+                    </tr>
+                    <tr style="border-top: thin solid">
+                        <td scope="row" style="width:200px"><b>Total Due: </b></td>
+                        <td scope="row" style="text-align:right">
+                            <p><ui:outputCurrency value="{!(v.wrapper.fundingSource.Total_Doc_Fees__c) + (v.wrapper.opportunity.Advanced_Amount_Calculated__c)}"/></p>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <aura:if isTrue="{!not(empty(v.wrapper.opportunity.Opportunity_Assets__r))}">
+        <div class="vendorTermStructure" style="padding-bottom:20px">
+            <div class="slds-text-heading_small" style="padding-bottom:10px">
+                <b>Vendor Prefunding Terms</b>
+            </div>
+            <table class="slds-table slds-table_bordered slds-table_col-bordered">
+                <thead>
+                    <tr class="slds-line-height_reset">
+                        <th class="" scope="col">
+                            <div class="slds-truncate">Prefunding Term</div>
+                        </th>
+                        <th class="" scope="col">
+                            <div class="slds-truncate">Vendor Name</div>
+                        </th>
+                        <th class="" scope="col">
+                            <div class="slds-truncate">Phone</div>
+                        </th>
+                        <th class="" scope="col">
+                            <div class="slds-truncate">Company Email</div>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <aura:iteration var="equipmentInfo" items="{!v.wrapper.opportunity.Opportunity_Assets__r}">
+                        <aura:if isTrue="{!or(not(empty(equipmentInfo.Vendor_Information__c)),not(empty(equipmentInfo.Vendor_Name__c)),
+                                             not(empty(equipmentInfo.Vendor__r.Phone)),not(empty(equipmentInfo.Vendor__r.Company_Email__c)))}">
+                            <tr>
+                                <td>
+                                    <div class="slds-truncate slds-grow slds-cell-wrap">{!equipmentInfo.Vendor_Information__c}</div>
+                                </td>
+                                <td>
+                                    <div class="slds-truncate slds-grow slds-cell-wrap">{!equipmentInfo.Vendor_Name__c}</div>
+                                </td>
+                                <td>
+                                    <div class="slds-truncate slds-grow slds-cell-wrap">{!equipmentInfo.Vendor__r.Phone}</div>
+                                </td>
+                                <td>
+                                    <div class="slds-truncate slds-grow slds-cell-wrap">{!equipmentInfo.Vendor__r.Company_Email__c}</div>
+                                </td>
+                            </tr>
+                        </aura:if>
+                    </aura:iteration>
+                </tbody>
+            </table>
+        </div>
+        </aura:if>
+
+        <aura:if isTrue="{!not(empty(v.wrapper.opportunity.Misc_Doc_Instructions__c))}">
+        <div class="miscDocInstructions">
+            <p><b>Miscellaneous Document Instructions: </b>{!v.wrapper.opportunity.Misc_Doc_Instructions__c}</p>
+        </div>
+        </aura:if>
+    </div>
+
+</aura:component>

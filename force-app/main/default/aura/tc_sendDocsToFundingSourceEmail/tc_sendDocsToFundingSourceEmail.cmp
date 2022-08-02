@@ -1,0 +1,124 @@
+<!--
+ - Created by tamarack on 2019-11-03.
+ -->
+
+<aura:component description="tc_sendDocsToFundingSourceEmail" controller="TC_sendDocsToFundingSourceCTRL"
+                implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction,lightning:hasPageReference,lightning:isUrlAddressable"
+                access="global">
+
+    <aura:attribute name="recordId" type="Id"/>
+    <aura:attribute name="wrapper" type="TC_sendDocsToFundingSourceCTRL.wizardWrapper"/>
+
+    <aura:attribute name="selectedEmailString" type="String"/>
+    <aura:attribute name="selectedFileWrapperList" type="TC_sendDocsToFundingSourceCTRL.fileWrapper[]"/>
+
+    <aura:attribute name="parentRendered" type="Boolean" default="{!false}"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler name="change" value="{!v.parentRendered}" action="{!c.doInit}"/>
+    <aura:method name="updateEmail" action="{!c.doInit}" access="public"/>
+
+    <aura:handler event="aura:waiting" action="{!c.showSpinner}"/>
+    <aura:handler event="aura:doneWaiting" action="{!c.hideSpinner}"/>
+    <aura:attribute name="spinner" type="boolean" default="false"/>
+
+    <div>
+        <div class="Send slds-align_absolute-center">
+            <lightning:button label="Send Email" onclick="{!c.sendEmail}" variant="brand" iconName="utility:email"
+                              iconPosition="right"/>
+        </div>
+
+        <div class="Recipients">
+            <h3 class="slds-section__title slds-theme_shade slds-m-top_x-small">
+                <span class="slds-truncate slds-p-horizontal_small" title="Section Title">Recipients</span>
+            </h3>
+
+            <div class="slds-p-around_small">
+                {!v.selectedEmailString}
+                <aura:if isTrue="{!empty(v.selectedEmailString)}"><i>No recipients selected</i></aura:if>
+            </div>
+        </div>
+
+        <div class="Email_Content">
+            <h3 class="slds-section__title slds-theme_shade slds-m-top_x-small">
+                <span class="slds-truncate slds-p-horizontal_small" title="Section Title">Email Content</span>
+            </h3>
+
+            <div class="slds-p-around_small">
+                <div class="slds-text-title slds-m-vertical_xxx-small">Subject</div>
+                {!v.wrapper.emailWrapper.subject}
+
+                <div class="slds-text-title slds-m-top_small">Body</div>
+                <lightning:formattedRichText value="{!v.wrapper.emailWrapper.htmlBody}"/>
+            </div>
+        </div>
+
+        <div class="Files">
+            <h3 class="slds-section__title slds-theme_shade slds-m-top_x-small">
+                <span class="slds-truncate slds-p-horizontal_small" title="Section Title">Attachments</span>
+            </h3>
+
+            <div class="slds-p-around_small">
+                <ul class="slds-list_dotted">
+                    <aura:iteration items="{!v.selectedFileWrapperList}" var="fileWrapper">
+                        <li>{!fileWrapper.cd.Title}</li>
+                    </aura:iteration>
+                </ul>
+                <aura:if isTrue="{!empty(v.selectedFileWrapperList)}"><i>No attachments selected</i></aura:if>
+            </div>
+        </div>
+
+        <aura:if isTrue="{!v.wrapper.fsEditBoolean}">
+            <h3 class="slds-section__title slds-theme_shade slds-m-top_x-small">
+                <span class="slds-truncate slds-p-horizontal_small" title="Section Title">Funding Source Records</span>
+            </h3>
+
+            <div class="Funding_Source_records slds-p-around_small">
+                <aura:if isTrue="{!empty(v.selectedEmailString)}"><i>No recipients selected</i></aura:if>
+                <aura:iteration items="{!v.wrapper.fsWrapperList}" var="fsWrapper">
+                    <div class="slds-text-title_caps slds-m-bottom_x-small">{!fsWrapper.email}</div>
+                    <aura:if isTrue="{!not(empty(fsWrapper.fs))}">
+                        <div class="slds-m-around_small">
+                            <div class="slds-grid slds-wrap slds-gutters slds-m-bottom_xx-small">
+                                <div class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3">
+                                    <b>Lender: </b>{!fsWrapper.lender.Name}
+                                </div>
+                                <div class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3">
+                                    <b>Status: </b>
+                                    <aura:if isTrue="{!not(empty(fsWrapper.fs.Status__c))}">
+                                        {!fsWrapper.fs.Status__c}
+                                        <aura:set attribute="else">N/A</aura:set>
+                                    </aura:if>
+                                </div>
+                                <div class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3">
+                                    <b>Submission Status: </b>
+                                    <aura:if isTrue="{!not(empty(fsWrapper.fs.Submission_Status__c))}">
+                                        {!fsWrapper.fs.Submission_Status__c}
+                                        <aura:set attribute="else">N/A</aura:set>
+                                    </aura:if>
+                                </div>
+                            </div>
+                        </div>
+
+                        <aura:set attribute="else">
+                            <div class="slds-p-bottom_small">
+                                <i>No funding source record associated with this Lender email</i>
+                            </div>
+                        </aura:set>
+                    </aura:if>
+                </aura:iteration>
+            </div>
+        </aura:if>
+
+    </div>
+
+    <aura:if isTrue="{!v.spinner}">
+        <div aura:id="spinnerId" class="slds-spinner_container">
+            <div class="slds-spinner--brand  slds-spinner slds-spinner--large slds-is-relative" role="alert">
+                <span class="slds-assistive-text">Loading</span>
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
+            </div>
+        </div>
+    </aura:if>
+
+</aura:component>

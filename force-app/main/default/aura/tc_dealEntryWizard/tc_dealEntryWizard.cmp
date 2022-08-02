@@ -1,0 +1,85 @@
+<aura:component description="Deal Entry Wizard" access="global"
+				implements="forceCommunity:availableForAllPageTypes,force:hasRecordId,flexipage:availableForRecordHome,force:appHostable"
+                controller="TC_DealEntryWizardCtrl">
+	
+    <aura:attribute name="wrapper" type="TC_DealEntryWizardCtrl.TC_DealWizardWrapper" access="global"/>
+    <aura:attribute name="currentStep" type="String" access="global" default="step_1"/>
+
+    <aura:attribute name="companyBoolean" type="Boolean" access="global" default="false"/>
+    <aura:attribute name="guarantorBoolean" type="Boolean" access="global" default="false"/>
+    <aura:attribute name="submitBoolean" type="Boolean" access="global" default="false"/>
+
+    <aura:attribute name="tabMap" type="Object" access="global"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler name="changeTab" event="c:tc_dealEntryNavigate_evt" action="{!c.handleTabNavigation}"
+                  description="Event handler to change the tab"/>
+
+    <lightning:card title="Enter New Deal">
+
+        <div class="slds-card__body slds-border_bottom slds-m-around_medium">
+            <table class="slds-table" style="width:35%">
+                <tr>
+                    <td>
+                        <div aura:id="step_1Tab" class="slds-m-around_xx-small selectedTab"><b>Deal</b></div>
+                    </td>
+                    <td>
+                        <div aura:id="step_2Tab" class="slds-m-around_xx-small unselectedTab"><b>Customer</b></div>
+                    </td>
+                    <td>
+                        <div aura:id="step_3Tab" class="slds-m-around_xx-small unselectedTab"><b>Guarantors</b></div>
+                    </td>
+                    <td>
+                        <div aura:id="step_4Tab" class="slds-m-around_xx-small unselectedTab"><b>Equipment</b></div>
+                    </td>
+                    <td>
+                        <div aura:id="step_5Tab" class="slds-m-around_xx-small unselectedTab"><b>Partner</b></div>
+                    </td>
+                    <td>
+                        <div aura:id="step_6Tab" class="slds-m-around_xx-small unselectedTab"><b>Save &amp; Close</b></div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="slds-m-around_medium">
+
+            <div aura:id="step_1">
+                <c:tc_dealEntryDeal wrapper="{!v.wrapper}"/>
+            </div>
+
+            <div aura:id="step_2" class="slds-hide" >
+                <c:tc_dealEntryCompany wrapper="{!v.wrapper}"/>
+            </div>
+
+            <div aura:id="step_3" class="slds-hide" >
+                <aura:if isTrue="{!v.guarantorBoolean}">
+                    <c:tc_dealEntryGuarantors wrapper="{!v.wrapper}"/>
+                    <aura:set attribute="else">
+                        <c:tc_dealEntryGuarantors wrapper="{!v.wrapper}"/>
+                    </aura:set>
+                </aura:if>
+            </div>
+
+            <div aura:id="step_4" class="slds-hide" >
+                <c:tc_dealEntryEquipment wrapper="{!v.wrapper}"/>
+            </div>
+
+            <div aura:id="step_5" class="slds-hide" >
+                <c:tc_dealEntryPartners wrapper="{!v.wrapper}"/>
+            </div>
+
+            <div aura:id="step_6" class="slds-hide">
+                <aura:if isTrue="{!v.submitBoolean}">
+                    <c:tc_dealEntrySubmit wrapper="{!v.wrapper}"/>
+                    <aura:set attribute="else">
+                        <c:tc_dealEntrySubmit wrapper="{!v.wrapper}"/>
+                    </aura:set>
+                </aura:if>
+            </div>
+
+        </div>
+
+    </lightning:card>
+    
+</aura:component>

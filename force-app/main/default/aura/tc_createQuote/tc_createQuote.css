@@ -1,0 +1,14 @@
+/**
+ * Created  on 12/7/17.
+ */
+.THIS {
+    background:rgba(255,255,255,0.7);
+}
+
+.THIS .slds-slider-label__range {
+    display: none;
+}
+
+.THIS .slds-slider__value {
+    display: none;
+}

@@ -1,0 +1,13 @@
+<apex:component selfclosing="true">
+    <apex:actionStatus id="saladStatus">
+        <apex:facet name="start">
+            <div class="slds-spinner_container">
+                <div class="slds-spinner slds-spinner--medium" role="alert">
+                    <span class="slds-assistive-text">Loading</span>
+                    <div class="slds-spinner__dot-a"></div>
+                    <div class="slds-spinner__dot-b"></div>
+                </div>
+            </div>
+        </apex:facet>
+    </apex:actionStatus>
+</apex:component>

@@ -1,0 +1,729 @@
+<apex:page controller="TC_QuickAppEntryCtrl" docType="html-5.0" sidebar="false" standardStylesheets="false" 
+           showHeader="false" title="Quick App" applyHtmlTag="false" applyBodyTag="false" id="quickAppPage">
+    <html xmlns="http://www.w3.org/2000/svg"  xmlns:xlink="http://www.w3.org/1999/xlink" lang="en" >
+        
+        <head>
+            <meta charset="utf-8" />
+            <title>Quick App</title>
+            <meta http-equiv="x-ua-compatible" content="ie=edge" />
+            <meta name="viewport" content="width=device-width, initial-scale=1" />
+            
+            <apex:stylesheet value="{!URLFOR($Resource.slds203tc, 'assets/styles/salesforce-lightning-design-system.min.css')}"/>
+            <apex:stylesheet value="{!URLFOR($Resource.datatables11012, 'DataTables/datatables.css')}"/>
+            <apex:includeScript value="{!$Resource.jquery310}"/>
+            <apex:includeScript value="{!$Resource.momentjs}"/>
+            <apex:includeScript value="{!URLFOR($Resource.aljs, '/jquery.aljs-all.min.js')}"/>
+            <apex:includeScript value="{!URLFOR($Resource.jQueryValidation1151 , '/jquery.validate.min.js')}"/>
+            <apex:includeScript value="https://cdn.datatables.net/v/dt/dt-1.10.12/datatables.js"/>
+            
+        </head>
+        <body>
+            <div class="tc">
+                <apex:pageMessages id="pageMessages"></apex:pageMessages>
+                
+                <apex:form id="mainform" styleClass="slds-m-around--medium">
+                    <apex:actionFunction name="saveAllData" action="{!saveDeal}" rerender="pageMessages, guarPanel,equipPanel, refPanel" status="saladStatus"/>
+                    
+                    <!--account lookup modal-->
+                    <apex:outputPanel layout="block" id="ssnLookupModal">
+                        <div layout="block" aria-hidden="true" role="dialog" class="slds-modal slds-hide slds-modal--large" id="ssnLookupModal">
+                            <div class="slds-modal__container">
+                                <div class="slds-modal__header">
+                                    <h2 class="slds-text-heading--medium">Lookup SSN</h2>
+                                    <a class="slds-button slds-button--icon-inverse slds-modal__close" data-aljs-dismiss="modal">
+                                        <svg aria-hidden="true" class="slds-button__icon slds-button__icon--large">
+                                            <use xlink:href="{!URLFOR($Resource.slds203tc , '/assets/icons/action-sprite/svg/symbols.svg#close')}"></use>
+                                        </svg>
+                                        <span class="slds-assistive-text">Close</span>
+                                    </a>
+                                </div>
+                                <div class="slds-modal__content slds-p-around--medium">
+                                    <div class="slds-box slds-box--small slds-theme--shade">
+                                        <div class="slds-col slds-col--padded">
+                                            <input id="ssnSearchText" class="slds-input slds-size--2-of-4" type="text" />
+                                            
+                                            <a class="slds-button slds-button--neutral slds-input slds-size--1-of-6" onclick="doSSNSearch($('#ssnSearchText').val())">Search</a>
+                                        </div>
+                                        <div class="slds-col slds-col--padded">
+                                            
+                                            <!-- results table -->
+                                            <table class="slds-table slds-table--bordered slds-table--cell-buffer ssnSearchResutlsTable slds-m-top--medium">
+                                                <thead>
+                                                    
+                                                    <tr class="slds-text-title--caps">
+                                                        <th scope="col">
+                                                            <div class="slds-truncate" title="Select">&nbsp;</div>
+                                                        </th>
+                                                        <apex:repeat value="{!$ObjectType.Account.FieldSets.quickapp_ssnsearchresults}" var="f">
+                                                            <th scope="col">
+                                                                <div class="slds-truncate" title="{!f.Label}">{!f.Label}</div>
+                                                            </th>
+                                                        </apex:repeat>  
+                                                    </tr>
+                                                </thead> 
+                                            </table>
+                                            
+                                        </div>
+                                    </div> 
+                                    
+                                    
+                                </div>  
+                                
+                                <div class="slds-modal__footer">
+                                    <a class="slds-button slds-button--neutral" data-aljs-dismiss="modal">Close</a>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </apex:outputPanel>
+                    <!-- end account lookup modal -->
+                    
+                    
+                    <div class="slds-grid slds-grid--align-center slds-m-vertical--small">
+                        <a class="slds-button slds-button--brand slds-size--1-of-6" onclick="validateAndSave()">Save</a>
+                        <a class="slds-button slds-button--neutral slds-size--1-of-6">Cancel</a>
+                    </div>
+                    
+                    <!-- BUSINESS INFO -->
+                    <apex:outputPanel layout="block" styleClass="businessDetailsSection slds-box slds-box--small slds-theme--shade" id="businessDetailsSection">
+                        <apex:actionFunction immediate="true" name="selectAccount" action="{!selectAccount}" reRender="pageMessages, businessDetailsSection, ssnLookupModal" oncomplete="initModalDialogs()" status="saladStatus">
+                            <apex:param assignTo="{!selectedAccountId}" name="selectedAccountId" value=""/>
+                        </apex:actionFunction>
+                        <fieldset class="slds-form--compound">
+                            <legend class="slds-form-element__label slds-text-title--caps">Business Details
+                                
+                            </legend>
+                            <div class="form-element__group">
+                                <div class="slds-form-element__row">
+                                    <div class="slds-form-element slds-size--1-of-2">
+                                        <label class="slds-form-element__label" for="ssnLookup">SSN/Tax Id</label>
+                                        <apex:inputText value="{!acc.AccountNumber}" styleClass="slds-input required"/>
+                                        
+                                    </div>
+                                    <div class="slds-form-element slds-size--1-of-2">
+                                        <label class="slds-form-element__label slds-size--3-of-3" for="ssnLookupButton">&nbsp;</label>
+                                        <a class="slds-button slds-button--neutral slds-input slds-size--1-of-3" data-aljs="modal" data-aljs-show="ssnLookupModal">Lookup Fed Tax Id/SSN</a>
+                                    </div>
+                                </div>
+                                
+                                <div class="slds-grid slds-wrap slds-grid--pull-padded ">
+                                    
+                                    <apex:repeat value="{!$ObjectType.Account.FieldSets.quickapp_companyinfo}" var="f">
+                                        <div class="slds-col slds-col--padded slds-size--1-of-3">
+                                            <div class="slds-form-element">
+                                                <label class="slds-form-element__label" for="name">{!$ObjectType.Account.fields[f].label}</label>
+                                                
+                                                <div class="slds-form-element__control">
+                                                    <apex:inputField showDatePicker="false" value="{!acc[f]}"  
+                                                                     styleClass=" {!if (f.type != 'boolean', 'slds-input', '')} 
+                                                                                 {!if (f.type == 'date', 'datepicker', '')}
+                                                                                 {!if (f.type == 'picklist', 'slds-select', '')}
+                                                                                 {!if (f.required || f.dbRequired, 'required', '')}" 
+                                                                     rendered="{!f.type != 'reference'
+                                                                               && f.type != 'string'}"/>
+                                                    
+                                                    <apex:inputText value="{!acc[f]}" styleClass="slds-input  {!if (f.type == 'date', 'datepicker', '')}  
+                                                                                                  {!if (f.required || f.dbRequired, 'required', '')}"  
+                                                                    rendered="{!
+                                                                              f.type == 'reference'
+                                                                              || f.type == 'string'}"/>
+                                                    
+                                                </div>
+                                            </div> 
+                                        </div>
+                                    </apex:repeat>
+                                </div>
+                            </div>
+                            
+                        </fieldset>                        
+                    </apex:outputPanel>  
+                    
+                    <!-- LOAN LEASE Details -->
+                    <div class="loanDetailsSection slds-box slds-box--small slds-theme--shade slds-m-vertical--small">
+                        
+                        <fieldset class="slds-form--compound">
+                            <legend class="slds-form-element__label slds-text-title--caps">Lease/Load Details</legend>
+                            <div class="form-element__group">
+                                <div class="slds-grid slds-wrap slds-grid--pull-padded ">
+                                    <apex:repeat value="{!$ObjectType.Opportunity.FieldSets.quickapp_dealdetails}" var="f">
+                                        <div class="slds-col slds-col--padded slds-size--1-of-3">
+                                            <div class="slds-form-element">
+                                                <label class="slds-form-element__label" for="name">{!$ObjectType.Opportunity.fields[f].label} ({!f.type})</label>
+                                                
+                                                <div class="slds-form-element__control">
+                                                    <apex:inputField showDatePicker="false" value="{!opp[f]}"  
+                                                                     styleClass=" {!if (f.type != 'boolean', 'slds-input', '')} 
+                                                                                 {!if (f.type == 'date', 'datepicker', '')}
+                                                                                 {!if (f.type == 'picklist', 'slds-select', '')}
+                                                                                 {!if (f.type == 'textarea', 'slds-textarea', '')}
+                                                                                 {!if (f.required || f.dbRequired, 'required', '')}" 
+                                                                     rendered="{!f.type != 'reference'}"/>
+                                                    
+                                                    <apex:inputText styleClass="slds-input  {!if (f.type == 'date', 'datepicker', '')}  
+                                                                                {!if (f.required || f.dbRequired, 'required', '')}"  
+                                                                    rendered="{!f.type == 'reference'}"/>
+                                                    
+                                                </div>
+                                            </div> 
+                                        </div>
+                                    </apex:repeat>
+                                </div>
+                            </div>
+                            
+                        </fieldset>                        
+                    </div>  
+                </apex:form>
+                <!-- GUAR SECTION -->
+                <apex:outputPanel id="guarPanel" layout="block">
+                    <apex:form id="guarForm" rendered="{!acc.Id != null && opp.Id!=null}" styleClass="slds-m-around--medium">
+                        <apex:actionFunction action="{!saveContactGuar}" name="saveContactGuar" rerender="guarModalContainer, guarTable" oncomplete="closeGuarModalAfterSave()" status="saladStatus"/>
+                        
+                         <apex:actionFunction immediate="true" name="selectGuarantor" action="{!selectGuarantor}" reRender="guarModalDetails" status="saladStatus">
+                            <apex:param assignTo="{!selectedGuarantorId}" name="selectedGuarantorId" value=""/>
+                        </apex:actionFunction>
+                        
+                        <!-- Guarantor Section -->
+                        <div class="guarantorSection slds-box slds-box--small slds-theme--shade slds-m-vertical--medium">
+                            <fieldset class="slds-form--compound">
+                                <legend class="slds-form-element__label slds-text-title--caps">Personal Guarantors</legend>
+                            </fieldset>
+                            <div class="form-element__group">
+                                <div class="slds-form-element__row">
+                                    <a class="slds-button slds-button--neutral slds-m-vertical--medium" data-aljs="modal" data-aljs-show="guarModal">Add Guarantor</a>
+                                </div>
+                            </div>
+                            
+                            <apex:outputPanel styleClass="slds-form-element__row" id="guarTable">
+                                
+                                
+                                <table class="slds-table slds-table--bordered slds-table--cell-buffer personalGuarTable">
+                                    <thead>
+                                        <tr class="slds-text-title--caps">
+                                            <apex:repeat value="{!$ObjectType.Contact.FieldSets.quickapp_relatedlist_guarantor}" var="f">
+                                                <th scope="col">
+                                                    <div class="slds-truncate" title="{!f.Label}">{!f.Label}</div>
+                                                </th>
+                                            </apex:repeat>  
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        
+                                        <apex:repeat value="{!personalGuarantors}" var="pg">
+                                            <tr>
+                                                <apex:repeat value="{!$ObjectType.Contact.FieldSets.quickapp_relatedlist_guarantor}" var="f">
+                                                    
+                                                    <td data-label="{!f.Label}">
+                                                        <div class="slds-truncate" title="{!pg[f]}">
+                                                            <apex:outputField value="{!pg[f]}"/>
+                                                        </div>
+                                                    </td>
+                                                    
+                                                </apex:repeat>
+                                                
+                                            </tr>
+                                        </apex:repeat> 
+                                    </tbody>
+                                </table>
+                            </apex:outputPanel>
+                        </div>
+                        
+                        <div aria-hidden="true" role="dialog" class="slds-modal slds-hide slds-modal--large" id="guarModal">
+                            
+                            <apex:outputPanel layout="block" styleClass="slds-modal__container" id="guarModalContainer">
+                                <div class="slds-modal__header">
+                                    <h2 class="slds-text-heading--medium">Add Guarantor</h2>
+                                    <a class="slds-button slds-button--icon-inverse slds-modal__close" data-aljs-dismiss="modal">
+                                        <svg aria-hidden="true" class="slds-button__icon slds-button__icon--large">
+                                            <use xmlns="http://www.w3.org/2000/svg"  xmlns:xlink="http://www.w3.org/1999/xlink"   xlink:href="{!URLFOR($Resource.slds203tc , '/assets/icons/action-sprite/svg/symbols.svg#close')}"></use>
+                                        </svg>
+                                        <span class="slds-assistive-text">Close</span>
+                                    </a>
+                                </div>
+                                <div class="slds-modal__content slds-p-around--medium">
+                                    
+                                    <div class="slds-box slds-box--small slds-theme--shade">
+                                        <div class="slds-col slds-col--padded">
+                                            <input id="guarSearchText" class="slds-input slds-size--2-of-4" type="text" />
+                                            
+                                            <a class="slds-button slds-button--neutral slds-input slds-size--1-of-6" onclick="doGuarSearch($('#guarSearchText').val())">Search</a>
+                                        </div>
+                                        <div class="slds-col slds-col--padded">
+                                            
+                                            <!-- results table -->
+                                            <table class="slds-table slds-table--bordered slds-table--cell-buffer guarSearchResutlsTable slds-m-top--medium">
+                                                <thead>
+                                                    
+                                                    <tr class="slds-text-title--caps">
+                                                        <th scope="col">
+                                                            <div class="slds-truncate" title="Select">&nbsp;</div>
+                                                        </th>
+                                                        <apex:repeat value="{!$ObjectType.Contact.FieldSets.quickapp_relatedlist_guarantor}" var="f">
+                                                            <th scope="col">
+                                                                <div class="slds-truncate" title="{!f.Label}">{!f.Label}</div>
+                                                            </th>
+                                                        </apex:repeat>  
+                                                    </tr>
+                                                </thead> 
+                                            </table>
+                                            
+                                        </div>
+                                    </div> 
+                                    
+                                    <apex:outputPanel layout="block" styleClass="slds-box slds-box--small slds-theme--shade slds-m-vertical--medium" id="guarModalDetails">
+                                        
+                                        <fieldset class="slds-form--compound">
+                                            <legend class="slds-form-element__label slds-text-title--caps">Guarantor Information
+                                                
+                                            </legend>
+                                            
+                                            <div class="form-element__group">
+                                                <div class="slds-form-element__row">
+                                                    <apex:outputText value="{!saveContactGuarErr}" id="saveContactGuarErr"/>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="form-element__group">
+                                                
+                                                
+                                                <div class="slds-grid slds-wrap slds-grid--pull-padded ">
+                                                    
+                                                    <apex:repeat value="{!$ObjectType.Contact.FieldSets.quickapp_edit_guarantor}" var="f">
+                                                        <div class="slds-col slds-col--padded slds-size--1-of-3">
+                                                            <div class="slds-form-element">
+                                                                <label class="slds-form-element__label" for="name">{!$ObjectType.Contact.fields[f].label}</label>
+                                                                
+                                                                <div class="slds-form-element__control">
+                                                                    <apex:inputField showDatePicker="false" value="{!addEditGuarCon[f]}"  
+                                                                                     styleClass=" {!if (f.type != 'boolean', 'slds-input', '')} 
+                                                                                                 {!if (f.type == 'date', 'datepicker', '')}
+                                                                                                 {!if (f.type == 'picklist', 'slds-select', '')}
+                                                                                                 {!if (f.required || f.dbRequired, 'required', '')}" 
+                                                                                     rendered="{!f.type != 'reference'
+                                                                                               && f.type != 'string'}"/>
+                                                                    
+                                                                    <apex:inputText value="{!addEditGuarCon[f]}" styleClass="slds-input  {!if (f.type == 'date', 'datepicker', '')}  
+                                                                                                                             {!if (f.required || f.dbRequired, 'required', '')}"  
+                                                                                    rendered="{!
+                                                                                              f.type == 'reference'
+                                                                                              || f.type == 'string'}"/>
+                                                                    
+                                                                </div>
+                                                            </div> 
+                                                        </div>
+                                                    </apex:repeat>
+                                                </div>
+                                            </div>
+                                            
+                                        </fieldset>                        
+                                    </apex:outputPanel> 
+                                </div>
+                                <div class="slds-modal__footer">
+                                    <a class="slds-button slds-button--neutral" data-aljs-dismiss="modal">Cancel</a>
+                                    <a class="slds-button slds-button--brand slds-button--brand" onclick="saveGuar();">Save</a>
+                                </div>
+                            </apex:outputPanel>
+                            
+                        </div>
+                        <!-- END GUAR MODAL -->    
+                    </apex:form>
+                </apex:outputPanel>
+                <!-- END GUAR SECTION -->
+                
+                
+                <!-- EQUIP SECTION -->
+                <apex:outputPanel id="equipPanel" layout="block">
+                    <apex:form id="equipForm" rendered="{!acc.Id != null && opp.Id!=null}" styleClass="slds-m-around--medium">
+                        <apex:actionFunction action="{!saveEquipment}" name="saveEquipment" rerender="eqModalContainer,equipTable" oncomplete="closeEquipModalAfterSave();" status="saladStatus"/>
+                        
+                        <apex:actionFunction action="{!saveVendor}" name="saveVendor" rerender="vendorModalContainer,equipTable" oncomplete="closeVendorModalAfterSave();" status="saladStatus">
+                            <apex:param name="selectedEquipmentId"  value="" assignTo="{!selectedEquipmentId}"/>
+                        </apex:actionFunction>
+                        
+                        <apex:actionFunction immediate="true" name="selectVendor" action="{!selectVendor}" reRender="vendorModalDetails" status="saladStatus">
+                            <apex:param assignTo="{!selectedVendorId}" name="selectedVendorId" value=""/>
+                        </apex:actionFunction>
+                        
+                        
+                        <div class="guarantorSection slds-box slds-box--small slds-theme--shade slds-m-vertical--medium">
+                            <fieldset class="slds-form--compound">
+                                <legend class="slds-form-element__label slds-text-title--caps">Equipment</legend>
+                            </fieldset>
+                            <div class="form-element__group">
+                                <div class="slds-form-element__row">
+                                    <a class="slds-button slds-button--neutral slds-m-vertical--medium" data-aljs="modal" data-aljs-show="eqModal">Add Equipment</a>
+                                </div>
+                            </div>
+                            
+                            <apex:outputPanel styleClass="slds-form-element__row" id="equipTable">
+                                
+                                
+                                <table class="slds-table slds-table--bordered slds-table--cell-buffer equipmentTable">
+                                    <thead>
+                                        <tr class="slds-text-title--caps">
+                                            
+                                            <th scope="col">
+                                                <div class="slds-truncate" title=""></div>
+                                            </th>
+                                            
+                                            <apex:repeat value="{!$ObjectType.Equipment__c.FieldSets.quickapp_relatedlist_equipment}" var="f">
+                                                
+                                                <th scope="col">
+                                                    <div class="slds-truncate" title="{!f.Label}">{!f.Label}</div>
+                                                </th>
+                                            </apex:repeat>  
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        
+                                        <apex:repeat value="{!equipmentList}" var="eq">
+                                            <tr>
+                                                <td data-label="">
+                                                    <div class="slds-truncate" title="">
+                                                        <a class="slds-button slds-button--neutral" onclick="openVendorModal('{!eq.Id}')">
+                                                            <svg aria-hidden="true" class="slds-button__icon--stateful slds-button__icon--left ">
+                                                                <use xmlns="http://www.w3.org/2000/svg"  xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{!URLFOR($Resource.slds203tc , '/assets/icons/utility-sprite/svg/symbols.svg#new')}"></use>
+                                                            </svg>
+                                                            Add Vendor
+                                                        </a>
+                                                        
+                                                        
+                                                    </div>
+                                                </td>
+                                                <apex:repeat value="{!$ObjectType.Equipment__c.FieldSets.quickapp_relatedlist_equipment}" var="f">
+                                                    
+                                                    
+                                                    
+                                                    <td data-label="{!f.Label}">
+                                                        <div class="slds-truncate" title="{!eq[f]}">
+                                                            <apex:outputField value="{!eq[f]}"/>
+                                                        </div>
+                                                    </td>
+                                                    
+                                                </apex:repeat>
+                                                
+                                            </tr>
+                                        </apex:repeat> 
+                                    </tbody>
+                                </table>
+                            </apex:outputPanel>
+                        </div>
+                        <!-- END EQUIPMENT LIST -->
+                        
+                        
+                        
+                        <!-- EQUIPMENT MODAL -->
+                        <div aria-hidden="true" role="dialog" class="slds-modal slds-hide" id="eqModal">
+                            
+                            <apex:outputPanel layout="block" styleClass="slds-modal__container" id="eqModalContainer">
+                                <div class="slds-modal__header">
+                                    <h2 class="slds-text-heading--medium">Add Equipment</h2>
+                                    <a class="slds-button slds-button--icon-inverse slds-modal__close" data-aljs-dismiss="modal">
+                                        <svg aria-hidden="true" class="slds-button__icon slds-button__icon--large">
+                                            <use xmlns="http://www.w3.org/2000/svg"  xmlns:xlink="http://www.w3.org/1999/xlink"   xlink:href="{!URLFOR($Resource.slds203tc , '/assets/icons/action-sprite/svg/symbols.svg#close')}"></use>
+                                        </svg>
+                                        <span class="slds-assistive-text">Close</span>
+                                    </a>
+                                </div>
+                                <div class="slds-modal__content slds-p-around--medium">
+                                    <div class="slds-box slds-box--small slds-theme--shade">
+                                        <fieldset class="slds-form--compound">
+                                            <legend class="slds-form-element__label slds-text-title--caps">Equipment Details</legend>
+                                            <div class="form-element__group">
+                                                <div class="slds-form-element__row">
+                                                    <apex:outputText value="{!saveEquipErr}" id="saveEqErr"/>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="form-element__group">
+                                                <div class="slds-grid slds-wrap slds-grid--pull-padded ">
+                                                    
+                                                    <apex:repeat value="{!$ObjectType.Equipment__c.FieldSets.quickapp_edit_equipment}" var="f">
+                                                        <div class="slds-col slds-col--padded slds-size--1-of-3">
+                                                            <div class="slds-form-element">
+                                                                <label class="slds-form-element__label" for="name">{!$ObjectType.Equipment__c.fields[f].label}</label>
+                                                                
+                                                                <div class="slds-form-element__control">
+                                                                    <apex:inputField showDatePicker="false" value="{!addEditEq[f]}"  
+                                                                                     styleClass=" {!if (f.type != 'boolean', 'slds-input', '')} 
+                                                                                                 {!if (f.type == 'date', 'datepicker', '')}
+                                                                                                 {!if (f.type == 'picklist', 'slds-select', '')}
+                                                                                                 {!if (f.required || f.dbRequired, 'required', '')}" 
+                                                                                     rendered="{!f.type != 'reference'
+                                                                                               && f.type != 'string'}"/>
+                                                                    
+                                                                    <apex:inputText value="{!addEditEq[f]}" styleClass="slds-input  {!if (f.type == 'date', 'datepicker', '')}  
+                                                                                                                        {!if (f.required || f.dbRequired, 'required', '')}"  
+                                                                                    rendered="{!
+                                                                                              f.type == 'reference'
+                                                                                              || f.type == 'string'}"/>
+                                                                    
+                                                                </div>
+                                                            </div> 
+                                                        </div>
+                                                    </apex:repeat>
+                                                </div>
+                                            </div>
+                                            
+                                        </fieldset>                        
+                                    </div> 
+                                </div>
+                                <div class="slds-modal__footer">
+                                    <a class="slds-button slds-button--neutral" data-aljs-dismiss="modal">Cancel</a>
+                                    <a class="slds-button slds-button--brand slds-button--brand" onclick="saveEquip();">Save</a>
+                                </div>
+                            </apex:outputPanel>
+                            
+                        </div>
+                        
+                        <!-- END EQUIPMENT MODAL -->  
+                        
+                        
+                        <!-- VENDOR MODAL -->
+                        <div aria-hidden="true" role="dialog" class="slds-modal slds-hide slds-modal--large" id="vendorModal">
+                            
+                            <apex:outputPanel layout="block" styleClass="slds-modal__container" id="vendorModalContainer">
+                                <div class="slds-modal__header">
+                                    <h2 class="slds-text-heading--medium">Add Vendor</h2>
+                                    <a class="slds-button slds-button--icon-inverse slds-modal__close" data-aljs-dismiss="modal">
+                                        <svg aria-hidden="true" class="slds-button__icon slds-button__icon--large">
+                                            <use xmlns="http://www.w3.org/2000/svg"  xmlns:xlink="http://www.w3.org/1999/xlink"   xlink:href="{!URLFOR($Resource.slds203tc , '/assets/icons/action-sprite/svg/symbols.svg#close')}"></use>
+                                        </svg>
+                                        <span class="slds-assistive-text">Close</span>
+                                    </a>
+                                </div>
+                                <div class="slds-modal__content slds-p-around--medium">
+                                    <apex:outputPanel layout="block" styleClass="slds-box slds-box--small slds-theme--shade" id="vendorModalDetails">
+                                        <fieldset class="slds-form--compound">
+                                            <legend class="slds-form-element__label slds-text-title--caps">Vendor Details</legend>
+                                            <div class="form-element__group">
+                                                <div class="slds-form-element__row">
+                                                    <apex:outputText value="{!saveVendorErr}" id="saveVendorErr"/>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="form-element__group">
+                                                <div class="slds-grid slds-wrap slds-grid--pull-padded">
+                                                    
+                                                    <apex:repeat value="{!$ObjectType.Account.FieldSets.quickapp_edit_vendor}" var="f">
+                                                        <div class="slds-col slds-col--padded slds-size--1-of-3">
+                                                            <div class="slds-form-element">
+                                                                <label class="slds-form-element__label" for="name">{!$ObjectType.Account.fields[f].label}</label>
+                                                                
+                                                                <div class="slds-form-element__control">
+                                                                    <apex:inputField showDatePicker="false" value="{!addEditVendor[f]}"  
+                                                                                     styleClass=" {!if (f.type != 'boolean', 'slds-input', '')} 
+                                                                                                 {!if (f.type == 'date', 'datepicker', '')}
+                                                                                                 {!if (f.type == 'picklist', 'slds-select', '')}
+                                                                                                 {!if (f.required || f.dbRequired, 'required', '')}" 
+                                                                                     rendered="{!f.type != 'reference'
+                                                                                               && f.type != 'string'}"/>
+                                                                    
+                                                                    <apex:inputText value="{!addEditVendor[f]}" styleClass="slds-input  {!if (f.type == 'date', 'datepicker', '')}  
+                                                                                                                            {!if (f.required || f.dbRequired, 'required', '')}"  
+                                                                                    rendered="{!
+                                                                                              f.type == 'reference'
+                                                                                              || f.type == 'string'}"/>
+                                                                    
+                                                                </div>
+                                                            </div> 
+                                                        </div>
+                                                    </apex:repeat>
+                                                </div>
+                                            </div>
+                                            
+                                        </fieldset>                        
+                                    </apex:outputPanel> 
+                                    
+                                    <div class="slds-box slds-box--small slds-theme--shade slds-m-vertical--medium">
+                                        <div class="slds-col slds-col--padded">
+                                            <input id="vendorSearchText" class="slds-input slds-size--2-of-4" type="text" />
+                                            
+                                            <a class="slds-button slds-button--neutral slds-input slds-size--1-of-6" onclick="doVendorSearch($('#vendorSearchText').val())">Search</a>
+                                        </div>
+                                        <div class="slds-col slds-col--padded">
+                                            
+                                            <!-- results table -->
+                                            <table class="slds-table slds-table--bordered slds-table--cell-buffer vendorSearchResutlsTable slds-m-top--medium">
+                                                <thead>
+                                                    
+                                                    <tr class="slds-text-title--caps">
+                                                        <th scope="col">
+                                                            <div class="slds-truncate" title="Select">&nbsp;</div>
+                                                        </th>
+                                                        <apex:repeat value="{!$ObjectType.Account.FieldSets.quickapp_vendorsearchresults}" var="f">
+                                                            <th scope="col">
+                                                                <div class="slds-truncate" title="{!f.Label}">{!f.Label}</div>
+                                                            </th>
+                                                        </apex:repeat>  
+                                                    </tr>
+                                                </thead> 
+                                            </table>
+                                            
+                                        </div>
+                                    </div> 
+                                </div>
+                                <div class="slds-modal__footer">
+                                    <a class="slds-button slds-button--neutral" data-aljs-dismiss="modal">Cancel</a>
+                                    <a class="slds-button slds-button--brand slds-button--brand" onclick="saveVendor(selectedVendorId);">Save</a>
+                                </div>
+                            </apex:outputPanel>
+                            
+                        </div>
+                        
+                        <!-- END VENDOR MODAL -->  
+                        
+                    </apex:form>
+                    <!-- END EQUIPMENT FORM -->  
+                </apex:outputPanel>
+                
+                <!-- END EQUIP SECTION -->
+                
+                
+                
+                <!-- REFERENCE SECTION -->
+                <apex:outputPanel id="refPanel" layout="block">
+                    <apex:form id="refForm" rendered="{!opp.Id!=null}" styleClass="slds-m-around--medium">
+                        <apex:actionFunction action="{!saveReferenceRecord}" name="saveReferenceRecord" rerender="refModalContainer, refTable" oncomplete="closeRefModalAfterSave()" status="saladStatus"/>
+                        
+                        <!-- REFERENCE Section -->
+                        <div class="slds-box slds-box--small slds-theme--shade slds-m-vertical--medium">
+                            <fieldset class="slds-form--compound">
+                                <legend class="slds-form-element__label slds-text-title--caps">References
+                                </legend>
+                            </fieldset>
+                            <div class="form-element__group">
+                                <div class="slds-form-element__row">
+                                    <a class="slds-button slds-button--neutral slds-m-vertical--medium" data-aljs="modal" data-aljs-show="refModal">Add Reference</a>
+                                </div>
+                            </div>
+                            
+                            <apex:outputPanel styleClass="slds-form-element__row" id="refTable">
+                                
+                                
+                                <table class="slds-table slds-table--bordered slds-table--cell-buffer refTable">
+                                    <thead>
+                                        <tr class="slds-text-title--caps">
+                                            <apex:repeat value="{!$ObjectType.Reference__c.FieldSets.quickapp_relatedlist_reference}" var="f">
+                                                <th scope="col">
+                                                    <div class="slds-truncate" title="{!f.Label}">{!f.Label}</div>
+                                                </th>
+                                            </apex:repeat>  
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        
+                                        <apex:repeat value="{!references}" var="ref">
+                                            <tr>
+                                                <apex:repeat value="{!$ObjectType.Reference__c.FieldSets.quickapp_relatedlist_reference}" var="f">
+                                                    
+                                                    <td data-label="{!f.Label}">
+                                                        <div class="slds-truncate" title="{!ref[f]}">
+                                                            <apex:outputField value="{!ref[f]}"/>
+                                                        </div>
+                                                    </td>
+                                                    
+                                                </apex:repeat>
+                                                
+                                            </tr>
+                                        </apex:repeat> 
+                                    </tbody>
+                                </table>
+                            </apex:outputPanel>
+                        </div>
+                        
+                        <div aria-hidden="true" role="dialog" class="slds-modal slds-hide" id="refModal">
+                            
+                            <apex:outputPanel layout="block" styleClass="slds-modal__container" id="guarModalContainer">
+                                <div class="slds-modal__header">
+                                    <h2 class="slds-text-heading--medium">Add Reference</h2>
+                                    <a class="slds-button slds-button--icon-inverse slds-modal__close" data-aljs-dismiss="modal">
+                                        <svg aria-hidden="true" class="slds-button__icon slds-button__icon--large">
+                                            <use xlink:href="{!URLFOR($Resource.slds203tc , '/assets/icons/action-sprite/svg/symbols.svg#close')}"></use>
+                                        </svg>
+                                        <span class="slds-assistive-text">Close</span>
+                                    </a>
+                                </div>
+                                <div class="slds-modal__content slds-p-around--medium">
+                                    <div class="slds-box slds-box--small slds-theme--shade">
+                                        
+                                        <fieldset class="slds-form--compound">
+                                            <legend class="slds-form-element__label slds-text-title--caps">Reference Information
+                                                
+                                            </legend>
+                                            
+                                            <div class="form-element__group">
+                                                <div class="slds-form-element__row">
+                                                    <apex:outputText value="{!saveRefErr}" id="saveRefErr"/>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="form-element__group">
+                                                
+                                                
+                                                <div class="slds-grid slds-wrap slds-grid--pull-padded ">
+                                                    
+                                                    <apex:repeat value="{!$ObjectType.Reference__c.FieldSets.quickapp_edit_reference}" var="f">
+                                                        <div class="slds-col slds-col--padded slds-size--1-of-3">
+                                                            <div class="slds-form-element">
+                                                                <label class="slds-form-element__label" for="name">{!$ObjectType.Reference__c.fields[f].label}</label>
+                                                                
+                                                                <div class="slds-form-element__control">
+                                                                    <apex:inputField showDatePicker="false" value="{!addEditRef[f]}"  
+                                                                                     styleClass=" {!if (f.type != 'boolean', 'slds-input', '')} 
+                                                                                                 {!if (f.type == 'date', 'datepicker', '')}
+                                                                                                 {!if (f.type == 'picklist', 'slds-select', '')}
+                                                                                                 {!if (f.required || f.dbRequired, 'required', '')}" 
+                                                                                     rendered="{!f.type != 'reference'
+                                                                                               && f.type != 'string'}"/>
+                                                                    
+                                                                    <apex:inputText value="{!addEditRef[f]}" styleClass="slds-input  {!if (f.type == 'date', 'datepicker', '')}  
+                                                                                                                             {!if (f.required || f.dbRequired, 'required', '')}"  
+                                                                                    rendered="{!
+                                                                                              f.type == 'reference'
+                                                                                              || f.type == 'string'}"/>
+                                                                    
+                                                                </div>
+                                                            </div> 
+                                                        </div>
+                                                    </apex:repeat>
+                                                </div>
+                                            </div>
+                                            
+                                        </fieldset>                        
+                                    </div> 
+                                </div>
+                                <div class="slds-modal__footer">
+                                    <a class="slds-button slds-button--neutral" data-aljs-dismiss="modal">Cancel</a>
+                                    <a class="slds-button slds-button--brand slds-button--brand" onclick="saveRef();">Save</a>
+                                </div>
+                            </apex:outputPanel>
+                            
+                        </div>
+                        <!-- END REFERENCE MODAL -->    
+                    </apex:form>
+                </apex:outputPanel>
+                <!-- END REFERENCE SECTION -->
+                
+                <c:TC_SaladSpinnerStatus />
+            </div> 
+            
+            
+            
+            
+            <!-- ADD JS PAGE -->
+            <apex:include pageName="TC_QuickAppEntryJS"/>
+            
+            
+            <style>
+                .redStripe {
+                border-left: 4px solid red !important;
+                }
+                
+                .slds-spinner_container {
+                z-index: 1000000;
+                }
+            </style>
+        </body> 
+    </html>
+</apex:page>

@@ -1,0 +1,68 @@
+<!--
+ - Created  on 11/9/18.
+ -->
+
+<aura:component description="tc_onlineApplicationGuarantor">
+
+    <aura:attribute name="indexVar" type="Integer" default="0"/>
+    <aura:attribute name="guarantor" type="Contact" default="{sobjectType: 'Contact'}"/>
+    <aura:method name="validateData" action="{!c.validateData}"/>
+
+    <!-- For State and Country picklists -->
+    <aura:attribute name="pgBoolean" type="Boolean" default="true"/>
+    <aura:attribute name="tempPgState" type="String" default=""/>
+    <aura:handler name="change" value="{!v.tempPgState}" action="{!c.onPgStateChange}"/>
+    <!-- For State and Country picklists -->
+
+    <aura:handler name="init" action="{!c.doInit}" value="{!this}"/>
+
+    <lightning:recordEditForm objectApiName="Lead">
+    <div class="slds-wrap slds-grid slds-gutters">
+        <div class="slds-col slds-size_1-of-1">
+            <div class="slds-text-title_caps">Guarantor {!v.indexVar+1}</div>
+        </div>
+
+        <lightning:input label="Title" maxlength="128" value="{!v.guarantor.Title}" class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3"/>
+        <lightning:input aura:id="requiredField" label="First Name" maxlength="40" value="{!v.guarantor.FirstName}" required="true" class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3"/>
+        <lightning:input aura:id="requiredField" label="Last Name" maxlength="40" value="{!v.guarantor.LastName}" required="true" class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3"/>
+        <lightning:input aura:id="requiredField" onchange="{!c.onPhoneChange}" placeholder="555-555-5555" required="true" type="tel" maxlength="12" minlength="12" label="Phone" value="{!v.guarantor.Phone}" class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-2"/>
+        <lightning:input aura:id="requiredField" type="email" label="Email" required="true" maxlength="40" value="{!v.guarantor.Email}" class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-2"/>
+        <lightning:input aura:id="requiredField" required="true" placeholder="xxx-xx-xxxx" onchange="{!c.onSSNChange}" label="Social Security Number" maxlength="11" minlength="11" class="slds-col slds-small-size_1-of-2 slds-x-small-size_1-of-1" value="{!v.guarantor.SSN__c}" type="text"/>
+        <lightning:input aura:id="requiredField" required="true" placeholder="mm/dd/yyyy" onchange="{!c.onDobChange}" maxlength="10" minlength="10" type="text" label="Date of Birth" value="{!v.guarantor.Birthdate}" class="slds-col slds-small-size_1-of-2 slds-x-small-size_1-of-1"/>
+
+        <div class="slds-col slds-size_1-of-1">
+            <div class="slds-text-title_caps slds-m-vertical_small">Address</div>
+        </div>
+
+        <c:tc_addressLookup class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-1 slds-m-top_small"
+                            street="{!v.guarantor.MailingStreet}"
+                            city="{!v.guarantor.MailingCity}"
+                            stateCode="{!v.tempPgState}"
+                            postalCode="{!v.guarantor.MailingPostalCode}"
+                            countryCode="{!v.guarantor.MailingCountryCode}"
+                            placeholder="Enter Address"/>
+
+        <lightning:input type="text" required="true" label="Street" value="{!v.guarantor.MailingStreet}" class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-2"/>
+        <lightning:input type="text" required="true" label="City" value="{!v.guarantor.MailingCity}" class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-2"/>
+        <!--lightning:input type="text" required="true" label="State" value="{!v.guarantor.MailingState}" class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3"/>
+        <lightning:input type="text" required="true" label="Postal Code" value="{!v.guarantor.MailingPostalCode}" disabled="true" class=" slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3"/>
+        <lightning:input type="text" required="true" label="Country" value="{!v.guarantor.MailingCountry}" disabled="true" class=" slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3"/-->
+
+        <div class="customRequired slds-text-title slds-col slds-x-small-size_1-of-3 slds-p-top_xx-small">State</div>
+        <div class="customRequired slds-text-title slds-col slds-x-small-size_1-of-3 slds-p-top_xx-small">Postal</div>
+        <div class="customRequired slds-text-title slds-col slds-x-small-size_1-of-3 slds-p-top_xx-small">Country</div>
+        <aura:if isTrue="{!v.pgBoolean}">
+            <div class="slds-col slds-x-small-size_1-of-3"><lightning:inputField fieldName="Contact_State_Dummy__c" value="{!v.tempPgState}" variant="label-hidden"/></div>
+            <aura:set attribute="else">
+                <div class="slds-col slds-x-small-size_1-of-3"><lightning:inputField fieldName="Contact_State_Dummy__c" value="{!v.tempPgState}" variant="label-hidden"/></div>
+            </aura:set>
+        </aura:if>
+        <div class="slds-col slds-x-small-size_1-of-3"><lightning:inputField fieldName="Contact_Postal_Code_1__c" value="{!v.guarantor.MailingPostalCode}" variant="label-hidden"/></div>
+        <div class="slds-col slds-x-small-size_1-of-3"><lightning:inputField fieldName="Contact_Country_Dummy__c" value="{!v.guarantor.MailingCountryCode}" variant="label-hidden"/></div>
+
+
+    </div>
+    </lightning:recordEditForm>
+
+
+</aura:component>

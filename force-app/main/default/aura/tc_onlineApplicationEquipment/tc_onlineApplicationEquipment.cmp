@@ -1,0 +1,18 @@
+<!--
+ - Created  on 11/16/18.
+ -->
+
+<aura:component description="tc_onlineApplicationEquipment">
+    <aura:attribute name="indexVar" type="Integer" default="0"/>
+    <aura:attribute name="equip" type="SObject" default="{sobjectType: 'Equipment__c'}"/>
+
+    <div class="slds-wrap slds-gutters">
+        <div class="slds-col">
+            <div class="slds-text-title_caps">Equipment {!v.indexVar+1}</div>
+        </div>
+
+        <lightning:input label="Description" required="true" value="{!v.equip.Name}" placeholder="Enter Year, Make and Model" class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-1"/>
+        <lightning:input label="Cost Per Unit" required="false" type="number" formatter="currency" step="0.01" value="{!v.equip.Cost_Per_Unit__c}" class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3"/>
+        <lightning:input label="Quantity" required="true" type="number" step="1" value="{!v.equip.Quantity__c}" class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3"/>
+    </div>
+</aura:component>

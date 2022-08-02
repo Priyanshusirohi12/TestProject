@@ -1,0 +1,10 @@
+<!--
+ - Created by szheng on 2019-08-13.
+ -->
+
+<aura:documentation>
+    <aura:description>Documentation for tc_onlineApplication</aura:description>
+    <aura:example name="tc_onlineApplication" ref="tc_onlineApplication" label="tc_onlineApplication">
+        Example for tc_onlineApplication
+    </aura:example>
+</aura:documentation>

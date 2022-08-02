@@ -1,0 +1,16 @@
+{
+  "orgName": "Demo company",
+  "edition": "Developer",
+  "description": "This org is created for gantt chart",
+  "hasSampleData": true,
+  "features": ["EnableSetPasswordInApi"],
+  "settings": {
+    "lightningExperienceSettings": {
+      "enableS1DesktopEnabled": true
+    },
+    "mobileSettings": {
+      "enableS1EncryptedStoragePref2": false
+    }
+  }
+}
+

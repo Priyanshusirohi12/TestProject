@@ -1,0 +1,10 @@
+<template> 
+    
+    <div class = 'slds-box slds-theme_default printPdf' > <!-- content to be printed inside the pdf included in div-->
+        <!-- <div class="pie-chart" style='width: 100%;height:700px;' lwc:dom="manual"></div> -->
+        <div class="chart" lwc:dom="manual" style='width: 100%;height:700px;'></div>
+    </div>
+    <div class="slds-box slds-theme_default">
+            <lightning-button label="Send Email" onclick={printPdf}></lightning-button> <!-- call the method to send lwc content as pdf-->
+    </div>
+</template>

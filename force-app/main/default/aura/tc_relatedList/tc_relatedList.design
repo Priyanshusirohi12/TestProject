@@ -1,0 +1,7 @@
+<design:component>
+
+  <design:attribute name="title" label="Related List Title" description="Title to Display for this Related List" />
+  <design:attribute name="sobjectType" label="Related Object API Name" description="Sobject API Name of Related SObject" />
+  <design:attribute name="fieldList" label="Files to Display" description="Comma Seperated List of API Names for Fields to Display" />
+
+</design:component>

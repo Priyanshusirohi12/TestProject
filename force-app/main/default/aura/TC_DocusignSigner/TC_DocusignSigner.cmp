@@ -1,0 +1,26 @@
+<!--
+ - Author: sfdc, Tamarack Consulting, Inc. 
+ - Date: 2019-09-04
+ - Description: 
+ -->
+
+
+<aura:component description="TC_DocusignLists" controller="TC_SendWithDocusignCtrl" access="global">
+    <aura:attribute name="obj" type="Object" access="global"/>
+    <aura:attribute name="objId" type="String" access="global"/>
+    <aura:attribute name="objName" type="String" access="global"/>
+    <aura:attribute name="selected" type="Boolean" default="{!false}"/>
+    <aura:attribute name="objList" type="List" default="Object[]" access="global"/>
+    <aura:attribute name="selectedObj" type="Object[]" default="[]" access="global"/>
+
+    <tr>
+        <td>
+            <div>{!v.obj.Contact_Name__c}</div>
+        </td>
+        <td>
+            <div>
+                <ui:inputCheckbox value="{!v.selected}" change="{!c.onChange}"/>
+            </div>
+        </td>
+    </tr>
+</aura:component>

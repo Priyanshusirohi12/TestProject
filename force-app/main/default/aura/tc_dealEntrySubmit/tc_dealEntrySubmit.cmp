@@ -1,0 +1,820 @@
+<aura:component description="Deal Entry Wizard - Submit" access="global"
+                implements="forceCommunity:availableForAllPageTypes,force:hasRecordId,flexipage:availableForRecordHome,force:appHostable"
+                controller="TC_DealEntryWizardCtrl">
+
+    <aura:attribute name="wrapper" type="TC_DealEntryWizardCtrl.TC_DealWizardWrapper" access="global"/>
+
+    <aura:registerEvent name="changeTab"
+                        type="c:tc_dealEntryNavigate_evt"
+                        description="Event used to navigate to a different tab"/>
+
+    <aura:handler event="aura:waiting" action="{!c.showSpinner}"/>
+    <aura:handler event="aura:doneWaiting" action="{!c.hideSpinner}"/>
+    <aura:attribute name="spinner" type="boolean" default="false"/>
+
+    <div class="slds-p-around__medium slds-clearfix">
+        <div class="slds-float_right">
+            <lightning:button label="Cancel" onclick="{!c.clearAllEvent}" variant="destructive" iconName="utility:clear"
+                              iconPosition="right"/>
+        </div>
+        <div class="slds-align_absolute-center">
+            <lightning:button label="Save Deal" onclick="{!c.submitDeal}" variant="brand" iconName="utility:save"
+                              iconPosition="right" aura:id="nextButton"/>
+        </div>
+    </div>
+
+    <div class="slds-grid slds-wrap slds-gutters">
+        <div class="Deal_Header slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-1">
+            <h3 class="slds-section__title slds-theme_shade slds-m-top_small">
+                <span class="slds-truncate slds-p-horizontal_small" title="Section Title">
+                    Deal
+                </span>
+                <div class="slds-float_right">
+                    <lightning:buttonIcon iconName="utility:edit" variant="bare" onclick="{!c.handleEditDeal}"
+                                          alternativeText="Edit" />
+                </div>
+            </h3>
+        </div>
+
+        <div class="Deal_Details slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-1 slds-m-around_small">
+            <div class="slds-grid slds-wrap slds-gutters">
+                <div class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3">
+                    <b>Opportunity Name:&nbsp;</b>
+                    <aura:if isTrue="{!not(empty(v.wrapper.dealWrapper.deal.Name))}">
+                        {!v.wrapper.dealWrapper.deal.Name}
+                        <aura:set attribute="else">N/A</aura:set>
+                    </aura:if>
+                </div>
+                <div class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3">
+                    <b>Close Date:&nbsp;</b>
+                    <aura:if isTrue="{!not(empty(v.wrapper.dealWrapper.deal.CloseDate))}">
+                        {!v.wrapper.dealWrapper.deal.CloseDate}
+                        <aura:set attribute="else">N/A</aura:set>
+                    </aura:if>
+                </div>
+                <div class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3">
+                    <b>Stage Name:&nbsp;</b>
+                    <aura:if isTrue="{!not(empty(v.wrapper.dealWrapper.deal.StageName))}">
+                        {!v.wrapper.dealWrapper.deal.StageName}
+                        <aura:set attribute="else">N/A</aura:set>
+                    </aura:if>
+                </div>
+
+                <div class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3">
+                    <b>Commencement Date:&nbsp;</b>
+                    <aura:if isTrue="{!not(empty(v.wrapper.dealWrapper.deal.Commencement_Date__c))}">
+                        {!v.wrapper.dealWrapper.deal.Commencement_Date__c}
+                        <aura:set attribute="else">N/A</aura:set>
+                    </aura:if>
+                </div>
+                <div class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3">
+                    <b>Term:&nbsp;</b>
+                    <aura:if isTrue="{!not(empty(v.wrapper.dealWrapper.deal.Term__c))}">
+                        {!v.wrapper.dealWrapper.deal.Term__c}
+                        <aura:set attribute="else">N/A</aura:set>
+                    </aura:if>
+                </div>
+            </div>
+        </div>
+
+        <div class="Company_Header slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-1">
+            <h3 class="slds-section__title slds-theme_shade slds-m-top_small">
+                <span class="slds-truncate slds-p-horizontal_small" title="Section Title">
+                    Customer
+                </span>
+                <div class="slds-float_right">
+                    <lightning:buttonIcon iconName="utility:edit" variant="bare" onclick="{!c.handleEditCompany}"
+                                          alternativeText="Edit" />
+                </div>
+            </h3>
+        </div>
+
+        <div class="Company_Details slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-1 slds-m-around_small">
+            <div class="slds-grid slds-wrap slds-gutters">
+                <aura:if isTrue="{!(v.wrapper.companyWrapper.company != null)}">
+                    <div class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3">
+                        <b>Company Name:&nbsp;</b>
+                        <aura:if isTrue="{!not(empty(v.wrapper.companyWrapper.company.Name))}">
+                            {!v.wrapper.companyWrapper.company.Name}
+                            <aura:set attribute="else">N/A</aura:set>
+                        </aura:if>
+                    </div>
+                    <div class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3">
+                        <b>Years in Business:&nbsp;</b>
+                        <aura:if isTrue="{!not(empty(v.wrapper.companyWrapper.company.Years_in_Business__c))}">
+                            {!v.wrapper.companyWrapper.company.Years_in_Business__c}
+                            <aura:set attribute="else">N/A</aura:set>
+                        </aura:if>
+                    </div>
+                    <div class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3">
+                        <b>DBA:&nbsp;</b>
+                        <aura:if isTrue="{!not(empty(v.wrapper.companyWrapper.company.DBA__c))}">
+                            {!v.wrapper.companyWrapper.company.DBA__c}
+                            <aura:set attribute="else">N/A</aura:set>
+                        </aura:if>
+                    </div>
+                    <div class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3">
+                        <b>Phone:&nbsp;</b>
+                        <aura:if isTrue="{!not(empty(v.wrapper.companyWrapper.company.Phone))}">
+                            {!v.wrapper.companyWrapper.company.Phone}
+                            <aura:set attribute="else">N/A</aura:set>
+                        </aura:if>
+                    </div>
+                    <div class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3">
+                        <b>Fax:&nbsp;</b>
+                        <aura:if isTrue="{!not(empty(v.wrapper.companyWrapper.company.Fax))}">
+                            {!v.wrapper.companyWrapper.company.Fax}
+                            <aura:set attribute="else">N/A</aura:set>
+                        </aura:if>
+                    </div>
+                    <div class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3">
+                        <b>Website:&nbsp;</b>
+                        <aura:if isTrue="{!not(empty(v.wrapper.companyWrapper.company.Website))}">
+                            {!v.wrapper.companyWrapper.company.Website}
+                            <aura:set attribute="else">N/A</aura:set>
+                        </aura:if>
+                    </div>
+                    <div class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3">
+                        <p><b>Billing Address:&nbsp;</b></p>
+                        <div class="slds-m-left_small">
+                            <p>
+                                <aura:if isTrue="{!not(empty(v.wrapper.companyWrapper.company.BillingStreet))}">
+                                    {!v.wrapper.companyWrapper.company.BillingStreet}
+                                    <aura:set attribute="else">N/A</aura:set>
+                                </aura:if>
+                            </p>
+                            <p>
+                                <aura:if isTrue="{!not(empty(v.wrapper.companyWrapper.company.BillingCity))}">
+                                    {!v.wrapper.companyWrapper.company.BillingCity}
+                                    <aura:set attribute="else">N/A</aura:set>
+                                </aura:if>,&nbsp;
+                                <aura:if isTrue="{!not(empty(v.wrapper.companyWrapper.company.BillingStateCode))}">
+                                    {!v.wrapper.companyWrapper.company.BillingStateCode}
+                                    <aura:set attribute="else">N/A</aura:set>
+                                </aura:if>
+                            </p>
+                            <p>
+                                <aura:if isTrue="{!not(empty(v.wrapper.companyWrapper.company.BillingCountryCode))}">
+                                    {!v.wrapper.companyWrapper.company.BillingCountryCode}
+                                    <aura:set attribute="else">N/A</aura:set>
+                                </aura:if>,&nbsp;
+                                <aura:if isTrue="{!not(empty(v.wrapper.companyWrapper.company.BillingPostalCode))}">
+                                    {!v.wrapper.companyWrapper.company.BillingPostalCode}
+                                    <aura:set attribute="else">N/A</aura:set>
+                                </aura:if>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3">
+                        <p><b>Shipping Address:&nbsp;</b></p>
+                        <div class="slds-m-left_small">
+                            <p>
+                                <aura:if isTrue="{!not(empty(v.wrapper.companyWrapper.company.ShippingStreet))}">
+                                    {!v.wrapper.companyWrapper.company.ShippingStreet}
+                                    <aura:set attribute="else">N/A</aura:set>
+                                </aura:if>
+                            </p>
+                            <p>
+                                <aura:if isTrue="{!not(empty(v.wrapper.companyWrapper.company.ShippingCity))}">
+                                    {!v.wrapper.companyWrapper.company.ShippingCity}
+                                    <aura:set attribute="else">N/A</aura:set>
+                                </aura:if>,&nbsp;
+                                <aura:if isTrue="{!not(empty(v.wrapper.companyWrapper.company.ShippingStateCode))}">
+                                    {!v.wrapper.companyWrapper.company.ShippingStateCode}
+                                    <aura:set attribute="else">N/A</aura:set>
+                                </aura:if>
+                            </p>
+                            <p>
+                                <aura:if isTrue="{!not(empty(v.wrapper.companyWrapper.company.ShippingCountryCode))}">
+                                    {!v.wrapper.companyWrapper.company.ShippingCountryCode}
+                                    <aura:set attribute="else">N/A</aura:set>
+                                </aura:if>,&nbsp;
+                                <aura:if isTrue="{!not(empty(v.wrapper.companyWrapper.company.ShippingPostalCode))}">
+                                    {!v.wrapper.companyWrapper.company.ShippingPostalCode}
+                                    <aura:set attribute="else">N/A</aura:set>
+                                </aura:if>
+                            </p>
+                        </div>
+                    </div>
+                </aura:if>
+            </div>
+        </div>
+
+        <div class="Guarantor_Header slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-1">
+            <h3 class="slds-section__title slds-theme_shade slds-m-top_small">
+                <span class="slds-truncate slds-p-horizontal_small" title="Section Title">
+                    Guarantors
+                </span>
+                <div class="slds-float_right">
+                    <lightning:buttonIcon iconName="utility:edit" variant="bare" onclick="{!c.handleEditGuarantors}"
+                                          alternativeText="Edit" />
+                </div>
+            </h3>
+        </div>
+
+        <div class="Guarantor_Details slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-1 slds-m-around_small">
+            <div class="slds-grid slds-wrap slds-gutters">
+            <aura:iteration var="guarantorWrapper" items="{!v.wrapper.companyPguarantorList}" indexVar="i">
+                <aura:if isTrue="{!guarantorWrapper.isSelected}">
+                    <div class="slds-col slds-text-title_caps slds-size_1-of-1 slds-m-vertical_x-small">
+                        Personal Guarantor Details
+                    </div>
+                    <div class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3">
+                        <b>First Name:&nbsp;</b>
+                        <aura:if isTrue="{!not(empty(guarantorWrapper.guarantor.Person__r.FirstName))}">
+                            {!guarantorWrapper.guarantor.Person__r.FirstName}
+                            <aura:set attribute="else">N/A</aura:set>
+                        </aura:if>
+                    </div>
+                    <div class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3">
+                        <b>Last Name:&nbsp;</b>
+                        <aura:if isTrue="{!not(empty(guarantorWrapper.guarantor.Person__r.LastName))}">
+                            {!guarantorWrapper.guarantor.Person__r.LastName}
+                            <aura:set attribute="else">N/A</aura:set>
+                        </aura:if>
+                    </div>
+                    <div class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3">
+                        <b>Title:&nbsp;</b>
+                        <aura:if isTrue="{!not(empty(guarantorWrapper.guarantor.Person__r.Title))}">
+                            {!guarantorWrapper.guarantor.Person__r.Title}
+                            <aura:set attribute="else">N/A</aura:set>
+                        </aura:if>
+                    </div>
+                    <div class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3">
+                        <b>Guarantor Account:&nbsp;</b>
+                        <aura:if isTrue="{!not(empty(guarantorWrapper.guarantor.Person__r.Account.Name))}">
+                            {!guarantorWrapper.guarantor.Person__r.Account.Name}
+                            <aura:set attribute="else">N/A</aura:set>
+                        </aura:if>
+                    </div>
+                    <div class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3">
+                        <b>SSN:&nbsp;</b>
+                        <aura:if isTrue="{!not(empty(guarantorWrapper.guarantor.Person__r.tc_bureau__Bureau_SSN_Encrypted__c))}">
+                            {!guarantorWrapper.guarantor.Person__r.SSN__c}
+                            <aura:set attribute="else">N/A</aura:set>
+                        </aura:if>
+                    </div>
+                    <div class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3">
+                        <b>Email:&nbsp;</b>
+                        <aura:if isTrue="{!not(empty(guarantorWrapper.guarantor.Person__r.Email))}">
+                            {!guarantorWrapper.guarantor.Person__r.Email}
+                            <aura:set attribute="else">N/A</aura:set>
+                        </aura:if>
+                    </div>
+                    <div class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3">
+                        <b>Phone:&nbsp;</b>
+                        <aura:if isTrue="{!not(empty(guarantorWrapper.guarantor.Person__r.Phone))}">
+                            {!guarantorWrapper.guarantor.Person__r.Phone}
+                            <aura:set attribute="else">N/A</aura:set>
+                        </aura:if>
+                    </div>
+                    <div class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3">
+                        <b>% Ownership:&nbsp;</b>
+                        <aura:if isTrue="{!not(empty(guarantorWrapper.guarantor.Percent_of_Ownership__c))}">
+                        <span>
+                            <lightning:formattedNumber value="{!guarantorWrapper.guarantor.Percent_of_Ownership__c}"
+                                                       style="decimal"
+                                                       maximumFractionDigits="0"
+                                                       minimumFractionDigits="0"/>%
+                        </span>
+                            <aura:set attribute="else">N/A</aura:set>
+                        </aura:if>
+                    </div>
+                    <div class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3">
+                        <b>Relationship Type:&nbsp;</b>
+                        <aura:if isTrue="{!not(empty(guarantorWrapper.guarantor.Relationship_Type__c))}">
+                            {!guarantorWrapper.guarantor.Relationship_Type__c}
+                            <aura:set attribute="else">N/A</aura:set>
+                        </aura:if>
+                    </div>
+                    <div class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3">
+                        <b>Signer:&nbsp;</b>
+                        <aura:if isTrue="{!not(empty(guarantorWrapper.guarantor.Signer__c))}">
+                            {!guarantorWrapper.guarantor.Signer__c}
+                            <aura:set attribute="else">false</aura:set>
+                        </aura:if>
+                    </div>
+                    <div class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3">
+                        <p><b>Mailing Address:&nbsp;</b></p>
+                        <div class="slds-m-left_small">
+                            <p>
+                                <aura:if isTrue="{!not(empty(guarantorWrapper.guarantor.Person__r.MailingStreet))}">
+                                    {!guarantorWrapper.guarantor.Person__r.MailingStreet}
+                                    <aura:set attribute="else">N/A</aura:set>
+                                </aura:if>
+                            </p>
+                            <p>
+                                <aura:if isTrue="{!not(empty(guarantorWrapper.guarantor.Person__r.MailingCity))}">
+                                    {!guarantorWrapper.guarantor.Person__r.MailingCity}
+                                    <aura:set attribute="else">N/A</aura:set>
+                                </aura:if>,&nbsp;
+                                <aura:if isTrue="{!not(empty(guarantorWrapper.guarantor.Person__r.MailingStateCode))}">
+                                    {!guarantorWrapper.guarantor.Person__r.MailingStateCode}
+                                    <aura:set attribute="else">N/A</aura:set>
+                                </aura:if>
+                            </p>
+                            <p>
+                                <aura:if isTrue="{!not(empty(guarantorWrapper.guarantor.Person__r.MailingCountryCode))}">
+                                    {!guarantorWrapper.guarantor.Person__r.MailingCountryCode}
+                                    <aura:set attribute="else">N/A</aura:set>
+                                </aura:if>,&nbsp;
+                                <aura:if isTrue="{!not(empty(guarantorWrapper.guarantor.Person__r.MailingPostalCode))}">
+                                    {!guarantorWrapper.guarantor.Person__r.MailingPostalCode}
+                                    <aura:set attribute="else">N/A</aura:set>
+                                </aura:if>
+                            </p>
+                        </div>
+                    </div>
+                </aura:if>
+            </aura:iteration>
+            <aura:iteration var="guarantorWrapper" items="{!v.wrapper.pguarantorList}" indexVar="i">
+                <div class="slds-col slds-text-title_caps slds-size_1-of-1 slds-m-vertical_x-small">
+                    Personal Guarantor Details
+                </div>
+                <div class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3">
+                    <b>First Name:&nbsp;</b>
+                    <aura:if isTrue="{!not(empty(guarantorWrapper.guarantor.Person__r.FirstName))}">
+                        {!guarantorWrapper.guarantor.Person__r.FirstName}
+                        <aura:set attribute="else">N/A</aura:set>
+                    </aura:if>
+                </div>
+                <div class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3">
+                    <b>Last Name:&nbsp;</b>
+                    <aura:if isTrue="{!not(empty(guarantorWrapper.guarantor.Person__r.LastName))}">
+                        {!guarantorWrapper.guarantor.Person__r.LastName}
+                        <aura:set attribute="else">N/A</aura:set>
+                    </aura:if>
+                </div>
+                <div class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3">
+                    <b>Title:&nbsp;</b>
+                    <aura:if isTrue="{!not(empty(guarantorWrapper.guarantor.Person__r.Title))}">
+                        {!guarantorWrapper.guarantor.Person__r.Title}
+                        <aura:set attribute="else">N/A</aura:set>
+                    </aura:if>
+                </div>
+                <div class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3">
+                    <b>Guarantor Account:&nbsp;</b>
+                    <aura:if isTrue="{!not(empty(guarantorWrapper.guarantor.Person__r.Account.Name))}">
+                        {!guarantorWrapper.guarantor.Person__r.Account.Name}
+                        <aura:set attribute="else">N/A</aura:set>
+                    </aura:if>
+                </div>
+                <div class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3">
+                    <b>SSN:&nbsp;</b>
+                    <aura:if isTrue="{!not(empty(guarantorWrapper.guarantor.Person__r.tc_bureau__Bureau_SSN_Encrypted__c))}">
+                        {!guarantorWrapper.guarantor.Person__r.tc_bureau__Bureau_SSN_Encrypted__c}
+                        <aura:set attribute="else">N/A</aura:set>
+                    </aura:if>
+                </div>
+                <div class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3">
+                    <b>Email:&nbsp;</b>
+                    <aura:if isTrue="{!not(empty(guarantorWrapper.guarantor.Person__r.Email))}">
+                        {!guarantorWrapper.guarantor.Person__r.Email}
+                        <aura:set attribute="else">N/A</aura:set>
+                    </aura:if>
+                </div>
+                <div class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3">
+                    <b>Phone:&nbsp;</b>
+                    <aura:if isTrue="{!not(empty(guarantorWrapper.guarantor.Person__r.Phone))}">
+                        {!guarantorWrapper.guarantor.Person__r.Phone}
+                        <aura:set attribute="else">N/A</aura:set>
+                    </aura:if>
+                </div>
+                <div class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3">
+                    <b>% Ownership:&nbsp;</b>
+                    <aura:if isTrue="{!not(empty(guarantorWrapper.guarantor.Percent_of_Ownership__c))}">
+                <span>
+                    <lightning:formattedNumber value="{!guarantorWrapper.guarantor.Percent_of_Ownership__c}"
+                                               style="decimal"
+                                               maximumFractionDigits="0"
+                                               minimumFractionDigits="0"/>%
+                </span>
+                        <aura:set attribute="else">N/A</aura:set>
+                    </aura:if>
+                </div>
+                <div class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3">
+                    <b>Relationship Type:&nbsp;</b>
+                    <aura:if isTrue="{!not(empty(guarantorWrapper.guarantor.Relationship_Type__c))}">
+                        {!guarantorWrapper.guarantor.Relationship_Type__c}
+                        <aura:set attribute="else">N/A</aura:set>
+                    </aura:if>
+                </div>
+                <div class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3">
+                    <b>Signer:&nbsp;</b>
+                    <aura:if isTrue="{!not(empty(guarantorWrapper.guarantor.Signer__c))}">
+                        {!guarantorWrapper.guarantor.Signer__c}
+                        <aura:set attribute="else">false</aura:set>
+                    </aura:if>
+                </div>
+                <div class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3">
+                    <p><b>Mailing Address:&nbsp;</b></p>
+                    <div class="slds-m-left_small">
+                        <p>
+                            <aura:if isTrue="{!not(empty(guarantorWrapper.guarantor.Person__r.MailingStreet))}">
+                                {!guarantorWrapper.guarantor.Person__r.MailingStreet}
+                                <aura:set attribute="else">N/A</aura:set>
+                            </aura:if>
+                        </p>
+                        <p>
+                            <aura:if isTrue="{!not(empty(guarantorWrapper.guarantor.Person__r.MailingCity))}">
+                                {!guarantorWrapper.guarantor.Person__r.MailingCity}
+                                <aura:set attribute="else">N/A</aura:set>
+                            </aura:if>,&nbsp;
+                            <aura:if isTrue="{!not(empty(guarantorWrapper.guarantor.Person__r.MailingStateCode))}">
+                                {!guarantorWrapper.guarantor.Person__r.MailingStateCode}
+                                <aura:set attribute="else">N/A</aura:set>
+                            </aura:if>
+                        </p>
+                        <p>
+                            <aura:if isTrue="{!not(empty(guarantorWrapper.guarantor.Person__r.MailingCountryCode))}">
+                                {!guarantorWrapper.guarantor.Person__r.MailingCountryCode}
+                                <aura:set attribute="else">N/A</aura:set>
+                            </aura:if>,&nbsp;
+                            <aura:if isTrue="{!not(empty(guarantorWrapper.guarantor.Person__r.MailingPostalCode))}">
+                                {!guarantorWrapper.guarantor.Person__r.MailingPostalCode}
+                                <aura:set attribute="else">N/A</aura:set>
+                            </aura:if>
+                        </p>
+                    </div>
+                </div>
+                </aura:iteration>
+            <aura:iteration var="guarantorWrapper" items="{!v.wrapper.companyCguarantorList}" indexVar="i">
+                <aura:if isTrue="{!guarantorWrapper.isSelected}">
+                    <div class="slds-col slds-text-title_caps slds-size_1-of-1 slds-m-vertical_x-small">
+                        Corporate Guarantor Details
+                    </div>
+                    <div class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3">
+                        <b>Company Name:&nbsp;</b>
+                        <aura:if isTrue="{!not(empty(guarantorWrapper.guarantor.Business__r.Name))}">
+                            {!guarantorWrapper.guarantor.Business__r.Name}
+                            <aura:set attribute="else">N/A</aura:set>
+                        </aura:if>
+                    </div>
+                    <div class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3">
+                        <b>Phone:&nbsp;</b>
+                        <aura:if isTrue="{!not(empty(guarantorWrapper.guarantor.Business__r.Phone))}">
+                            {!guarantorWrapper.guarantor.Business__r.Phone}
+                            <aura:set attribute="else">N/A</aura:set>
+                        </aura:if>
+                    </div>
+                    <div class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3">
+                        <b>Relationship Type:&nbsp;</b>
+                        <aura:if isTrue="{!not(empty(guarantorWrapper.guarantor.Relationship_Type__c))}">
+                            {!guarantorWrapper.guarantor.Relationship_Type__c}
+                            <aura:set attribute="else">N/A</aura:set>
+                        </aura:if>
+                    </div>
+                    <div class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3">
+                        <p><b>Billing Address:&nbsp;</b></p>
+                        <div class="slds-m-left_small">
+                            <p>
+                                <aura:if isTrue="{!not(empty(guarantorWrapper.guarantor.Business__r.BillingStreet))}">
+                                    {!guarantorWrapper.guarantor.Business__r.BillingStreet}
+                                    <aura:set attribute="else">N/A</aura:set>
+                                </aura:if>
+                            </p>
+                            <p>
+                                <aura:if isTrue="{!not(empty(guarantorWrapper.guarantor.Business__r.BillingCity))}">
+                                    {!guarantorWrapper.guarantor.Business__r.BillingCity}
+                                    <aura:set attribute="else">N/A</aura:set>
+                                </aura:if>,&nbsp;
+                                <aura:if isTrue="{!not(empty(guarantorWrapper.guarantor.Business__r.BillingStateCode))}">
+                                    {!guarantorWrapper.guarantor.Business__r.BillingStateCode}
+                                    <aura:set attribute="else">N/A</aura:set>
+                                </aura:if>
+                            </p>
+                            <p>
+                                <aura:if isTrue="{!not(empty(guarantorWrapper.guarantor.Business__r.BillingCountryCode))}">
+                                    {!guarantorWrapper.guarantor.Business__r.BillingCountryCode}
+                                    <aura:set attribute="else">N/A</aura:set>
+                                </aura:if>,&nbsp;
+                                <aura:if isTrue="{!not(empty(guarantorWrapper.guarantor.Business__r.BillingPostalCode))}">
+                                    {!guarantorWrapper.guarantor.Business__r.BillingPostalCode}
+                                    <aura:set attribute="else">N/A</aura:set>
+                                </aura:if>
+                            </p>
+                        </div>
+                    </div>
+                </aura:if>
+            </aura:iteration>
+            <aura:iteration var="guarantorWrapper" items="{!v.wrapper.cguarantorList}" indexVar="i">
+                <div class="slds-col slds-text-title_caps slds-size_1-of-1 slds-m-vertical_x-small">
+                    Corporate Guarantor Details
+                </div>
+                <div class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3">
+                    <b>Company Name:&nbsp;</b>
+                    <aura:if isTrue="{!not(empty(guarantorWrapper.guarantor.Business__r.Name))}">
+                        {!guarantorWrapper.guarantor.Business__r.Name}
+                        <aura:set attribute="else">N/A</aura:set>
+                    </aura:if>
+                </div>
+                <div class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3">
+                    <b>Phone:&nbsp;</b>
+                    <aura:if isTrue="{!not(empty(guarantorWrapper.guarantor.Business__r.Phone))}">
+                        {!guarantorWrapper.guarantor.Business__r.Phone}
+                        <aura:set attribute="else">N/A</aura:set>
+                    </aura:if>
+                </div>
+                <div class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3">
+                    <b>Relationship Type:&nbsp;</b>
+                    <aura:if isTrue="{!not(empty(guarantorWrapper.guarantor.Relationship_Type__c))}">
+                        {!guarantorWrapper.guarantor.Relationship_Type__c}
+                        <aura:set attribute="else">N/A</aura:set>
+                    </aura:if>
+                </div>
+                <div class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3">
+                    <p><b>Billing Address:&nbsp;</b></p>
+                    <div class="slds-m-left_small">
+                        <p>
+                            <aura:if isTrue="{!not(empty(guarantorWrapper.guarantor.Business__r.BillingStreet))}">
+                                {!guarantorWrapper.guarantor.Business__r.BillingStreet}
+                                <aura:set attribute="else">N/A</aura:set>
+                            </aura:if>
+                        </p>
+                        <p>
+                            <aura:if isTrue="{!not(empty(guarantorWrapper.guarantor.Business__r.BillingCity))}">
+                                {!guarantorWrapper.guarantor.Business__r.BillingCity}
+                                <aura:set attribute="else">N/A</aura:set>
+                            </aura:if>,&nbsp;
+                            <aura:if isTrue="{!not(empty(guarantorWrapper.guarantor.Business__r.BillingStateCode))}">
+                                {!guarantorWrapper.guarantor.Business__r.BillingStateCode}
+                                <aura:set attribute="else">N/A</aura:set>
+                            </aura:if>
+                        </p>
+                        <p>
+                            <aura:if isTrue="{!not(empty(guarantorWrapper.guarantor.Business__r.BillingCountryCode))}">
+                                {!guarantorWrapper.guarantor.Business__r.BillingCountryCode}
+                                <aura:set attribute="else">N/A</aura:set>
+                            </aura:if>,&nbsp;
+                            <aura:if isTrue="{!not(empty(guarantorWrapper.guarantor.Business__r.BillingPostalCode))}">
+                                {!guarantorWrapper.guarantor.Business__r.BillingPostalCode}
+                                <aura:set attribute="else">N/A</aura:set>
+                            </aura:if>
+                        </p>
+                    </div>
+                </div>
+            </aura:iteration>
+            </div>
+        </div>
+
+        <div class="Equipment_Header slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-1">
+            <h3 class="slds-section__title slds-theme_shade slds-m-top_small">
+                <span class="slds-truncate slds-p-horizontal_small" title="Section Title">
+                    Equipment
+                </span>
+                <div class="slds-float_right">
+                    <lightning:buttonIcon iconName="utility:edit" variant="bare" onclick="{!c.handleEditEquipment}"
+                                          alternativeText="Edit" />
+                </div>
+            </h3>
+        </div>
+
+        <div class="Equipment_Details slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-1 slds-m-around_small">
+            <div class="slds-grid slds-wrap slds-gutters">
+                <aura:iteration var="equipment" items="{!v.wrapper.equipmentList}" indexVar="i">
+                    <div class="slds-col slds-text-title_caps slds-size_1-of-1 slds-m-vertical_x-small">
+                        Equipment {!(i+1)} Details
+                    </div>
+                    <div class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3">
+                        <b>Equipment Description:&nbsp;</b>
+                        <aura:if isTrue="{!not(empty(equipment.Name))}">
+                            {!equipment.Name}
+                            <aura:set attribute="else">N/A</aura:set>
+                        </aura:if>
+                    </div>
+                    <div class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3">
+                        <b>Quantity:&nbsp;</b>
+                        <aura:if isTrue="{!not(empty(equipment.Quantity__c))}">
+                            {!equipment.Quantity__c}
+                            <aura:set attribute="else">N/A</aura:set>
+                        </aura:if>
+                    </div>
+                    <div class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3">
+                        <b>Cost Per Unit:&nbsp;</b>
+                        <aura:if isTrue="{!not(empty(equipment.Cost_Per_Unit__c))}">
+                            <span>
+                                <lightning:formattedNumber value="{!equipment.Cost_Per_Unit__c}"
+                                                           style="currency"
+                                                           currencyCode="USD"/>
+                            </span>
+                            <aura:set attribute="else">N/A</aura:set>
+                        </aura:if>
+
+                    </div>
+                    <div class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3">
+                        <b>Equipment Type:&nbsp;</b>
+                        <aura:if isTrue="{!not(empty(equipment.Equipment_Type_Open_Text_Field__c))}">
+                            {!equipment.Equipment_Type_Open_Text_Field__c}
+                            <aura:set attribute="else">N/A</aura:set>
+                        </aura:if>
+                    </div>
+                    <div class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3">
+                        <b>Year:&nbsp;</b>
+                        <aura:if isTrue="{!not(empty(equipment.Year__c))}">
+                            {!equipment.Year__c}
+                            <aura:set attribute="else">N/A</aura:set>
+                        </aura:if>
+                    </div>
+                    <div class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3">
+                        <b>Condition:&nbsp;</b>
+                        <aura:if isTrue="{!not(empty(equipment.Condition__c))}">
+                            {!equipment.Condition__c}
+                            <aura:set attribute="else">N/A</aura:set>
+                        </aura:if>
+                    </div>
+                    <div class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3">
+                        <b>Make:&nbsp;</b>
+                        <aura:if isTrue="{!not(empty(equipment.Make__c))}">
+                            {!equipment.Make__c}
+                            <aura:set attribute="else">N/A</aura:set>
+                        </aura:if>
+                    </div>
+                    <div class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3">
+                        <b>Model:&nbsp;</b>
+                        <aura:if isTrue="{!not(empty(equipment.Model__c))}">
+                            {!equipment.Model__c}
+                            <aura:set attribute="else">N/A</aura:set>
+                        </aura:if>
+                    </div>
+                    <div class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3">
+                        <b>VIN:&nbsp;</b>
+                        <aura:if isTrue="{!not(empty(equipment.VIN__c))}">
+                            {!equipment.VIN__c}
+                            <aura:set attribute="else">N/A</aura:set>
+                        </aura:if>
+                    </div>
+                    <div class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3">
+                        <b>Serial Numbers:&nbsp;</b>
+                        <aura:if isTrue="{!not(empty(equipment.Serial_Numbers__c))}">
+                            {!equipment.Serial_Numbers__c}
+                            <aura:set attribute="else">N/A</aura:set>
+                        </aura:if>
+                    </div>
+                    <div class="slds-col slds-x-small-size_1-of-1 slds-large-size_2-of-3">
+                    </div>
+                    <div class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3">
+                        <p><b>Location:&nbsp;</b></p>
+                        <div class="slds-m-left_small">
+                            <p>
+                                <aura:if isTrue="{!not(empty(equipment.Location_Address__c))}">
+                                    {!equipment.Location_Address__c}
+                                    <aura:set attribute="else">N/A</aura:set>
+                                </aura:if>
+                            </p>
+                            <p>
+                                <aura:if isTrue="{!not(empty(equipment.Location_City__c))}">
+                                    {!equipment.Location_City__c}
+                                    <aura:set attribute="else">N/A</aura:set>
+                                </aura:if>,&nbsp;
+                                <aura:if isTrue="{!not(empty(equipment.Location_State__c))}">
+                                    {!equipment.Location_State__c}
+                                    <aura:set attribute="else">N/A</aura:set>
+                                </aura:if>
+                            </p>
+                            <p>
+                                <aura:if isTrue="{!not(empty(equipment.Location_Country__c))}">
+                                    {!equipment.Location_Country__c}
+                                    <aura:set attribute="else">N/A</aura:set>
+                                </aura:if>,&nbsp;
+                                <aura:if isTrue="{!not(empty(equipment.Location_Zip__c))}">
+                                    {!equipment.Location_Zip__c}
+                                    <aura:set attribute="else">N/A</aura:set>
+                                </aura:if>
+                            </p>
+                        </div>
+                    </div>
+                </aura:iteration>
+            </div>
+        </div>
+
+        <div class="Partner_Header slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-1">
+            <h3 class="slds-section__title slds-theme_shade slds-m-top_small">
+                <span class="slds-truncate slds-p-horizontal_small" title="Section Title">
+                    Partner
+                </span>
+                <div class="slds-float_right">
+                    <lightning:buttonIcon iconName="utility:edit" variant="bare" onclick="{!c.handleEditPartner}"
+                                          alternativeText="Edit" />
+                </div>
+            </h3>
+        </div>
+
+        <div class="Partner_Details slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-1 slds-m-around_small">
+            <div class="slds-grid slds-wrap slds-gutters">
+                <aura:if isTrue="{!(v.wrapper.partnerWrapper.partner != null)}">
+                    <div class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3">
+                        <b>Name:&nbsp;</b>
+                        <aura:if isTrue="{!not(empty(v.wrapper.partnerWrapper.partner.Name))}">
+                            {!v.wrapper.partnerWrapper.partner.Name}
+                            <aura:set attribute="else">N/A</aura:set>
+                        </aura:if>
+                    </div>
+                    <div class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3">
+                        <b>DBA:&nbsp;</b>
+                        <aura:if isTrue="{!not(empty(v.wrapper.partnerWrapper.partner.DBA__c))}">
+                            {!v.wrapper.partnerWrapper.partner.DBA__c}
+                            <aura:set attribute="else">N/A</aura:set>
+                        </aura:if>
+                    </div>
+                    <div class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3">
+                        <b>Phone:&nbsp;</b>
+                        <aura:if isTrue="{!not(empty(v.wrapper.partnerWrapper.partner.Phone))}">
+                            {!v.wrapper.partnerWrapper.partner.Phone}
+                            <aura:set attribute="else">N/A</aura:set>
+                        </aura:if>
+                    </div>
+                    <div class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3">
+                        <b>Fax:&nbsp;</b>
+                        <aura:if isTrue="{!not(empty(v.wrapper.partnerWrapper.partner.Fax))}">
+                            {!v.wrapper.partnerWrapper.partner.Fax}
+                            <aura:set attribute="else">N/A</aura:set>
+                        </aura:if>
+                    </div>
+                    <div class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3">
+                        <b>Website:&nbsp;</b>
+                        <aura:if isTrue="{!not(empty(v.wrapper.partnerWrapper.partner.Website))}">
+                            {!v.wrapper.partnerWrapper.partner.Website}
+                            <aura:set attribute="else">N/A</aura:set>
+                        </aura:if>
+                    </div>
+                    <div class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3">
+                    </div>
+                    <div class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3">
+                        <p><b>Billing Address:&nbsp;</b></p>
+                        <div class="slds-m-left_small">
+                            <p>
+                                <aura:if isTrue="{!not(empty(v.wrapper.partnerWrapper.partner.BillingStreet))}">
+                                    {!v.wrapper.partnerWrapper.partner.BillingStreet}
+                                    <aura:set attribute="else">N/A</aura:set>
+                                </aura:if>
+                            </p>
+                            <p>
+                                <aura:if isTrue="{!not(empty(v.wrapper.partnerWrapper.partner.BillingCity))}">
+                                    {!v.wrapper.partnerWrapper.partner.BillingCity}
+                                    <aura:set attribute="else">N/A</aura:set>
+                                </aura:if>,&nbsp;
+                                <aura:if isTrue="{!not(empty(v.wrapper.partnerWrapper.partner.BillingStateCode))}">
+                                    {!v.wrapper.partnerWrapper.partner.BillingStateCode}
+                                    <aura:set attribute="else">N/A</aura:set>
+                                </aura:if>
+                            </p>
+                            <p>
+                                <aura:if isTrue="{!not(empty(v.wrapper.partnerWrapper.partner.BillingCountryCode))}">
+                                    {!v.wrapper.partnerWrapper.partner.BillingCountryCode}
+                                    <aura:set attribute="else">N/A</aura:set>
+                                </aura:if>,&nbsp;
+                                <aura:if isTrue="{!not(empty(v.wrapper.partnerWrapper.partner.BillingPostalCode))}">
+                                    {!v.wrapper.partnerWrapper.partner.BillingPostalCode}
+                                    <aura:set attribute="else">N/A</aura:set>
+                                </aura:if>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3">
+                        <p><b>Shipping Address:&nbsp;</b></p>
+                        <div class="slds-m-left_small">
+                            <p>
+                                <aura:if isTrue="{!not(empty(v.wrapper.partnerWrapper.partner.ShippingStreet))}">
+                                    {!v.wrapper.partnerWrapper.partner.ShippingStreet}
+                                    <aura:set attribute="else">N/A</aura:set>
+                                </aura:if>
+                            </p>
+                            <p>
+                                <aura:if isTrue="{!not(empty(v.wrapper.partnerWrapper.partner.ShippingCity))}">
+                                    {!v.wrapper.partnerWrapper.partner.ShippingCity}
+                                    <aura:set attribute="else">N/A</aura:set>
+                                </aura:if>,&nbsp;
+                                <aura:if isTrue="{!not(empty(v.wrapper.partnerWrapper.partner.ShippingStateCode))}">
+                                    {!v.wrapper.partnerWrapper.partner.ShippingStateCode}
+                                    <aura:set attribute="else">N/A</aura:set>
+                                </aura:if>
+                            </p>
+                            <p>
+                                <aura:if isTrue="{!not(empty(v.wrapper.partnerWrapper.partner.ShippingCountryCode))}">
+                                    {!v.wrapper.partnerWrapper.partner.ShippingCountryCode}
+                                    <aura:set attribute="else">N/A</aura:set>
+                                </aura:if>,&nbsp;
+                                <aura:if isTrue="{!not(empty(v.wrapper.partnerWrapper.partner.ShippingPostalCode))}">
+                                    {!v.wrapper.partnerWrapper.partner.ShippingPostalCode}
+                                    <aura:set attribute="else">N/A</aura:set>
+                                </aura:if>
+                            </p>
+                        </div>
+                    </div>
+                </aura:if>
+            </div>
+        </div>
+
+    </div>
+
+    <aura:if isTrue="{!v.spinner}">
+        <div aura:id="spinnerId" class="slds-spinner_container">
+            <div class="slds-spinner--brand  slds-spinner slds-spinner--large slds-is-relative" role="alert">
+                <span class="slds-assistive-text">Loading</span>
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
+            </div>
+        </div>
+    </aura:if>
+
+</aura:component>

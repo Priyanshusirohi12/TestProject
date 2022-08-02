@@ -1,0 +1,63 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickActionWithoutHeader,lightning:hasPageReference,lightning:isUrlAddressable"
+                access="global" controller="TC_sendDocsToFundingSourceCTRL" >
+
+    <aura:html tag="style">
+        .slds-modal__container {
+        min-width: 95vw;
+        }
+    </aura:html>
+
+    <aura:attribute name="recordId" type="Id"/>
+    <aura:attribute name="wrapper" type="TC_sendDocsToFundingSourceCTRL.wizardWrapper" access="global"/>
+
+    <aura:attribute name="parentRendered" type="Boolean" default="{!false}"/>
+    <aura:attribute name="renderRecords" type="Boolean" default="{!false}"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <div>
+
+        <div class="Header-Details slds-m-bottom_small">
+            <div class="slds-text-title_caps slds-m-bottom_small">
+                Send to Funding Source
+            </div>
+            Opportunity:
+            <span><a onclick="{!c.handleRecordClick}">{!v.wrapper.opportunity.Name}</a></span>
+        </div>
+
+        <lightning:tabset selectedTabId="lenders">
+
+            <lightning:tab label="Recipients" id="lenders">
+                <c:tc_sendDocsToFundingSourceLender recordId="{!v.recordId}" wrapper="{!v.wrapper}"/>
+            </lightning:tab>
+
+            <lightning:tab label="Email Content" id="body">
+                <c:tc_sendDocsToFundingSourceBody parentRendered="{!v.parentRendered}" wrapper="{!v.wrapper}"/>
+            </lightning:tab>
+
+            <lightning:tab label="Attachments" id="attachments">
+                <c:tc_sendDocsToFundingSourceAttachments wrapper="{!v.wrapper}"/>
+            </lightning:tab>
+
+            <aura:if isTrue="{!v.wrapper.fsEditBoolean}">
+                <lightning:tab label="Funding Source Records" id="fsRecords" onactive="{!c.setRecordTab}">
+                    <aura:if isTrue="{!v.renderRecords}">
+                        <c:tc_sendDocsToFundingSourceRecords aura:id="recordComponent" recordId="{!v.recordId}"
+                                                             fsWrapperList="{!v.wrapper.fsWrapperList}"/>
+                        <aura:set attribute="else">
+                            <c:tc_sendDocsToFundingSourceRecords aura:id="recordComponent" recordId="{!v.recordId}"
+                                                                 fsWrapperList="{!v.wrapper.fsWrapperList}"/>
+                        </aura:set>
+                    </aura:if>
+                </lightning:tab>
+            </aura:if>
+
+            <lightning:tab label="Review &amp; Send" onactive="{!c.setReviewTab}" id="review">
+                <c:tc_sendDocsToFundingSourceEmail aura:id="emailComponent" recordId="{!v.recordId}"
+                                                   parentRendered="{!v.parentRendered}" wrapper="{!v.wrapper}"/>
+            </lightning:tab>
+
+        </lightning:tabset>
+
+    </div>
+
+</aura:component>

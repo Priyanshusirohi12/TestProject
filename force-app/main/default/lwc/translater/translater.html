@@ -1,0 +1,36 @@
+<template>
+    <lightning-card>
+        <div>
+        <lightning-layout multiple-rows>
+            <lightning-layout-item size="12"  small-device-size="12" medium-device-size="6" large-device-size="5" padding="horizontal-small">
+                <lightning-combobox label ="Translate To" onchange={fillValues} value={translateLanguage} options={getTranslatedList} class="slds-size_2-of-3 slds-align_absolute-center" ></lightning-combobox>
+            </lightning-layout-item>
+            <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="2" padding="horizontal-small">
+                <div class="slds-align_absolute-center slds-m-top_large" >
+                    
+                    <lightning-icon icon-name="utility:product_transfer" alternative-text="Transfer" title="Transfer"></lightning-icon>
+                </div>
+            </lightning-layout-item>
+            <lightning-layout-item class="slds-float_right" size="12" small-device-size="12" medium-device-size="6" large-device-size="5" padding="horizontal-small">
+                <lightning-combobox label="Translate In" onchange={fillValues} value={translatedLanguage} options={setTranslatedList} class="slds-size_2-of-3 slds-align_absolute-center"></lightning-combobox>
+            </lightning-layout-item>
+        </lightning-layout>
+
+        <lightning-layout multiple-rows>
+            <lightning-layout-item size="12"  small-device-size="12" medium-device-size="6" large-device-size="5" padding="horizontal-small">
+                <lightning-textarea onchange={fillValues} label ="Translate Input" class="slds-size_2-of-3 slds-align_absolute-center" disabled={disableTranslateInput} value={translateInput} >gsgdfghfdh</lightning-textarea>
+            </lightning-layout-item>
+            <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="2" padding="horizontal-small">
+                
+            </lightning-layout-item>
+            <lightning-layout-item class="slds-float_right" size="12" small-device-size="12" medium-device-size="6" large-device-size="5" padding="horizontal-small">
+                <lightning-textarea   class="slds-size_2-of-3 slds-align_absolute-center" value={translatedOutput} disabled="true"></lightning-textarea>
+                
+            </lightning-layout-item>
+        </lightning-layout>
+        <div class="slds-align_absolute-center">
+            <lightning-button label="translate" variant="brand" onclick={translateValue}></lightning-button>
+        </div>
+    </div>
+    </lightning-card>
+</template>

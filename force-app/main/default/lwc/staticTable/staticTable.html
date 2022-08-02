@@ -1,0 +1,333 @@
+<template>
+    <lightning-card>
+            <div class="slds-grid slds-wrap printPdf">
+                <!-- <svg width="100" height="100">
+                    <circle cx="50" cy="50" r="40" stroke="green" stroke-width="4" fill="yellow" />
+                    Sorry, your browser does not support inline SVG.
+                </svg>  -->
+                <div style="height:700px;" class="slds-scrollable_y slds-col slds-small-size_12-of-12 slds-medium-size_6-of-12 slds-large-size_4-of-12 slds-box">    
+                    <lightning-accordion allow-multiple-sections-open
+                    class = ''
+                    title = 'Press down'
+                    onsectiontoggle={handleToggleSection} 
+                    active-section-name={activeSections}>
+                        <template if:false={sprintList}>
+                            <lightning-accordion-section  
+                            name="" 
+                            label="No Sprint" >
+                            </lightning-accordion-section>
+                        </template>
+                        <template if:true={sprintList}>
+                            <template for:each={sprintList} for:item="sprintValue">
+                                <div key={sprintValue.Id} class =" slds-clearfix">
+                                    <div class ="slds-float_right">
+                                        <lightning-button-icon 
+                                        icon-name="utility:add"
+                                        title ="Add Task" 
+                                        value ={sprintValue.Id}  
+                                        size="medium"  
+                                        variant="brand"
+                                        onclick={openModalForInsertTask}>
+                                        </lightning-button-icon>
+                                    </div>
+                                    <div class ="slds-float_right slds-m-right_x-small">
+                                        <lightning-button-icon 
+                                        icon-name="utility:edit" 
+                                        title ="Edit Sprint"
+                                        value ={sprintValue.Id}  
+                                        size="medium"  
+                                        variant="brand"
+                                        onclick={openModalToUpdateSprint}>
+                                        </lightning-button-icon>
+                                    </div>
+                                    <div class ="slds-float_right slds-m-right_x-small" if:false={sprintValue.Activities__r}>
+                                        <lightning-button-icon 
+                                        icon-name="utility:delete" 
+                                        title ="Delete Sprint" 
+                                        size="medium"  
+                                        onclick={openModalForDeleteSprint}
+                                        value={sprintValue.Id}
+                                        variant="brand">
+                                        </lightning-button-icon>
+                                    </div>
+                                    <lightning-accordion-section  name={sprintValue.Id} label={sprintValue.Name} >
+                                         
+                                        <div class="slds-scrollable_x" if:true={sprintValue.Activities__r}>
+                                            <table
+                                             
+                                            class = "slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered" 
+                                            aria-labelledby="element-with-table-label other-element-with-table-label" >
+                                                <!-- <template if:false={sprintValue.Activities__r}>
+                                                    <p class="slds-text-heading_small slds-align_absolute-center slds-text-color_error" >
+                                                        No Task available in this sprint
+                                                    </p>
+                                                </template>   -->                                               
+                                                <thead>
+                                                    <tr class ="slds-line-height_reset">
+                                                        <th><div class="slds-truncate">Task Name</div></th>
+                                                        <th><div class="slds-truncate">Start Date</div></th>
+                                                        <th><div class="slds-truncate">End Date</div></th>
+                                                        <th><div class="slds-truncate">Status</div></th>
+                                                        <th><div class="slds-truncate">Duration</div></th>
+                                                        <th colspan="2"><div class="slds-truncate slds-align_absolute-center">Action</div></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>  
+                                                    <template for:each={sprintValue.Activities__r} for:item="tasks" for:index="index">
+                                                        <tr key={tasks.Id} class="slds-hint-parent" >
+                                                            <td><div class="slds-truncate">{tasks.Subject}</div></td>
+                                                            <td><div class="slds-truncate">{tasks.Start_Date__c}</div></td>
+                                                            <td><div class="slds-truncate">{tasks.ActivityDate}</div></td>
+                                                            <td><div class="slds-truncate">{tasks.Status}</div></td>
+                                                            <td><div class="slds-truncate">{tasks.Duration__c}</div></td>
+                                                            <td>
+                                                                <lightning-button-icon  
+                                                                icon-name="utility:edit" 
+                                                                onclick={openModelForUpdateTask} 
+                                                                title ="Update Task" 
+                                                                value={tasks.Id} 
+                                                                variant="brand" 
+                                                                size ="small">
+                                                                </lightning-button-icon>
+                                                            </td>
+                                                            <td >
+                                                                <lightning-button-icon  
+                                                                icon-name="utility:delete" 
+                                                                onclick={openModalForDeleteSprint} 
+                                                                title="Delete Task" 
+                                                                value={tasks.Id} 
+                                                                variant="brand" 
+                                                                size ="small">
+                                                                </lightning-button-icon>
+                                                            </td>
+                                                        </tr>
+                                                    </template>  
+                                                </tbody>
+                                            </table>   
+                                        </div> 
+                                        <div if:false={sprintValue.Activities__r}>                                           
+                                                    <div class="slds-text-heading_small slds-align_absolute-center slds-text-color_error" >
+                                                        No Task available in this sprint
+                                                    </div>
+                                        </div> 
+                                    </lightning-accordion-section>  
+                                </div>    
+                            </template>  
+                        </template>
+                    </lightning-accordion>         
+                </div>
+                <div class="exampleHolder" if:true={handdleSpinner}>
+                    <lightning-spinner alternative-text="Loading" size="large"></lightning-spinner>
+                </div>
+                <div class="slds-col slds-small-size_12-of-12 slds-medium-size_6-of-12 slds-large-size_8-of-12">
+                    <!-- <div class = 'printPdf' > -->
+                        <div class="thegantt" lwc:dom="manual" style='width: 100%;height:700px;'></div>
+                    <!-- </div>    -->
+                </div>
+            </div>
+            <template if:true={isModalOpen}>
+                <section 
+                role="dialog" 
+                tabindex="-1" 
+                aria-labelledby="modal-heading-01" 
+                aria-modal="true" 
+                aria-describedby="modal-content-id-1" 
+                class="slds-modal slds-fade-in-open">
+                    <div class="slds-modal__container">
+                        <header class="slds-modal__header slds-box">
+                            <button 
+                            class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" 
+                            title="Close" 
+                            onclick={closeModal}>
+                                <lightning-icon 
+                                icon-name="utility:close"
+                                alternative-text="close"
+                                variant="inverse"
+                                size="small" >
+                                </lightning-icon>
+                                <span class="slds-assistive-text">Close</span>
+                            </button>
+                            <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate"> Add Task</h2> 
+                        </header>
+                        <div class="slds-modal__content slds-p-around_medium  slds-scrollable" id="modal-content-id-1">
+                            <div slot="title">
+                                <h3> 
+                                    <!-- <lightning-icon icon-name="standard:contact" size="small"></lightning-icon> -->           
+                                </h3>
+                            </div>
+                            <div class="slds-grid slds-wrap">
+                                <div class="slds-p-horizontal--small slds-col slds-size_6-of-12 slds-m-bottom--medium">
+                                    <div class="slds-form-element">
+                                        <lightning-input 
+                                        label="Subject" 
+                                        value={subject} 
+                                        onchange={contactChangeVal} 
+                                        required>
+                                        </lightning-input>
+                                    </div>
+                                </div>
+                                <div class="slds-p-horizontal--small slds-col slds-size_6-of-12 slds-m-bottom--medium">
+                                    <div class="slds-form-element">
+                                        <!-- <lightning-input label="Priority" value={lastName} onchange={contactChangeVal}></lightning-input> -->
+                                        <!-- <lightning-combobox 
+                                        label="Sprint" 
+                                        options={sprintListForLookup} 
+                                        value={sprintValue} 
+                                        onchange={contactChangeVal} 
+                                        required disabled={disableSprintOnTask}>
+                                        </lightning-combobox> -->
+                                        <label class="slds-form-element__label" for="combobox-id-3" id="combobox-label-id-132" >Sprint</label>
+                                        <c-d-t-i object-name={objectName} select-record-name={sprintName} select-record-id={sprintValue} project-id={projectId} onprogressvaluechange={handleProgressValueChange}></c-d-t-i>
+                                    </div>
+                                </div>
+                                <div class="slds-p-horizontal--small slds-col slds-size_6-of-12 slds-m-bottom--medium">
+                                    <div class="slds-form-element">
+                                        <!-- <lightning-input label="Status" value={phoneNo} onchange={contactChangeVal}></lightning-input> -->
+                                        <lightning-combobox options={statusList} value={statusValue} label ="Status" onchange={contactChangeVal} required></lightning-combobox>
+                                    </div>
+                                </div>
+                    
+                                <div class="slds-p-horizontal--small slds-col slds-size_6-of-12 slds-m-bottom--medium">
+                                <div class="slds-form-element">
+                                    <!-- <lightning-combobox label="Owner" options={ownerList} value={ownerValue} onchange={contactChangeVal} required></lightning-combobox> -->
+                                    <label class="slds-form-element__label" for="combobox-id-3" id="combobox-label-id-133" >Owner</label>
+                                        <c-d-t-i object-name={objectName} check-user='User' select-record-name={ownerName} select-record-id={ownerValue} project-id={projectId} onprogressvaluechange={handleProgressValueChange}></c-d-t-i>
+                                </div>
+                                </div>
+                                
+                                <div class="slds-p-horizontal--small slds-col slds-size_6-of-12 slds-m-bottom--medium">
+                                    <div class="slds-form-element">
+                                        <lightning-input type="date" label="Start Date" value ={startDate} onchange={contactChangeVal} required></lightning-input>   
+                                    </div>
+                                </div>
+
+                                <div class="slds-p-horizontal--small slds-col slds-size_6-of-12 slds-m-bottom--medium">
+                                    <div class="slds-form-element">
+                                        <!-- <lightning-input type="date" label="Start Date " value={departmentVal} class="taskRecord" onchange={contactChangeVal} ></lightning-input> -->
+                                        <lightning-input type="date" label="End Date" value={endDate} onchange={contactChangeVal} required></lightning-input>
+                                    </div>
+                                </div>
+                                <div class="slds-p-horizontal--small slds-col slds-size_6-of-12 slds-m-bottom--medium">               
+                                    <div class="slds-form-element">
+                                        <lightning-combobox options={priorityList} value={priorityValue} label ="Priority" onchange={contactChangeVal} required></lightning-combobox>               
+                                        
+                                    </div>
+                                </div>  
+                                <div class="slds-p-horizontal--small slds-col slds-size_6-of-12 slds-m-bottom--medium" if:true={showFields}>
+                                    <div class="slds-form-element">               
+                                    <lightning-input label="Progress" value={progress} onchange={contactChangeVal} type="number"></lightning-input>
+                                    </div>
+                                </div>  
+                            </div>
+                            <div class="exampleHolder" if:true={handdleSpinner}>
+                                <lightning-spinner alternative-text="Loading" size="large"></lightning-spinner>
+                            </div>
+                            <div slot="footer" class="slds-align_absolute-center">
+                                <lightning-button label="Save" variant="brand" onclick={upsertTaskAction}></lightning-button>        
+                                <lightning-button style = "margin:5px;"  label = "Cancel" variant = "base" onclick={closeModal} ></lightning-button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <div class="slds-backdrop slds-backdrop_open"></div>
+            </template>
+
+    <template if:true={isUpateSprintModelOpen}>
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeModal}>
+                        <lightning-icon icon-name="utility:close"
+                            alternative-text="close"
+                            variant="inverse"
+                            size="small" ></lightning-icon>
+                        <span class="slds-assistive-text">Close</span>
+                    </button>
+                     <h2 id="modal-heading-02" class="slds-text-heading_medium slds-hyphenate">Update Sprint</h2> 
+                </header>
+                <div class="slds-modal__content slds-p-around_medium  slds-scrollable" id="modal-content-id-2">
+                    <div slot="title">
+                        <h3> 
+                            <!-- <lightning-icon icon-name="standard:contact" size="small"></lightning-icon> --> Sprint             
+                        </h3>
+                    </div>
+                    <div class="slds-grid slds-wrap">
+       
+                        <div class="slds-p-horizontal--small slds-col slds-size_6-of-12 slds-m-bottom--medium">
+                            <div class="slds-form-element">
+                              <lightning-input type="text" label="Name" title="Name" onchange={sprintChangeValue} value={sprintName} required></lightning-input>
+                            </div>
+                        </div>
+               
+                        <div class="slds-p-horizontal--small slds-col slds-size_6-of-12 slds-m-bottom--medium">
+                            <div class="slds-form-element">
+                                <!-- <lightning-combobox label="Gantt Project" onchange={sprintChangeValue} options={projectList} value ={ganttProjectId} required></lightning-combobox> -->
+                                <label class="slds-form-element__label" for="combobox-id-3" id="combobox-label-id-131" >Gantt Project</label>
+                                <c-d-t-i object-name={objectName} select-record-id={ganttProjectId} select-record-name={ganttProjectName} onprogressvaluechange={handleProgressValueChange}></c-d-t-i>
+                            </div>
+                        </div>
+
+                        <div class="slds-p-horizontal--small slds-col slds-size_6-of-12 slds-m-bottom--medium">
+                            <div class="slds-form-element">
+                                <lightning-input type="date" label="Start Date" onchange={sprintChangeValue} value ={sprintStartDate} required></lightning-input>
+                            </div>
+                        </div>
+               
+                        <div class="slds-p-horizontal--small slds-col slds-size_6-of-12 slds-m-bottom--medium">               
+                            <div class="slds-form-element">               
+                                <lightning-input type="date" label="End Date" onchange={sprintChangeValue} value ={sprintEndDate} required></lightning-input>
+                            </div>
+                        </div>  
+                        <div class="slds-p-horizontal--small slds-col slds-size_6-of-12 slds-m-bottom--medium">
+                            <div class="slds-form-element">  
+                                <lightning-combobox options={sprintStatusList} label ="Status" onchange={sprintChangeValue} value ={sprintStatus} required></lightning-combobox>             
+                            </div>
+                        </div>  
+                    </div>
+                    <div class="exampleHolder" if:true={handdleSpinner}>
+                        <lightning-spinner alternative-text="Loading" size="large"></lightning-spinner>
+                    </div>
+                    <div slot="footer" class="slds-align_absolute-center">
+                        <lightning-button label="Save" variant="brand" onclick={updateSprint} disabled={disabledSprintSaveButton}></lightning-button>        
+                        <lightning-button style = "margin:5px;"  label = "Cancel" variant = "base" onclick={closeModal} ></lightning-button>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+    <template if:true={isDeleteSprintModalOpen}>
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeModal}>
+                        <lightning-icon icon-name="utility:close"
+                            alternative-text="close"
+                            size="small" ></lightning-icon>
+                        <span class="slds-assistive-text">Close</span>
+                    </button>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-3">
+                    <div class="slds-text-align_center slds-text-heading_medium"><b>Are you sure you want to Delete ? </b></div>
+                </div>
+                <div class="exampleHolder" if:true={handdleSpinner}>
+                    <lightning-spinner alternative-text="Loading" size="large"></lightning-spinner>
+                </div>
+                <footer class="slds-modal__footer">
+                    <button class="slds-button slds-button_neutral" onclick={closeModal} title="Cancel">Cancel</button>
+                    <template if:true={showOkButton}>
+                        <button class="slds-button slds-button_brand" onclick={handleDeleteSprint} title="OK">OK</button>    
+                    </template>
+                    <template if:false={showOkButton}>
+                        <button class="slds-button slds-button_brand" onclick={handleDeleteTask} title="OK">OK</button>    
+                    </template>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+    <!-- <div class="slds-box slds-theme_default">
+        <lightning-button label="Download Chart" onclick={printPdf}></lightning-button>  call the method to send lwc content as pdf
+    </div> -->
+    </lightning-card>
+</template>

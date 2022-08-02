@@ -1,0 +1,16 @@
+/**
+ * Created  on 12/19/17.
+ */
+.THIS {
+    background:rgba(255,255,255,0.7);
+}
+
+.THIS .optionItem {
+    background: white;
+}
+
+.THIS .optionName {
+    /*color: rgb(0, 50, 88); token(colorTextLinkHover);*/
+    color: rgb(0, 50, 88);
+    font-weight: bold;
+}

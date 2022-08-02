@@ -1,0 +1,16 @@
+<template>
+    <lightning-card  variant="Narrow"  title="Custom Lookup" icon-name="standard:account">
+        <p class="slds-p-horizontal_small">
+            <c-search-component
+                obj-name="Contact"
+                icon-name="standard:contact"
+                label-name="Contact"
+                placeholder="Search" 
+                fields={fields}
+                display-fields={displayFields}
+                onlookup={handleLookup} >
+            </c-search-component>
+        </p>
+        
+    </lightning-card>
+</template>

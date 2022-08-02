@@ -1,0 +1,135 @@
+<!--
+ - Created by szheng on 2/9/20.
+ -->
+
+<aura:component description="tc_onlineApplicationSection"
+                implements="force:appHostable,flexipage:availableForAllPageTypes,force:hasRecordId,lightning:isUrlAddressable,forceCommunity:availableForAllPageTypes"
+                controller="TC_OnlineApplicationCtrl">
+
+    <aura:attribute name="sectionWrapper" type="TC_OnlineApplicationCtrl.SectionWrapper"/>
+    <aura:attribute name="sectionHeaderNumber" type="Integer" default="{!null}"/>
+
+    <aura:attribute name ="useGoogleApi" type="Boolean" default="{!true}"/>
+    <aura:attribute name="addressUpdateBoolean" type="Boolean" default="{!false}"/>
+    <aura:attribute name="tempCountryCode" type="String" default=""/>
+    <aura:attribute name="stateCodes" type="List" access="global" default="[]"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler name="change" value="{!v.tempCountryCode}" action="{!c.changeOnLookup}"/>
+    <aura:method name="fieldValidation" action="{!c.fieldValidation}" access="PUBLIC"/>
+    <ltng:require scripts="{!$Resource.AuraUtils}" />
+
+    <aura:if isTrue="{!not(empty(v.sectionWrapper.sectionHeaders))}">
+        <aura:iteration items="{!v.sectionWrapper.sectionHeaders}" var="sectionHeader" indexVar="i">
+            <div class="slds-gutters slds-grid slds-wrap slds-p-around_small">
+                <div class="slds-col slds-size_1-of-1">
+                    <div class="slds-text-title_caps slds-m-vertical_small">{!sectionHeader}&nbsp;{!v.sectionHeaderNumber}</div>
+                </div>
+                <c:auraFieldSectionDisplay
+                        sectionName="{!sectionHeader}"
+                        sectionToFieldMap="{!v.sectionWrapper.sectionFields}"
+                        fieldClass="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-2"
+                        sObject="{!v.sectionWrapper.sObjectRecord}"
+                        ignoreRequired="{!false}"
+                        prePopulate="{!true}"
+                        aura:id="AuraFieldSectionDisplay"
+                />
+            </div>
+        </aura:iteration>
+    </aura:if>
+    <aura:if isTrue="{!v.sectionWrapper.addressBoolean}">
+        <div class="slds-gutters slds-grid slds-wrap slds-p-around_small">
+            <div class="slds-col slds-size_1-of-1">
+                <div class="slds-text-title_caps slds-m-vertical_small">Address</div>
+            </div>
+            <aura:if isTrue="{!v.useGoogleApi}">
+                <c:tc_addressLookup class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-1"
+                                    street="{!v.sectionWrapper.sObjectRecord.Street}"
+                                    city="{!v.sectionWrapper.sObjectRecord.City}"
+                                    stateCode="{!v.sectionWrapper.sObjectRecord.StateCode}"
+                                    postalCode="{!v.sectionWrapper.sObjectRecord.PostalCode}"
+                                    countryCode="{!v.tempCountryCode}"
+                                    placeholder="Enter Address"/>
+            </aura:if>
+            <aura:if isTrue="{!v.sectionWrapper.requireAddressBoolean}">
+                <div class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-2">
+                    <label class="slds-form-element__label">
+                        <abbr class="slds-required" title="required">* </abbr>
+                        Street
+                    </label>
+                    <lightning:input name="Street" required="true" value="{!v.sectionWrapper.sObjectRecord.Street}" variant="label-hidden" aura:id="required"/>
+                </div>
+                <div class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-2">
+                    <label class="slds-form-element__label">
+                        <abbr class="slds-required" title="required">* </abbr>City</label>
+                    <lightning:input name="City" required="true" value="{!v.sectionWrapper.sObjectRecord.City}" variant="label-hidden" aura:id="required"/>
+                </div>
+                <!-- Unable to re-render state picklist after setting country picklist, using aura:if to force picklist update -->
+                <aura:if isTrue="{!v.addressUpdateBoolean}">
+                    <lightning:select aura:id="statePicklist" value="{!v.sectionWrapper.sObjectRecord.StateCode}" label="State/Province" required="true"
+                                      class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3 validate-required">
+                        <option value="{!null}">-- None --</option>
+                        <aura:iteration items="{!v.stateCodes}" var="state"><option value="{!state}">{!state}</option></aura:iteration>
+                    </lightning:select>
+                    <aura:set attribute="else">
+                        <lightning:select aura:id="statePicklist" onchange="{!c.stateCodeOnSelect}" value="{!v.sectionWrapper.sObjectRecord.StateCode}"
+                                          label="State/Province" required="true" class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3 validate-required">
+                            <option value="{!null}">-- None --</option>
+                            <aura:iteration items="{!v.stateCodes}" var="state"><option value="{!state}">{!state}</option></aura:iteration>
+                        </lightning:select>
+                    </aura:set>
+                </aura:if>
+                <div class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3">
+                    <label class="slds-form-element__label">
+                        <abbr class="slds-required" title="required">* </abbr>
+                        Postal Code
+                    </label>
+                    <lightning:input name="Postal Code" required="true" value="{!v.sectionWrapper.sObjectRecord.PostalCode}" variant="label-hidden" aura:id="required"/>
+                </div>
+                <lightning:select aura:id="countryPicklist" onchange="{!c.countryCodeOnSelect}" value="{!v.sectionWrapper.sObjectRecord.CountryCode}"
+                                  label="Country" required="true" class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3 validate-required">
+                    <aura:iteration items="{!v.sectionWrapper.countryCodeList}" var="country">
+                        <option value="{!country.value}">{!country.label}</option>
+                    </aura:iteration>
+                </lightning:select>
+
+                <aura:set attribute="else">
+                    <div class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-2">
+                        <label class="slds-form-element__label">Street</label>
+                        <lightning:input name="Street" value="{!v.sectionWrapper.sObjectRecord.Street}" variant="label-hidden"/>
+                    </div>
+                    <div class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-2">
+                        <label class="slds-form-element__label">City</label>
+                        <lightning:input name="City" value="{!v.sectionWrapper.sObjectRecord.City}" variant="label-hidden"/>
+                    </div>
+                    <!-- Unable to re-render state picklist after setting country picklist, using aura:if to force picklist update -->
+                    <aura:if isTrue="{!v.addressUpdateBoolean}">
+                        <lightning:select aura:id="statePicklist" value="{!v.sectionWrapper.sObjectRecord.StateCode}" label="State/Province" required="true"
+                                          class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3">
+                            <option value="{!null}">-- None --</option>
+                            <aura:iteration items="{!v.stateCodes}" var="state"><option value="{!state}">{!state}</option></aura:iteration>
+                        </lightning:select>
+                        <aura:set attribute="else">
+                            <lightning:select aura:id="statePicklist" onchange="{!c.stateCodeOnSelect}" value="{!v.sectionWrapper.sObjectRecord.StateCode}"
+                                              label="State/Province" class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3">
+                                <option value="{!null}">-- None --</option>
+                                <aura:iteration items="{!v.stateCodes}" var="state"><option value="{!state}">{!state}</option></aura:iteration>
+                            </lightning:select>
+                        </aura:set>
+                    </aura:if>
+                    <div class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3">
+                        <label class="slds-form-element__label">Postal Code</label>
+                        <lightning:input name="Postal Code" value="{!v.sectionWrapper.sObjectRecord.PostalCode}" variant="label-hidden"/>
+                    </div>
+                    <lightning:select aura:id="countryPicklist" onchange="{!c.countryCodeOnSelect}" value="{!v.sectionWrapper.sObjectRecord.CountryCode}"
+                                      label="Country" class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3">
+                        <aura:iteration items="{!v.sectionWrapper.countryCodeList}" var="country">
+                            <option value="{!country.value}">{!country.label}</option>
+                        </aura:iteration>
+                    </lightning:select>
+                </aura:set>
+            </aura:if>
+        </div>
+    </aura:if>
+
+</aura:component>

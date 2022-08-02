@@ -1,0 +1,136 @@
+<!--
+ - Created  on 12/30/17.
+ -->
+
+<aura:component description="Deal of Application" access="global"
+                implements="forceCommunity:availableForAllPageTypes,force:hasRecordId,flexipage:availableForRecordHome"
+                controller="TC_LoanApplicationCtrl">
+
+    <aura:attribute name="deal" type="Opportunity" access="global" default="{sobjectType:'Opportunity'}"/>
+    <aura:attribute name="quoteOptions" type="List" default="[]"/>
+    <aura:attribute name="totalFinanceAmount" type="Decimal" access="global" default="0"/>
+    <aura:attribute name="masterLineId" type="String" access="global" default=""/>
+    <aura:attribute name="masterLine" type="String" access="global" default=""/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <div class="slds-p-vertical_x-small slds-small-size_1-of-1 slds-large-size_1-of-3">
+        <lightning:button label="Clear Company" iconName="utility:clear" variant="neutral" onclick="{!c.clearDeal}" class="slds-m-left_small"/>
+        <lightning:button label="Save" onclick="{!c.quickSave}" variant="brand" iconName="utility:save" iconPosition="left"/>
+        <lightning:button label="Next" onclick="{!c.goToNext}" variant="brand" iconName="utility:forward" iconPosition="right" aura:id="nextButton"/>
+    </div>
+
+    <c:tc_accordionSection isCollapsible="false" title="Deal Details">
+        <div class="slds-p-around_x-small slds-small-size_1-of-1 slds-large-size_1-of-3 slds-form-element">
+            <label class="slds-form-element__label">Total Finance Amount</label>
+            <div class="slds-form-element__control slds-p-around_xx-small totalFinanceAmount">
+                <ui:outputCurrency value="{!v.totalFinanceAmount}"/>
+            </div>
+            To edit this amount go to <ui:outputURL label="Equipment Detals" click="{!c.goToEquipmentDetails}"/>
+        </div>
+        
+        <aura:if isTrue="{!v.masterLineId}">
+            <div class="slds-p-around_x-small slds-small-size_1-of-1 slds-large-size_1-of-3 slds-form-element">
+                <label class="slds-form-element__label">Master Line</label>
+                <div class="slds-form-element__control slds-p-around_xx-small">
+                    <ui:outputText value="{!v.masterLine}"/>
+                </div>
+            </div>
+        </aura:if>
+
+        <lightning:textarea value="{!v.deal.Loan_Purpose__c}" name="leaseLoanPurpose" label="Lease/Loan Purpose"
+                            class="slds-p-around_x-small slds-size_1-of-1"/>
+    </c:tc_accordionSection>
+
+   <aura:if isTrue="{!v.quoteOptions.length>0}">
+       <c:tc_accordionSection isCollapsible="false" title="Quote Options">
+
+           <table class="slds-table slds-table_bordered slds-table_cell-buffer slds-no-cell-focus slds-table_fixed-layout">
+               <thead>
+                   <tr class="slds-text-title_caps">
+                       <th scope="col">
+                           <div class="slds-truncate">Description</div>
+                       </th>
+                       <th scope="col">
+                           <div class="slds-truncate">Finance Amount</div>
+                       </th>
+                       <th scope="col">
+                           <div class="slds-truncate">Term</div>
+                       </th>
+                       <th scope="col">
+                           <div class="slds-truncate">Based On</div>
+                       </th>
+                       <th scope="col">
+                           <div class="slds-truncate">Credit Rating</div>
+                       </th>
+                       <th scope="col">
+                           <div class="slds-truncate">Rate Ftr/Int Rate</div>
+                       </th>
+                       <th scope="col">
+                           <div class="slds-truncate">Payment Amount</div>
+                       </th>
+                       <th scope="col">
+                           <div class="slds-truncate">Selected</div>
+                       </th>
+                   </tr>
+               </thead>
+               <tbody>
+                   <aura:iteration items="{!v.quoteOptions}" var="qo" indexVar="i">
+                       <tr>
+                           <th scope="row">
+                               <div class="slds-truncate">
+                                   {!qo.Quote_Option_Description__c}
+                               </div>
+                           </th>
+                           <td>
+                               <div class="slds-truncate">
+                                   <ui:outputCurrency value="{!qo.Finance_Amount__c}" currencySymbol="$"/>
+                               </div>
+                           </td>
+                           <td>
+                               <div class="slds-truncate">
+                                   {!if (qo.Term_Months__c, qo.Term_Months__c + ' Months', '')}
+                               </div>
+                           </td>
+                           <td>
+                               <div class="slds-truncate">
+                                   {!qo.RecordType.Name}
+                               </div>
+                           </td>
+                           <td>
+                               <div class="slds-truncate">
+                                   {!qo.Credit_Rating__c}
+                               </div>
+                           </td>
+                           <td>
+                               <div class="slds-truncate">
+                                   {!qo.Rate_Factor__c}
+                               </div>
+                           </td>
+                           <td>
+                               <div class="slds-truncate">
+                                   <ui:outputCurrency value="{!qo.Payment_Amount__c}" currencySymbol="$"/>
+                               </div>
+                           </td>
+                           <td>
+                               <div class="slds-truncate">
+                                   <ui:inputRadio class="slds-m-left_x-small" text="{!qo.Id}" name="include" value="{!qo.Include_in_Quote__c}" change="{!c.updateSelected}"/>
+                               </div>
+                           </td>
+                       </tr>
+
+                   </aura:iteration>
+               </tbody>
+           </table>
+
+
+       </c:tc_accordionSection>
+   </aura:if>
+                
+    <div class="slds-p-around_x-small slds-small-size_1-of-1 slds-large-size_1-of-3">
+        <lightning:button label="Clear Deal"  iconName="utility:clear" onclick="{!c.clearDeal}" class="slds-m-left_small"/>
+        <lightning:button label="Save" onclick="{!c.quickSave}" variant="brand" iconName="utility:save" iconPosition="left"/>
+        <lightning:button label="Next" onclick="{!c.goToNext}" variant="brand" iconName="utility:forward" iconPosition="right" aura:id="nextButton"/>
+    </div>
+    <lightning:spinner aura:id="spinner" class="slds-hide"/>
+</aura:component>

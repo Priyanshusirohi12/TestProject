@@ -1,0 +1,13 @@
+/**
+ * Created  on 2019-02-26.
+ */
+.THIS {
+
+}
+
+@media print
+{
+    .THIS.no-print {
+        display: none;
+    }
+}

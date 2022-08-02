@@ -1,0 +1,222 @@
+<aura:component description="Review All Details of Application" access="global"
+                implements="forceCommunity:availableForAllPageTypes,force:hasRecordId,flexipage:availableForRecordHome">
+
+    <aura:attribute name="docColumns" type="List" default="[]"/>
+    <aura:attribute name="quoteOptions" type="List" default="[]"/>
+    <aura:attribute name="company" type="Account" access="global" default="{}"/>
+    <aura:attribute name="guarantors" type="List" access="global" default="[]"/>
+    <aura:attribute name="equipmentList" type="List" access="global" default="[]"/>
+    <aura:attribute name="docs" type="List" access="global" default="[]"/>
+    <aura:attribute name="deal" type="Opportunity" access="global" default="{}"/>
+    <aura:attribute name="recordId" type="String" access="global"/>
+    <aura:attribute name="totalFinanceAmount" type="Decimal" access="global" default="0"/>
+
+    <aura:registerEvent name="appNavEvent" type="c:tc_applicationNavigation_evt"/>
+    <aura:handler value="{!this}" name="init" action="{!c.doInit}"/>
+
+
+    <c:tc_accordionSection isCollapsible="false" title="Company">
+        <div class="slds-grid slds-wrap">
+            <div class="slds-small-size_1-of-3 slds-x-small-size_1-of-1">
+                <dl class="slds-list_horizontal slds-wrap">
+                    <dt class="slds-item_label slds-text-color_weak slds-truncate">Company Name</dt>
+                    <dd class="slds-item_detail slds-truncate">
+                        <ui:outputText value="{!v.company.Name}"/>
+                    </dd>
+
+                    <dt class="slds-item_label slds-text-color_weak slds-truncate">DBA</dt>
+                    <dd class="slds-item_detail slds-truncate">
+                        <ui:outputText value="{!v.company.DBA__c}"/>
+                    </dd>
+
+                    <dt class="slds-item_label slds-text-color_weak slds-truncate">Fed Tax ID</dt>
+                    <dd class="slds-item_detail slds-truncate">
+                        <ui:outputText value="{!v.company.Fed_Tax_ID__c}"/>
+                    </dd>
+
+                    <dt class="slds-item_label slds-text-color_weak slds-truncate">Street</dt>
+                    <dd class="slds-item_detail slds-truncate">
+                        <ui:outputText value="{!v.company.BillingStreet}"/>
+                    </dd>
+
+                    <dt class="slds-item_label slds-text-color_weak slds-truncate">City</dt>
+                    <dd class="slds-item_detail slds-truncate">
+                        <ui:outputText value="{!v.company.BillingCity}"/>
+                    </dd>
+
+                    <dt class="slds-item_label slds-text-color_weak slds-truncate">State</dt>
+                    <dd class="slds-item_detail slds-truncate">
+                        <ui:outputText value="{!v.company.BillingState}"/>
+                    </dd>
+
+                    <dt class="slds-item_label slds-text-color_weak slds-truncate">Postal Code</dt>
+                    <dd class="slds-item_detail slds-truncate">
+                        <ui:outputText value="{!v.company.BillingPostalCode}"/>
+                    </dd>
+                </dl>
+
+            </div>
+
+            <div class="slds-small-size_1-of-3 slds-x-small-size_1-of-1">
+
+                <dl class="slds-list_horizontal slds-wrap">
+                    <dt class="slds-item_label slds-text-color_weak slds-truncate">Phone</dt>
+                    <dd class="slds-item_detail slds-truncate">
+                        <ui:outputPhone value="{!v.company.Phone}"/>
+                    </dd>
+
+                    <dt class="slds-item_label slds-text-color_weak slds-truncate">Fax</dt>
+                    <dd class="slds-item_detail slds-truncate">
+                        <ui:outputPhone value="{!v.company.Fax}"/>
+                    </dd>
+
+                    <dt class="slds-item_label slds-text-color_weak slds-truncate">General Company Email</dt>
+                    <dd class="slds-item_detail slds-truncate">
+                        <ui:outputEmail value="{!v.company.Company_Email__c}"/>
+                    </dd>
+
+                    <dt class="slds-item_label slds-text-color_weak slds-truncate">Company Website</dt>
+                    <dd class="slds-item_detail slds-truncate">
+                        <ui:outputText value="{!v.company.Website}"/>
+                    </dd>
+
+                    <dt class="slds-item_label slds-text-color_weak slds-truncate">State of Incorporation</dt>
+                    <dd class="slds-item_detail slds-truncate">
+                        <ui:outputText value="{!v.company.State_of_Incorporation__c}"/>
+                    </dd>
+
+                    <dt class="slds-item_label slds-text-color_weak slds-truncate">Legal Entity Type</dt>
+                    <dd class="slds-item_detail slds-truncate">
+                        <ui:outputText value="{!v.company.Company_Type__c}"/>
+                    </dd>
+
+                    <dt class="slds-item_label slds-text-color_weak slds-truncate">Industry</dt>
+                    <dd class="slds-item_detail slds-truncate">
+                        <ui:outputText value="{!v.company.Industry}"/>
+                    </dd>
+                </dl>
+            </div>
+
+            <div class="slds-small-size_1-of-3 slds-x-small-size_1-of-1 ">
+
+                <dl class="slds-list_horizontal slds-wrap">
+
+                    <dt class="slds-item_label slds-text-color_weak slds-truncate">Date Company Established</dt>
+                    <dd class="slds-item_detail slds-truncate">
+                        <ui:outputDate value="{!v.company.Inception_Date__c}"/>
+                    </dd>
+
+                    <dt class="slds-item_label slds-text-color_weak slds-truncate">Years Under Current Owner</dt>
+                    <dd class="slds-item_detail slds-truncate">
+                        <ui:outputText value="{!v.company.Years_in_Business__c}"/>
+                    </dd>
+
+                    <dt class="slds-item_label slds-text-color_weak slds-truncate">Annual Revenue</dt>
+                    <dd class="slds-item_detail slds-truncate">
+                        <ui:outputCurrency value="{!v.company.AnnualRevenue}" currencySymbol="$"/>
+                    </dd>
+
+                    <dt class="slds-item_label slds-text-color_weak slds-truncate">Number of Employees</dt>
+                    <dd class="slds-item_detail slds-truncate">
+                        <ui:outputText value="{!v.company.NumberOfEmployees}"/>
+                    </dd>
+
+                </dl>
+            </div>
+        </div>
+
+    </c:tc_accordionSection>
+
+    <c:tc_accordionSection isCollapsible="false" title="Guarantors">
+        <c:tc_dealGuarantorDataTable guarantors="{!v.guarantors}"/>
+    </c:tc_accordionSection>
+
+
+    <c:tc_accordionSection isCollapsible="false" title="Equipment">
+        <c:tc_dealEquipmentDataTable equipmentList="{!v.equipmentList}"/>
+    </c:tc_accordionSection>
+
+    <c:tc_accordionSection isCollapsible="false" title="Deal &amp; Quote Options">
+        <div class="slds-grid slds-wrap">
+            <div class="slds-medium-size_1-of-2 slds-x-small-size_1-of-1">
+                <dl class="slds-list_horizontal slds-wrap">
+                    <dt class="slds-item_label slds-text-color_weak slds-truncate">Total Finance Amount</dt>
+                    <dd class="slds-item_detail slds-truncate totalFinanceAmount">
+                        <ui:outputCurrency value="{!v.totalFinanceAmount}" currencySymbol="$"/>
+                    </dd>
+                </dl>
+            </div>
+            <div class="slds-medium-size_1-of-2 slds-x-small-size_1-of-1">
+                <dl class="slds-list_horizontal slds-wrap">
+                    <dt class="slds-item_label slds-text-color_weak slds-truncate">Lease/Loan Purpose</dt>
+                    <dd class="slds-item_detail slds-truncate">
+                        <ui:outputText value="{!v.deal.Loan_Purpose__c}"/>
+                    </dd>
+                </dl>
+            </div>
+        </div>
+        <aura:if isTrue="{!v.quoteOptions.length>0}">
+
+            <div>
+
+                <aura:iteration items="{!v.quoteOptions}" indexVar="i" var="qo">
+
+                    <aura:if isTrue="{!qo.Include_in_Quote__c}">
+                        <div class="slds-medium-size_1-of-2 slds-x-small-size_1-of-1">
+                            <dl class="slds-list_horizontal slds-wrap">
+                                <dt class="slds-item_label slds-text-color_weak slds-truncate">Selected Quote Option</dt>
+                                <dd class="slds-item_detail slds-truncate">
+                                    <ui:outputText value="{!qo.Quote_Option_Description__c}"/>
+                                </dd>
+                            </dl>
+                        </div>
+
+                        <div class="slds-medium-size_1-of-2 slds-x-small-size_1-of-1">
+                            <dl class="slds-list_horizontal slds-wrap">
+                                <dt class="slds-item_label slds-text-color_weak slds-truncate">Term</dt>
+                                <dd class="slds-item_detail slds-truncate">
+                                    <ui:outputText value="{!qo.Term_Months__c}"/>
+                                </dd>
+                            </dl>
+
+                            <dl class="slds-list_horizontal slds-wrap">
+                                <dt class="slds-item_label slds-text-color_weak slds-truncate">Payment Frequency</dt>
+                                <dd class="slds-item_detail slds-truncate">
+                                    <ui:outputText value="{!qo.Payment_Frequency__c}"/>
+                                </dd>
+                            </dl>
+                        </div>
+
+
+
+                        <div class="slds-medium-size_1-of-2 slds-x-small-size_1-of-1">
+                            <dl class="slds-list_horizontal slds-wrap">
+                                <dt class="slds-item_label slds-text-color_weak slds-truncate">Credit Rating</dt>
+                                <dd class="slds-item_detail slds-truncate">
+                                    <ui:outputText value="{!qo.Credit_Rating__c}"/>
+                                </dd>
+                            </dl>
+                            <dl class="slds-list_horizontal slds-wrap">
+                                <dt class="slds-item_label slds-text-color_weak slds-truncate">Payment Amount</dt>
+                                <dd class="slds-item_detail slds-truncate">
+                                    <!--ui:outputText value="{!qo.Payment_Amount__c}"/-->
+                                    <ui:outputCurrency value="{!qo.Payment_Amount__c}" currencySymbol="$"/>
+                                </dd>
+                            </dl>
+                        </div>
+                    </aura:if>
+
+
+                </aura:iteration>
+
+            </div>
+        </aura:if>
+
+    </c:tc_accordionSection>
+
+    <c:tc_accordionSection isCollapsible="false" title="Docs">
+        <c:tc_dealDocsDataTable fileList="{!v.docs}"/>
+
+    </c:tc_accordionSection>
+
+</aura:component>

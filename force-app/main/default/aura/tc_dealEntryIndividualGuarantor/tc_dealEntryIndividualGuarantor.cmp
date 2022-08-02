@@ -1,0 +1,301 @@
+<aura:component description="Deal Entry Wizard - Individual Guarantor" access="global"
+                implements="forceCommunity:availableForAllPageTypes,force:hasRecordId,flexipage:availableForRecordHome,force:appHostable"
+                controller="TC_DealEntryGuarantorsCtrl">
+
+    <aura:attribute name="guarantorWrapper" type="TC_DealEntryWizardCtrl.TC_GuarantorWrapper"/>
+    <aura:attribute name="wrapper" type="TC_DealEntryWizardCtrl.TC_DealWizardWrapper" access="global"/>
+    <aura:attribute name="index" type="Integer"/>
+    <aura:attribute name="isPersonal" type="Boolean" default="{!false}"/>
+    <aura:attribute name="isSelectedNum" type="Integer"/>
+
+    <aura:attribute name="toggleAdditionalDetails" type="Boolean" default="false" access="global"/>
+
+    <aura:handler name="init" action="{!c.doInit}" value="{!this}"/>
+    <aura:handler name="lookupChoose" event="c:tc_dealEntryLookupChoose_evt" action="{!c.handleChooseEvent}"
+                  description="Event handler to get the selected record from LookupItem component."/>
+
+    <!-- For State and Country picklists -->
+    <aura:attribute name="stateBoolean" type="Boolean" default="{!true}"/>
+    <aura:attribute name="tempState" type="String" default=""/>
+    <aura:handler name="change" value="{!v.tempState}" action="{!c.onStateChange}"/>
+    <!-- For State and Country picklists -->
+
+    <aura:if isTrue="{!v.isPersonal}">
+
+        <aura:if isTrue="{!not(v.guarantorWrapper.isAccountRelated)}">
+            <h3 class="slds-section__title slds-theme_shade slds-m-top_x-small">
+                <span class="slds-truncate slds-p-horizontal_small" title="Section Title">
+                    New Personal Guarantor {!v.index+1} Details
+                </span>
+            </h3>
+            <c:tc_dealEntryLookup fieldLabel="Search Personal Guarantors"
+                                  objectAPIName="Contact"
+                                  subHeadingFieldsAPI="MailingAddress,Email,Phone,RecordTypeId"
+                                  placeholder="Search Personal Guarantors"
+                                  chosenRecordId="Contact"
+                                  aura:id="lookupid"
+                                  showCreateNew="false"
+                                  showLabel="false"
+                                  inputClass="slds-size_1-ofe-1"
+                                  iconCategoryName="standard:account"/>
+            <aura:set attribute="else">
+                <lightning:input type="checkbox" name="isSelected" label="Select Existing Guarantor for this Deal?"
+                                 aura:id="isSelected" class="slds-p-vertical_small"
+                                 checked="{!v.guarantorWrapper.isSelected}"
+                                 onchange="{!c.updateSelectedPGs}"/>
+            </aura:set>
+        </aura:if>
+
+        <lightning:recordEditForm objectApiName="Relationship__c" density="comfy"
+                                  recordTypeId="{!v.guarantorWrapper.guarantor.RecordTypeId}">
+            <div class="slds-grid slds-wrap slds-gutters">
+                <lightning:input label="First Name" value="{!v.guarantorWrapper.guarantor.Person__r.FirstName}" type="text"
+                                 class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3"
+                                 disabled="{!v.guarantorWrapper.contactReadOnly}"/>
+                <lightning:input label="Last Name" value="{!v.guarantorWrapper.guarantor.Person__r.LastName}" type="text"
+                                 required="true" class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3"
+                                 disabled="{!v.guarantorWrapper.contactReadOnly}"/>
+            </div>
+        </lightning:recordEditForm>
+
+        <div class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-1 slds-m-top_small slds-m-bottom_small">
+            <div class="slds-box slds-box_xx-small slds-theme_shade"
+                 style="cursor: pointer;"
+                 onclick="{!c.toggleAdditionalSection}">
+                <section class="slds-clearfix">
+                    <div class="slds-float--left ">
+                        <lightning:icon class="slds-show" aura:id="additionalSection" iconName="utility:add" size="x-small"
+                                        alternativeText="Indicates add"/>
+                        <lightning:icon class="slds-hide" aura:id="additionalSection" iconName="utility:dash" size="x-small"
+                                        alternativeText="Indicates dash"/>
+                    </div>
+                    <div class="slds-m-left--large">Additional Details</div>
+                </section>
+            </div>
+        </div>
+
+        <div class="slds-hide" aura:id="additionalSection">
+
+            <div class="slds-col slds-text-title_caps slds-size_1-of-1 slds-m-vertical_small">
+                Relationship Details
+            </div>
+
+            <lightning:recordEditForm objectApiName="Relationship__c" density="comfy"
+                                      recordTypeId="{!v.guarantorWrapper.guarantor.RecordTypeId}">
+                <div class="slds-grid slds-wrap slds-gutters">
+                    <div class="slds-col slds-x-small-size_1-of-3">
+                        <lightning:inputField fieldName="Percent_of_Ownership__c"
+                                              value="{!v.guarantorWrapper.guarantor.Percent_of_Ownership__c}"/>
+                    </div>
+                    <div class="slds-col slds-x-small-size_1-of-3">
+                        <lightning:inputField fieldName="Relationship_Type__c"
+                                              value="{!v.guarantorWrapper.guarantor.Relationship_Type__c}"/>
+                    </div>
+                    <div class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3">
+                        <div class="slds-text-title slds-m-top_x-small">Signer</div>
+                        <div class="slds-m-around_xx-small">
+                            <ui:inputCheckbox aura:id="signerCheck" change="{!c.onSignerCheck}"/>
+                        </div>
+                    </div>
+                </div>
+
+            </lightning:recordEditForm>
+
+            <lightning:recordEditForm objectApiName="Contact" recordId="" density="comfy">
+
+                <div class="slds-grid slds-wrap slds-gutters">
+                    <div class="slds-col slds-text-title_caps slds-size_1-of-1 slds-m-vertical_small">
+                        Contact Details
+                    </div>
+
+                    <lightning:input label="Title" value="{!v.guarantorWrapper.guarantor.Person__r.Title}" type="text"
+                                     class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3"
+                                     disabled="{!v.guarantorWrapper.contactReadOnly}"/>
+                    <lightning:input label="Account"
+                                     value="{!v.guarantorWrapper.guarantor.Person__r.Account.Name}"
+                                     class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3"
+                                     disabled="true"/>
+                    <lightning:input label="SSN" value="{!v.guarantorWrapper.guarantor.Person__r.SSN__c}"
+                                     type="text" class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3"
+                                     disabled="{!v.guarantorWrapper.contactReadOnly}"
+                                     onchange="{!c.onSSNChange}" maxlength="11" minlength="11" placeholder="xxx-xx-xxxx"/>
+                    <lightning:input label="Email" value="{!v.guarantorWrapper.guarantor.Person__r.Email}" type="text"
+                                     class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3"
+                                     disabled="{!v.guarantorWrapper.contactReadOnly}"/>
+                    <lightning:input label="Phone" value="{!v.guarantorWrapper.guarantor.Person__r.Phone}" type="text"
+                                     class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3"
+                                     disabled="{!v.guarantorWrapper.contactReadOnly}"
+                                     onchange="{!c.onPhoneChange}" maxlength="12" minlength="12" placeholder="xxx-xxx-xxxx"/>
+
+                    <div class="slds-col slds-m-top_small slds-x-small-size_1-of-1 slds-large-size_1-of-1 slds-text-title">
+                        Search Mailing Address
+                    </div>
+                    <c:tc_addressLookup class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-1 slds-m-top_x-small"
+                                        street="{!v.guarantorWrapper.guarantor.Person__r.MailingStreet}"
+                                        city="{!v.guarantorWrapper.guarantor.Person__r.MailingCity}"
+                                        stateCode="{!v.tempState}"
+                                        postalCode="{!v.guarantorWrapper.guarantor.Person__r.MailingPostalCode}"
+                                        countryCode="{!v.guarantorWrapper.guarantor.Person__r.MailingCountryCode}"
+                                        placeholder="Enter Address"
+                                        disabled="{!v.guarantorWrapper.contactReadOnly}"/>
+
+                    <lightning:input type="text" label="Street" value="{!v.guarantorWrapper.guarantor.Person__r.MailingStreet}"
+                                     class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-2"
+                                     disabled="{!v.guarantorWrapper.contactReadOnly}"/>
+                    <lightning:input type="text" label="City" value="{!v.guarantorWrapper.guarantor.Person__r.MailingCity}"
+                                     class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-2"
+                                     disabled="{!v.guarantorWrapper.contactReadOnly}"/>
+
+                    <aura:if isTrue="{!v.stateBoolean}">
+                        <div class="slds-col slds-x-small-size_1-of-3">
+                            <lightning:inputField fieldName="State_Dummy__c" value="{!v.tempState}"
+                                                  disabled="{!v.guarantorWrapper.contactReadOnly}"/>
+                        </div>
+                        <aura:set attribute="else">
+                            <div class="slds-col slds-x-small-size_1-of-3">
+                                <lightning:inputField fieldName="State_Dummy__c" value="{!v.tempState}"
+                                                      disabled="{!v.guarantorWrapper.contactReadOnly}"/>
+                            </div>
+                        </aura:set>
+                    </aura:if>
+                    <lightning:input type="text" label="Postal" value="{!v.guarantorWrapper.guarantor.Person__r.MailingPostalCode}"
+                                     class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3"
+                                     disabled="{!v.guarantorWrapper.contactReadOnly}"/>
+                    <div class="slds-col slds-x-small-size_1-of-3">
+                        <lightning:inputField fieldName="Country_Dummy__c" disabled="{!v.guarantorWrapper.contactReadOnly}"
+                                              value="{!v.guarantorWrapper.guarantor.Person__r.MailingCountryCode}"/>
+                    </div>
+
+                </div>
+            </lightning:recordEditForm>
+        </div>
+
+        <aura:set attribute="else">
+            <aura:if isTrue="{!not(v.guarantorWrapper.isAccountRelated)}">
+                <h3 class="slds-section__title slds-theme_shade slds-m-top_x-small">
+                    <span class="slds-truncate slds-p-horizontal_small" title="Section Title">
+                        New Corporate Guarantor {!v.index+1} Details
+                    </span>
+                </h3>
+                <div class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-1">
+                    <c:tc_dealEntryLookup fieldLabel="Search Corporate Guarantors"
+                                          objectAPIName="Account"
+                                          subHeadingFieldsAPI="BillingAddress,Phone"
+                                          placeholder="Search Corporate Guarantors"
+                                          chosenRecordId="Account"
+                                          aura:id="lookupid"
+                                          showCreateNew="false"
+                                          showLabel="false"
+                                          inputClass="slds-size_1-of-1"
+                                          iconCategoryName="standard:account"/>
+                </div>
+                <aura:set attribute="else">
+                    <h3 class="slds-section__title slds-theme_shade slds-m-top_x-small">
+                        <span class="slds-truncate slds-p-horizontal_small" title="Section Title">
+                            Existing Corporate Guarantor {!v.index+1} Details
+                        </span>
+                    </h3>
+                    <lightning:input type="checkbox" name="isSelected" label="Select Existing Guarantor for this Deal?"
+                                     aura:id="isSelected" class="slds-p-vertical_small"
+                                     checked="{!v.guarantorWrapper.isSelected}"
+                                     onchange="{!c.updateSelectedCGs}" />
+                </aura:set>
+            </aura:if>
+
+            <lightning:recordEditForm objectApiName="Relationship__c" density="comfy"
+                                      recordTypeId="{!v.guarantorWrapper.guarantor.RecordTypeId}">
+                <div class="slds-grid slds-wrap slds-gutters">
+                    <lightning:input label="Company Name" value="{!v.guarantorWrapper.guarantor.Business__r.Name}" type="text"
+                                     class="customRequired slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3"
+                                     disabled="{!v.guarantorWrapper.accountReadOnly}"/>
+                </div>
+            </lightning:recordEditForm>
+
+            <div class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-1 slds-m-top_small slds-m-bottom_small">
+                <div class="slds-box slds-box_xx-small slds-theme_shade"
+                     style="cursor: pointer;"
+                     onclick="{!c.toggleAdditionalSection}">
+                    <section class="slds-clearfix">
+                        <div class="slds-float--left ">
+                            <lightning:icon class="slds-show" aura:id="additionalSection" iconName="utility:add" size="x-small"
+                                            alternativeText="Indicates add"/>
+                            <lightning:icon class="slds-hide" aura:id="additionalSection" iconName="utility:dash" size="x-small"
+                                            alternativeText="Indicates dash"/>
+                        </div>
+                        <div class="slds-m-left--large">Additional Details</div>
+                    </section>
+                </div>
+            </div>
+
+            <div class="slds-hide" aura:id="additionalSection">
+                <div class="slds-col slds-text-title_caps slds-size_1-of-1 slds-m-vertical_small">
+                    Relationship Details
+                </div>
+                <lightning:recordEditForm objectApiName="Relationship__c" density="comfy"
+                                          recordTypeId="{!v.guarantorWrapper.guarantor.RecordTypeId}">
+                    <div class="slds-grid slds-wrap slds-gutters">
+                        <div class="slds-col slds-x-small-size_1-of-3">
+                            <lightning:inputField fieldName="Relationship_Type__c"
+                                                  value="{!v.guarantorWrapper.guarantor.Relationship_Type__c}"/>
+                        </div>
+                    </div>
+                </lightning:recordEditForm>
+
+                <div class="slds-col slds-text-title_caps slds-size_1-of-1 slds-m-vertical_small">
+                    Account Details
+                </div>
+                <lightning:recordEditForm objectApiName="Account" recordId="" density="comfy">
+                    <div class="slds-grid slds-wrap slds-gutters">
+                        <lightning:input label="Phone" value="{!v.guarantorWrapper.guarantor.Business__r.Phone}" type="text"
+                                         class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3"
+                                         disabled="{!v.guarantorWrapper.accountReadOnly}"
+                                         onchange="{!c.onPhoneChange}"
+                                         maxlength="12" minlength="12" placeholder="xxx-xxx-xxxx"/>
+
+                        <div class="slds-col slds-m-top_small slds-x-small-size_1-of-1 slds-large-size_1-of-1 slds-text-title">
+                            Search Billing Address
+                        </div>
+                        <c:tc_addressLookup class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-1"
+                                            street="{!v.guarantorWrapper.guarantor.Business__r.BillingStreet}"
+                                            city="{!v.guarantorWrapper.guarantor.Business__r.BillingCity}"
+                                            stateCode="{!v.tempState}"
+                                            postalCode="{!v.guarantorWrapper.guarantor.Business__r.BillingPostalCode}"
+                                            countryCode="{!v.guarantorWrapper.guarantor.Business__r.BillingCountryCode}"
+                                            placeholder="Enter Address"
+                                            disabled="{!v.guarantorWrapper.accountReadOnly}"/>
+
+                        <lightning:input type="text" label="Street" value="{!v.guarantorWrapper.guarantor.Business__r.BillingStreet}"
+                                         class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-2"
+                                         disabled="{!v.guarantorWrapper.accountReadOnly}"/>
+                        <lightning:input type="text" label="City" value="{!v.guarantorWrapper.guarantor.Business__r.BillingCity}"
+                                         class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-2"
+                                         disabled="{!v.guarantorWrapper.accountReadOnly}"/>
+                        <aura:if isTrue="{!v.stateBoolean}">
+                            <div class="slds-col slds-x-small-size_1-of-3">
+                                <lightning:inputField fieldName="State_Dummy__c" value="{!v.tempState}"
+                                                      disabled="{!v.guarantorWrapper.accountReadOnly}"/>
+                            </div>
+                            <aura:set attribute="else">
+                                <div class="slds-col slds-x-small-size_1-of-3">
+                                    <lightning:inputField fieldName="State_Dummy__c" value="{!v.tempState}"
+                                                          disabled="{!v.guarantorWrapper.accountReadOnly}"/>
+                                </div>
+                            </aura:set>
+                        </aura:if>
+                        <lightning:input type="text" label="Postal" disabled="{!v.guarantorWrapper.accountReadOnly}"
+                                         value="{!v.guarantorWrapper.guarantor.Business__r.BillingPostalCode}"
+                                         class="slds-col slds-x-small-size_1-of-1 slds-large-size_1-of-3"/>
+                        <div class="slds-col slds-x-small-size_1-of-3">
+                            <lightning:inputField fieldName="Country_Dummy__c"
+                                                  value="{!v.guarantorWrapper.guarantor.Business__r.BillingCountryCode}"
+                                                  disabled="{!v.guarantorWrapper.accountReadOnly}"/>
+                        </div>
+                    </div>
+                </lightning:recordEditForm>
+            </div>
+
+        </aura:set>
+
+    </aura:if>
+
+</aura:component>

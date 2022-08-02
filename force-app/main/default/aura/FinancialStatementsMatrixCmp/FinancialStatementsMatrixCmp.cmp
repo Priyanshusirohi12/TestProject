@@ -1,0 +1,175 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,force:lightningQuickAction" access="global" controller="TC_FinancialStatementsMatrixCtrl">
+    <ltng:require styles="{!$Resource.slds202_cp +'/assets/styles/salesforce-lightning-design-system-ltng.css'}"/>
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" /> 
+    <aura:handler event="aura:waiting" action="{!c.waiting}"/>
+    <aura:handler event="aura:doneWaiting" action="{!c.doneWaiting}"/>
+        
+    <aura:attribute name="accountId" type="String"/>
+    <aura:attribute name="financialStatements" type="Financial_Statement__c[]"/>
+    <aura:attribute name="rowLabels" type="String[]"/>
+    
+    <!-- spinner -->
+    <div aura:id="spinner" class="slds-spinner_container slds-hidden">
+        <div class="slds-spinner slds-spinner--large" aria-hidden="false" role="alert">
+            <div class="slds-spinner__dot-a"></div>
+            <div class="slds-spinner__dot-b"></div>
+        </div>
+    </div>
+    <!-- end spinner -->
+    
+    <section class="slds-clearfix">
+        <div class="slds-grid slds-float--left slds-m-vertical--medium slds-grid--pull-padded">
+            <div class="slds-col--padded">
+                <div class="slds-popover" role="dialog">
+                    <div class="slds-popover__body">
+                        <div class="slds-form--inline">
+                            <div class="slds-form-element">
+                                <label class="slds-form-element__label" for="AccountName">Account Name</label>
+                                <div class="slds-form-element__control">
+                                    <ui:outputText aura:id="AccountName" value="{!v.financialStatements[0].Account__r.Name}"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- buttons -->
+    <div class="slds-grid slds-grid--pull-padded slds-grid--align-center">
+        <div class="slds-col slds-col-padded slds-m-vertical--small">
+            <button aura:id="saveAllButton" onclick="{!c.saveStatements}" class="slds-button--neutral slds-button slds-theme--success">
+                Save All
+            </button>
+            <button aura:id="saveCloseButton" onclick="{!c.saveStatementsAndClose}" class="slds-button--neutral slds-button">
+                Save &amp; Close
+            </button>
+            <button aura:id="cancelButton" onclick="{!c.cancelAndClose}" class="slds-button--neutral slds-button slds-theme--error">
+                Cancel
+            </button>
+            <button aura:id="addColButton" onclick="{!c.addStatement}" class="slds-button--neutral slds-button slds-theme--offline">
+                Add Column
+            </button>
+        </div>
+    </div>
+    <!-- end buttons -->
+    
+    <div class="slds-grid">
+        <div class="slds-col slds-size--1-of-24">
+            <aura:iteration items="{!v.rowLabels}" var="rowLabel">
+                <div class="slds-grid slds-text-align--right labelCol">
+                    <div class="slds-col">
+                        <ui:inputText class="slds-input slds-text-heading--label slds-text-align--right" disabled="true" value="{!rowLabel}"/>
+                    </div>
+                </div>
+            </aura:iteration>
+        </div>
+        
+        <aura:iteration items="{!v.financialStatements}" var="statement">
+            <div class="{!statement.Name + ' slds-col slds-size--1-of-12'}">
+                <c:FinancialStatementItemCmp financialStatement="{!statement}"/>
+            </div>
+        </aura:iteration>
+        
+        <div class="slds-col slds-size--1-of-12'">
+            <div class="slds-col">
+                <ui:inputText class="slds-input slds-text-heading--label slds-text-align--center" disabled="true" value="Comments"/>
+            </div>
+            <div class="slds-col">
+                <ui:inputText class="slds-input" value="{!v.financialStatements[0].Account__r.FS_Type_Comments__c}" />
+            </div>
+            <div class="slds-col">
+                <ui:inputText class="slds-input" value="{!v.financialStatements[0].Account__r.FS_Quality_Comments__c}" />
+            </div>
+            <div class="slds-col">
+                <ui:inputText class="slds-input" value="{!v.financialStatements[0].Account__r.FS_Fiscal_Year_Ended_Comments__c}" />
+            </div>
+            <div class="slds-col">
+                <ui:inputText class="slds-input slds-text-heading--label slds-text-align--center" disabled="true" value="Balance Sheet Data"/>
+            </div>
+            <div class="slds-col">
+                <ui:inputText class="slds-input" value="{!v.financialStatements[0].Account__r.FS_Cash_Comments__c}" />
+            </div>
+            <div class="slds-col">
+                <ui:inputText class="slds-input" value="{!v.financialStatements[0].Account__r.FS_Current_Assets_Comments__c}" />
+            </div>
+            <div class="slds-col">
+                <ui:inputText class="slds-input" value="{!v.financialStatements[0].Account__r.FS_Total_Assets_Comments__c}" />
+            </div>
+            <div class="slds-col">
+                <ui:inputText class="slds-input" value="{!v.financialStatements[0].Account__r.FS_Current_Liabilities_Comments__c}" />
+            </div>
+            <div class="slds-col">
+                <ui:inputText class="slds-input" value="{!v.financialStatements[0].Account__r.FS_Total_Liabilities_Comments__c}" />
+            </div>
+            <div class="slds-col">
+                <ui:inputText class="slds-input" value="{!v.financialStatements[0].Account__r.FS_Retained_Earnings_Comments__c}" />
+            </div>
+            <div class="slds-col">
+                <ui:inputText class="slds-input" value="{!v.financialStatements[0].Account__r.FS_Net_Worth_Comments__c}" />
+            </div>
+            <div class="slds-col">
+                <ui:inputText class="slds-input" value="{!v.financialStatements[0].Account__r.FS_Tangible_Net_Worth_Comments__c}" />
+            </div>
+            <div class="slds-col">
+                <ui:inputText class="slds-input" value="{!v.financialStatements[0].Account__r.FS_Total_LT_Term_Debt_Comments__c}" />
+            </div>
+            <div class="slds-col">
+                <ui:inputText class="slds-input" value="{!v.financialStatements[0].Account__r.FS_CPLTD_w_o_Revolver_Comments__c}" />
+            </div>
+            <div class="slds-col">
+                <ui:inputText class="slds-input" value="{!v.financialStatements[0].Account__r.FS_CPLTD_w_Revolver_Comments__c}" />
+            </div>
+            <div class="slds-col">
+                <ui:inputText class="slds-input slds-text-heading--label slds-text-align--center" disabled="true" value="Income Statement Data"/>
+            </div>
+            <div class="slds-col">
+                <ui:inputText class="slds-input" value="{!v.financialStatements[0].Account__r.FS_Revenue_Comments__c}" />
+            </div>
+            <div class="slds-col">
+                <ui:inputText class="slds-input" value="{!v.financialStatements[0].Account__r.FS_Gross_Profit_Comments__c}" />
+            </div>
+            <div class="slds-col">
+                <ui:inputText class="slds-input" value="{!v.financialStatements[0].Account__r.FS_Net_Income_Comments__c}" />
+            </div>
+            <div class="slds-col">
+                <ui:inputText class="slds-input" value="{!v.financialStatements[0].Account__r.FS_Taxes_Comments__c}" />
+            </div>
+            <div class="slds-col">
+                <ui:inputText class="slds-input" value="{!v.financialStatements[0].Account__r.FS_Interest_Expense_Comments__c}" />
+            </div>
+            <div class="slds-col">
+                <ui:inputText class="slds-input" value="{!v.financialStatements[0].Account__r.FS_Depreciation_Amort_Comments__c}" />
+            </div>
+            <div class="slds-col">
+                <ui:inputText class="slds-input" value="{!v.financialStatements[0].Account__r.FS_EBITDA_Comments__c}" />
+            </div>
+            <div class="slds-col">
+                <ui:inputText class="slds-input" value="{!v.financialStatements[0].Account__r.FS_Extraordinary_Gain_Comments__c}" />
+            </div>
+            <div class="slds-col">
+                <ui:inputText class="slds-input" value="{!v.financialStatements[0].Account__r.FS_Extraordinary_Loss_Comments__c}" />
+            </div>
+            <div class="slds-col">
+                <ui:inputText class="slds-input" value="{!v.financialStatements[0].Account__r.FS_Adjusted_Net_Income_Comments__c}" />
+            </div>
+            <div class="slds-col">
+                <ui:inputText class="slds-input slds-text-heading--label slds-text-align--center" disabled="true" value="Ratios"/>
+            </div>
+            <div class="slds-col">
+                <ui:inputText class="slds-input" value="{!v.financialStatements[0].Account__r.FS_Debt_Service_Coverage_Comments__c}" />
+            </div>
+            <div class="slds-col">
+                <ui:inputText class="slds-input" value="{!v.financialStatements[0].Account__r.FS_Fixed_Charge_Coverage_Comments__c}" />
+            </div>
+            <div class="slds-col">
+                <ui:inputText class="slds-input" value="{!v.financialStatements[0].Account__r.FS_Current_Ratio_Comments__c}" />
+            </div>
+            <div class="slds-col">
+                <ui:inputText class="slds-input" value="{!v.financialStatements[0].Account__r.FS_Debt_TNW_Leverage_Comments__c}" />
+            </div>
+        </div>
+    </div>
+</aura:component>

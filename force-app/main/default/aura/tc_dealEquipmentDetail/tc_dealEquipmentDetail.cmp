@@ -1,0 +1,97 @@
+<!--
+ - Created  on 1/1/18.
+ -->
+
+<aura:component description="tc_dealEquipmentDetail" controller="TC_LoanApplicationCtrl">
+
+    <aura:attribute name="equipment" type="Object" required="true" access="global"/>
+    <aura:attribute name="company" type="Account" access="global"/>
+    <aura:attribute name="index" type="Integer"/>
+    <aura:attribute name="picklists" type="Object" access="global"/>
+
+    <c:tc_accordionSection title="{!'Equipment '  + (v.index + 1) + ' Details' + if (v.equipment.Name, ' - ' + v.equipment.Name, '')}">
+        <div>
+            <div class="slds-grid slds-wrap">
+                <lightning:input value="{!v.equipment.Name}" name="equipmentShortDescription" label="Equipment Short Description"
+                                 class="slds-p-around_x-small slds-x-small-size_1-of-1 slds-large-size_1-of-3" type="text"/>
+                <lightning:textarea value="{!v.equipment.Vendor_Information__c}" name="equipmentLongDescription" label="Equipment Long Description"
+                                    class="slds-p-around_x-small slds-x-small-size_1-of-1 slds-large-size_2-of-3"/>
+                <div class="slds-p-around_x-small slds-x-small-size_1-of-1 slds-large-size_1-of-3">
+                    <lightning:input value="{!v.equipment.Cost_Per_Unit__c}" name="unitPrice" label="Unit Price"
+                                     type="number" formatter="currency" required="true"/>
+                </div>
+                <div class="slds-p-around_x-small slds-x-small-size_1-of-1 slds-large-size_1-of-3">
+                    <lightning:input value="{!v.equipment.Quantity__c}" name="quantity" label="Quantity"
+                                     type="number" required="true"/>
+                </div>
+                <div class="slds-p-around_x-small slds-x-small-size_1-of-1 slds-large-size_1-of-3 slds-form-element">
+                    <label class="slds-form-element__label">Total Finance Amount</label>
+                    <div class="slds-form-element__control slds-p-around_xx-small totalFinanceAmount">
+                        <ui:outputCurrency value="{!if(and(v.equipment.Cost_Per_Unit__c != null, v.equipment.Quantity__c != null), v.equipment.Cost_Per_Unit__c * v.equipment.Quantity__c, 0)}"/>
+                    </div>
+                </div>
+                <!--lightning:input value="" name="equipmentLocationAddress" label="Equipment Location Address (Enter and Select Address)"
+                                 class="slds-p-around_x-small slds-x-small-size_1-of-1 slds-large-size_1-of-1" type="text"/-->
+                <c:tc_addressLookup class="slds-p-around_x-small slds-x-small-size_1-of-1 slds-large-size_2-of-3"
+                                    street="{!v.equipment.Location_Address__c}"
+                                    city="{!v.equipment.Location_City__c}"
+                                    stateCode="{!v.equipment.Location_State__c}"
+                                    postalCode="{!v.equipment.Location_Zip__c}"
+                                    placeholder="Equipment Location Address (Enter and Select Address)"/>
+                <lightning:input aura:id="sameAsCompanyAddress" label="Same as Company Address" onchange="{!c.handleSameAddress}"
+                                 class="slds-p-around_small slds-x-small-size_1-of-1 slds-large-size_1-of-3" type="checkbox"/>
+                <lightning:input value="{!v.equipment.Location_Address__c}" name="street" label="Street"
+                                 class="slds-p-around_x-small slds-x-small-size_1-of-1 slds-large-size_1-of-3" type="text"/>
+                <lightning:input value="{!v.equipment.Location_City__c}" name="city" label="City"
+                                 class="slds-p-around_x-small slds-x-small-size_1-of-1 slds-large-size_1-of-3" type="text"/>
+                <div class="slds-p-around_x-small slds-x-small-size_1-of-1 slds-large-size_1-of-8">
+                    <c:tc_inputSelect objInfo="{!v.equipment}" fldInfo="Location_State__c" label="State" value="{!v.equipment.Location_State__c}"/>
+                </div>
+                <lightning:input value="{!v.equipment.Location_Zip__c}" name="postalCode" label="Postal Code"
+                                 class="slds-p-around_x-small slds-x-small-size_1-of-1 slds-large-size_1-of-8" type="text"/>
+                <!--lightning:input value="{!v.equipment.Make__c}" name="make" label="Make"
+                                 class="slds-p-around_x-small slds-x-small-size_1-of-1 slds-large-size_1-of-3" type="text"/-->
+                <div class="slds-p-around_x-small slds-x-small-size_1-of-1 slds-large-size_1-of-2">
+                    <c:tc_inputSelect objInfo="{!v.equipment}" fldInfo="Make_Picklist__c" label="Make" value="{!v.equipment.Make_Picklist__c}" change="{!c.setSeriesPicklist}"/>
+                </div>
+                <!--lightning:input value="{!v.equipment.Model__c}" name="model" label="Model"
+                                 class="slds-p-around_x-small slds-x-small-size_1-of-1 slds-large-size_1-of-3" type="text"/-->
+                <div class="slds-p-around_x-small slds-x-small-size_1-of-1 slds-large-size_1-of-2">
+                    <div class="slds-form-element">
+                        <label class="slds-form-element__label">Series</label>
+                        <div class="{!v.class}">
+                            <ui:inputSelect aura:id="seriesFieldId" class="slds-select" value="{!v.equipment.Series_Picklist__c}" change="{!c.setModelEnginePicklist}"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-p-around_x-small slds-x-small-size_1-of-1 slds-large-size_1-of-2">
+                    <div class="slds-form-element">
+                        <label class="slds-form-element__label">Model</label>
+                        <div class="{!v.class}">
+                            <ui:inputSelect aura:id="modelFieldId" class="slds-select" value="{!v.equipment.Model_Picklist__c}"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-p-around_x-small slds-x-small-size_1-of-1 slds-large-size_1-of-2">
+                    <div class="slds-form-element">
+                        <label class="slds-form-element__label">Engine</label>
+                        <div class="{!v.class}">
+                            <ui:inputSelect aura:id="engineFieldId" class="slds-select" value="{!v.equipment.Engine_Picklist__c}"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-p-around_x-small slds-x-small-size_1-of-1 slds-large-size_1-of-8">
+                    <c:tc_inputSelect objInfo="{!v.equipment}" fldInfo="Condition__c" label="Condition" value="{!v.equipment.Condition__c}"/>
+                </div>
+                <div class="slds-p-around_x-small slds-x-small-size_1-of-1 slds-large-size_1-of-8">
+                    <lightning:input value="{!v.equipment.Year__c}" name="year" label="Year" pattern="[0-9]{4}" messageWhenPatternMismatch="Invalid year"
+                                     type="text"/>
+                </div>
+                <lightning:input value="{!v.equipment.Serial_Numbers__c}" name="serialNumbers" label="Serial Numbers"
+                                 class="slds-p-around_x-small slds-x-small-size_1-of-1 slds-large-size_1-of-3" type="text"/>
+                <lightning:input value="{!v.equipment.VIN__c}" name="vins" label="VINs"
+                                 class="slds-p-around_x-small slds-x-small-size_1-of-1 slds-large-size_1-of-3" type="text"/>
+            </div>
+        </div>
+    </c:tc_accordionSection>
+</aura:component>

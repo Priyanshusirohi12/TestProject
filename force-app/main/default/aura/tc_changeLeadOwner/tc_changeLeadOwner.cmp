@@ -1,0 +1,75 @@
+<aura:component implements="force:hasRecordId,force:lightningQuickActionWithoutHeader" access="global" controller="TC_ChangeOwnerCtrl">
+    <aura:attribute name="recordId" type="Id"/>
+   <aura:attribute name="selectedUserId" type="String"/>
+    <aura:attribute name="lead" type="Lead"/>
+    <aura:attribute name="loaded" type="Boolean" default="false" />
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <div class="slds-m-around_xxx-small">
+        <lightning:card>
+
+            <div class="slds-card__header slds-border_bottom slds-p-bottom_small">
+                <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                    <div class="slds-media__body">
+                        <h2 class="slds-text-heading_medium slds-align_absolute-center">Change Lead Owner</h2>
+                    </div>
+                </header>
+            </div>
+
+            <div class="slds-card__body">
+                <div class="slds-p-bottom_large">
+                    <c:tc_dealEntryLookup fieldLabel=""
+                                          objectAPIName="User"
+                                          subHeadingFieldsAPI=""
+                                          placeholder="Search People..."
+                                          chosenRecordId="{!v.selectedUserId}"
+                                          aura:id="lookupid"
+                                          showCreateNew="false"
+                                          showLabel="false"
+                                          inputClass="slds-size_1-of-1"
+                                          iconCategoryName="standard:account"
+                                          filterArray='IsActive=true'/>
+                </div>
+                <!--<div class="slds-p-bottom_large">
+                    <c:tc_dealEntryLookup fieldLabel=""
+                                          objectAPIName="Group"
+                                          subHeadingFieldsAPI=""
+                                          placeholder="Search Queues..."
+                                          chosenRecordId="{!v.selectedUserId}"
+                                          aura:id="lookupid"
+                                          showCreateNew="false"
+                                          showLabel="false"
+                                          inputClass="slds-size_1-of-1"
+                                          iconCategoryName="standard:account"
+                                          filterArray="Type='Queue'"/>
+                </div>-->
+
+                <div>
+                    
+                    <b>The new owner </b>will also become the owner of these records related to <b> {!v.lead.Name} </b>
+
+                    <div class="slds-m-around_medium">
+                        <ul>
+                            <li class="slds-m-bottom_small">&#x25CB;&nbsp;&nbsp; Open activities</li>
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+
+            <footer class="slds-card__footer">
+                <!--<button class="slds-button slds-button_neutral">Cancel</button>
+                <button class="slds-button slds-button_brand">Change Owner</button>-->
+                <lightning:button label="Change Owner" onclick="{!c.changeOwner}" />
+                <aura:if isTrue="{! v.loaded }">
+                    <lightning:spinner alternativeText="Loading" />
+        		</aura:if>
+                <lightning:button label="Cancel" onclick="{!c.cancel}"/>
+            </footer>
+
+        </lightning:card>
+    </div>
+    
+<!--<lightning:button label="Change Owner" onclick="{!c.changeOwner}" />-->
+</aura:component>

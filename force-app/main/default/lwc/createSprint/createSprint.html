@@ -1,0 +1,488 @@
+
+<template>
+    <lightning-card>      
+        <p class="slds-text-heading_medium slds-m-bottom_small slds-m-left_xx-large"> Search Project</p>
+            <lightning-layout multiple-rows>
+                <lightning-layout-item size="12" 
+                small-device-size="12" 
+                medium-device-size="6" 
+                large-device-size="6" 
+                padding="horizontal-small" 
+                class="slds-clearfix" 
+                style="display: inline-flex">
+                 <!-- <lightning-combobox onchange={handleOnComboboxChange} lable = "Product List" variant="label-hidden" options ={ganttProjectList} value ={ganttProjectValue} class ="slds-float_right  slds-size_2-of-3 slds-m-bottom_small"></lightning-combobox> -->
+                    <div class ="slds-size_2-of-3 slds-m-bottom_small slds-m-left_x-large">
+                        <div class="slds-form-element"> 
+                            <div class="slds-form-element__control">
+                                <div class="slds-combobox_container">   
+                                    <div class={txtclassname} 
+                                    data-id="resultBox" 
+                                    aria-expanded="false" 
+                                    aria-haspopup="listbox" 
+                                    role="combobox">
+                                        <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon slds-input-has-icon_left-right" 
+                                        role="none">  
+                                            <!-- <div>
+                                                <span class="slds-icon_container slds-icon-utility-search slds-input__icon iconheight">
+                                                <lightning-icon class="slds-icon slds-icon slds-icon_small slds-icon-text-default" icon-name={iconName} size="x-small" alternative-text="icon" ></lightning-icon>
+                                                </span> 
+                                            </div> -->
+                                            <lightning-input required={required}  
+                                            data-id="userinput" 
+                                            variant="label-hidden" 
+                                            label={Label} 
+                                            name="searchText" 
+                                            autocomplete="off" 
+                                            onchange={searchField} 
+                                            onclick={searchField} 
+                                            value={selectRecordName} 
+                                            class="leftspace"></lightning-input>    
+                                            <div if:true={iconFlag}>
+                                                <span class="slds-icon_container slds-icon-utility-search slds-input__icon slds-input__icon_right iconheight">
+                                                    <lightning-icon class="slds-icon slds-icon slds-icon_small slds-icon-text-default" 
+                                                    icon-name="utility:search" 
+                                                    size="x-small" 
+                                                    alternative-text="icon" ></lightning-icon>
+                                                </span> 
+                                            </div>
+                                            <div if:true={clearIconFlag}>
+                                                <button class="slds-input__icon slds-input__icon_right slds-button slds-button_icon iconheight" 
+                                                onclick={resetData}>
+                                                    <lightning-icon class="slds-icon slds-icon slds-icon_small slds-icon-text-default" 
+                                                    icon-name="utility:clear" 
+                                                    size="x-small" 
+                                                    alternative-text="icon" ></lightning-icon>
+                                                    <span class="slds-assistive-text">Clear</span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <!-- Second part display result -->
+                                        <div id="listbox-id-1" 
+                                        class="slds-dropdown slds-dropdown_length-with-icon-7 slds-dropdown_fluid" 
+                                        role="listbox">
+                                            <ul class="slds-listbox slds-listbox_vertical" 
+                                            role="presentation">
+                                                    <template for:each={searchRecords} 
+                                                    for:item="serecord">
+                                                        <li role="presentation" 
+                                                        class="slds-listbox__item" 
+                                                        key={serecord.Id}>      
+                                                            <div data-id={serecord.Id} 
+                                                            data-name={serecord.Name} 
+                                                            onclick={setSelectedRecord} 
+                                                            class="slds-media slds-listbox__option slds-listbox__option_entity slds-listbox__option_has-meta" 
+                                                            role="option">
+                                                                <!-- <span class="slds-media__figure">
+                                                                    <span class="slds-icon_container slds-icon-standard-account">
+                                                                        <lightning-icon icon-name={iconName} class="slds-icon slds-icon slds-icon_small slds-icon-text-default" size="x-small"></lightning-icon>
+                                                                    </span>
+                                                                </span> -->
+                                                                <span class="slds-media__body">
+                                                                    <span class="slds-listbox__option-text slds-listbox__option-text_entity">
+                                                                        {serecord.Name}
+                                                                    </span>
+                                                                </span>
+                                                            </div>
+                                                        </li>
+                                                    </template>
+                                            </ul>
+                                        </div> 
+                                        <div if:true={messageFlag}>
+                                            No result found.
+                                        </div>
+                                        <!-- <div if:true={LoadingText}>
+                                            Loading...
+                                        </div> -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <template if:true={hideProjectUpdateButton}>
+                        <lightning-button-icon icon-name='utility:delete' 
+                        class="slds-m-left_small"
+                        variant="brand"
+                        size="medium"
+                        onclick={openModalForDeleteSprint}
+                        value={selectRecordId}
+                        alternative-text="Delete"></lightning-button-icon>
+
+                        <lightning-button-icon icon-name='utility:edit' 
+                        class="slds-m-left_small"
+                        variant="brand"
+                        size="medium"
+                        value ={selectRecordId}
+                        onclick={openGanttProjectUpdateModel}
+                        alternative-text="Edit"></lightning-button-icon>
+                    </template>
+                </lightning-layout-item>
+                <lightning-layout-item 
+                class="slds-text-align_right" 
+                size="12" 
+                small-device-size="12" 
+                medium-device-size="6" 
+                large-device-size="6" 
+                padding="horizontal-small">
+                    
+                    <lightning-button 
+                    label="Add Project"
+                    onclick={openGanttProjectInsertModel} 
+                    icon-position="right" 
+                    icon-name="utility:add"  
+                    variant="brand">    
+                    </lightning-button>
+
+                    <lightning-button 
+                    label="Add Sprint" 
+                    onclick={openSprintInsertModel} 
+                    icon-name="utility:add" 
+                    icon-position="right" 
+                    class="slds-m-horizontal_medium" 
+                    variant="brand">     
+                    </lightning-button>
+
+                    <lightning-button 
+                    label="Filter" 
+                    onclick={taskFilter} 
+                    icon-name="utility:filterList" 
+                    class="slds-m-right_medium" 
+                    icon-position="right"
+                    variant="brand" 
+                    disabled={enableFilter} >
+                    </lightning-button>
+
+                    <lightning-button
+                    label ="Download Chart"
+                    onclick={downloadPdf}
+                    variant="brand" 
+                    icon-name="utility:download"
+                    icon-position="right"
+                    ></lightning-button>
+                </lightning-layout-item>
+            </lightning-layout>
+            <!-- <lightning-combobox lable = "Product List" options ={ganttProjectList} value ={ganttProjectValue} class ="slds-align_absolute-center slds-size_2-of-4 slds-m-bottom_small"></lightning-combobox>
+            <table class ="slds-clearfix">
+                <tr class ="slds-float_right">
+                    <td>
+                        <lightning-button label="Add Project" style = "margin:5px;" onclick={openGanttProjectInsertModel} variant="brand"></lightning-button>
+                    </td>
+                    <td >
+                        <lightning-button label="Add Sprint" style = "margin:5px;" onclick={openSprintInsertModel} variant="brand"></lightning-button>
+                    </td>
+                    <td >
+                        <lightning-button label="Filter" onclick={taskFilter} style = "margin:5px;" variant="brand"></lightning-button>
+                    </td>
+                </tr>
+            </table> -->
+            <template if:true={isSprintInsertModelOpen}>
+                <section 
+                role="dialog" 
+                tabindex="-1"
+                aria-labelledby="modal-heading-01" 
+                aria-modal="true" 
+                aria-describedby="modal-content-id-1" 
+                class="slds-modal slds-fade-in-open">
+                    <div class="slds-modal__container">
+                        <header class="slds-modal__header slds-box" >
+                            <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" 
+                            title="Close" 
+                            onclick={closeModal}>
+                                <lightning-icon 
+                                icon-name="utility:close"
+                                alternative-text="close"
+                                variant="inverse"
+                                size="small" ></lightning-icon>
+                                <span class="slds-assistive-text">Close</span>
+                            </button>
+                            <h2 id="modal-heading-01" 
+                            class="slds-text-heading_medium slds-hyphenate">Add Sprint</h2> 
+                        </header>
+                        <div class="slds-modal__content slds-p-around_medium slds-scrollable" id="modal-content-id-1">
+                            <div slot="title">
+                                <h3> 
+                                    <!-- <lightning-icon icon-name="standard:contact" size="small"></lightning-icon> --> Sprint             
+                                </h3>
+                            </div>
+                            <div class="slds-grid slds-wrap">
+               
+                                <div class="slds-p-horizontal--small slds-col slds-size_6-of-12 slds-m-bottom--medium">
+                                    <div class="slds-form-element">
+                                      <lightning-input 
+                                      type="text" 
+                                      label="Name" 
+                                      title=Name 
+                                      class ="sprintRecord" 
+                                      required></lightning-input>
+                                    </div>
+                                </div>             
+                                <div class="slds-p-horizontal--small slds-col slds-size_6-of-12 slds-m-bottom--medium">
+                                     <div class="slds-form-element">
+                                        <label class="slds-form-element__label" for="combobox-id-3" id="combobox-label-id-131" >Gantt Project</label>
+                                        <c-d-t-i object-name={objectName} select-record-id={projectIdForSprintModel} select-record-name={projectNameForSprintModel} onprogressvaluechange={hanldeProgressValueChange}></c-d-t-i>
+                                       <!-- <lightning-combobox 
+                                        label="Gantt Project" 
+                                        value={projectIdForSprintModel}
+                                        options={projectList} 
+                                        onchange={fillGanttProjectId}
+                                         
+                                        required></lightning-combobox>-->
+                                    </div> 
+                                </div>
+        
+                                <div class="slds-p-horizontal--small slds-col slds-size_6-of-12 slds-m-bottom--medium">
+                                    <div class="slds-form-element">
+                                        <lightning-input 
+                                        type="date" 
+                                        label="Start Date" 
+                                        class ="sprintRecord" 
+                                        required></lightning-input>
+                                    </div>
+                                </div>
+                       
+                                <div class="slds-p-horizontal--small slds-col slds-size_6-of-12 slds-m-bottom--medium">               
+                                    <div class="slds-form-element">               
+                                        <lightning-input 
+                                        type="date" 
+                                        label="End Date" 
+                                        class ="sprintRecord" 
+                                        required></lightning-input>
+                                    </div>
+                                </div>  
+                                <div class="slds-p-horizontal--small slds-col slds-size_6-of-12 slds-m-bottom--medium">
+                                    <div class="slds-form-element">  
+                                        <lightning-combobox 
+                                        options={SprintStatusPickListValues} 
+                                        label ="Status" 
+                                        class ="sprintRecord" 
+                                        required></lightning-combobox>             
+                                    </div>
+                                </div>  
+                            </div>
+                            <div class="exampleHolder" if:true={handdleSpinner}>
+                                <lightning-spinner alternative-text="Loading" size="large"></lightning-spinner>
+                            </div>
+                            <div slot="footer" class="slds-align_absolute-center">
+                                <lightning-button label="Save" 
+                                variant="brand" 
+                                onclick={insertSprint} 
+                                disabled={sprintSaveButtonDisable}></lightning-button>        
+                                <lightning-button style = "margin:5px;"  
+                                label = "Cancel" variant = "base" 
+                                onclick={closeModal} ></lightning-button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </template>
+            <template if:true={isGanttProjectInsertModelOpen}>
+                <section role="dialog" 
+                tabindex="-1" 
+                aria-labelledby="modal-heading-01" 
+                aria-modal="true" 
+                aria-describedby="modal-content-id-1" 
+                class="slds-modal slds-fade-in-open">
+                    <div class="slds-modal__container">
+                        <header class="slds-modal__header slds-box">              
+                            <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" 
+                            title="Close" 
+                            onclick={closeModal}>
+                                <lightning-icon 
+                                icon-name="utility:close"
+                                alternative-text="close"
+                                variant="inverse"
+                                size="small" ></lightning-icon>
+                                <span class="slds-assistive-text">Close</span>
+                            </button>
+                            <h2 id="modal-heading-02" class="slds-text-heading_medium slds-hyphenate">Add Project</h2> 
+                        </header>
+                        <div class="slds-modal__content slds-p-around_medium slds-scrollable" id="modal-content-id-2">
+                            <div slot="title">
+                                <h3> 
+                                    <!-- <lightning-icon icon-name="standard:contact" size="small"></lightning-icon> --> Gantt Project             
+                                </h3>
+                            </div>
+                            <div class="slds-grid slds-wrap">
+               
+                                <div class="slds-p-horizontal--small slds-col slds-size_6-of-12 slds-m-bottom--medium">
+                                    <div class="slds-form-element">
+                                      <lightning-input type="text" 
+                                      label="Name" 
+                                      value={projectName} 
+                                      title=Name 
+                                      onchange={setProjectRecords}  
+                                      required></lightning-input>
+                                    </div>
+                                </div>
+                                <div class="slds-p-horizontal--small slds-col slds-size_6-of-12 slds-m-bottom--medium">
+                                    <div class="slds-form-element">
+                                        <label class="slds-form-element__label" for="combobox-id-3" id="combobox-label-id-132">Client</label>
+                                        <c-d-t-i object-name={objectName} select-record-id={client} select-record-name ={clientName} onprogressvaluechange={hanldeProgressValueChange} ></c-d-t-i>
+
+                                        <!-- <lightning-combobox    
+                                        options={contactList} 
+                                        label ="Client" 
+                                        value={client} 
+                                        onchange={setProjectRecords} 
+                                        required></lightning-combobox> 
+                                        //select-record-id={client}
+                                    -->
+                                    </div>
+                                </div> 
+                       
+                                <div class="slds-p-horizontal--small slds-col slds-size_6-of-12 slds-m-bottom--medium">               
+                                    <div class="slds-form-element">               
+                                        <lightning-input 
+                                        type="date" 
+                                        label="Start Date" 
+                                        value={startDate} 
+                                        onchange={setProjectRecords} 
+                                        required></lightning-input>
+                                    </div>
+                                </div>  
+                       
+                                <div class="slds-p-horizontal--small slds-col slds-size_6-of-12 slds-m-bottom--medium">
+                                    <div class="slds-form-element">
+                                        <lightning-input 
+                                        type="date" 
+                                        label="End Date" 
+                                        value={endDate} 
+                                        onchange={setProjectRecords} 
+                                        required></lightning-input>
+                                    </div>
+                                </div>
+
+                                <div class="slds-p-horizontal--small slds-col slds-size_6-of-12 slds-m-bottom--medium">
+                                    <div class="slds-form-element">
+                                        <lightning-combobox 
+                                        options={statusPickList} 
+                                        label ="Status" 
+                                        value={status} 
+                                        onchange={setProjectRecords} 
+                                        required></lightning-combobox>
+                                    </div>
+                                </div>
+
+                                <div class="slds-p-horizontal--small slds-col slds-size_6-of-12 slds-m-bottom--medium">               
+                                    <div class="slds-form-element">               
+                                        <lightning-input type="number" 
+                                        formatter="currency" 
+                                        label="Cost" 
+                                        value={cost} 
+                                        onchange={setProjectRecords}></lightning-input>
+                                    </div>
+                                </div>   
+                            </div>
+                            <div class="exampleHolder" if:true={handdleSpinner}>
+                                <lightning-spinner alternative-text="Loading" size="large"></lightning-spinner>
+                            </div>
+                            <div slot="footer" class="slds-align_absolute-center">
+                                <lightning-button 
+                                label="Save" 
+                                variant="brand"
+                                onclick={insertGanttProject} disabled={projectSaveButtonDisable}></lightning-button>        
+                                <lightning-button 
+                                style = "margin:5px;"  
+                                label = "Cancel" 
+                                variant = "base" 
+                                onclick={closeModal} ></lightning-button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </template>
+            <template if:true={isTaskModelOpen}>     
+                <section role="dialog" 
+                tabindex="-1" 
+                aria-labelledby="modal-heading-01" 
+                aria-modal="true" 
+                aria-describedby="modal-content-id-1" 
+                class="slds-modal slds-fade-in-open">
+                    <div class="slds-modal__container">
+                        <header class="slds-modal__header">
+                            <button 
+                            class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" 
+                            title="Close" 
+                            onclick={closeModal}>
+                                <lightning-icon 
+                                icon-name="utility:close"
+                                alternative-text="close"
+                                variant="inverse"
+                                size="small" ></lightning-icon>
+                                <span class="slds-assistive-text">Close</span>
+                            </button>
+                            <h2 id="modal-heading-03" class="slds-modal__title slds-hyphenate">Filter Tasks</h2>
+                        </header>
+                        <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-3">
+                            <template for:each={taskStatusPickList} for:item="status" for:index="index">
+                                <div key={status} >                     
+                                            <lightning-input 
+                                            data-index={index} 
+                                            type="checkbox" 
+                                            checked={status.label}      
+                                            class="slds-align_absolute-center" 
+                                            label={status.value}
+                                            value={status.value}
+                                            onchange = {handleCheckbox}>
+                                            </lightning-input>  
+                                </div>   
+                            </template>
+                            <div slot="footer" class="slds-align_absolute-center">
+                                <lightning-button label="Save" 
+                                variant="brand" 
+                                onclick={sendSelectedCheckboxList}></lightning-button>        
+                                <lightning-button style = "margin:5px;"  
+                                label = "Cancel" 
+                                variant = "base" 
+                                onclick={closeModal} ></lightning-button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <div class="slds-backdrop slds-backdrop_open"></div>
+            </template>  
+            <template if:true={isDeleteProjectModalOpen}>
+                <section role="dialog" 
+                tabindex="-1" 
+                aria-labelledby="modal-heading-01" 
+                aria-modal="true" 
+                aria-describedby="modal-content-id-1" 
+                class="slds-modal slds-fade-in-open">
+                    <div class="slds-modal__container">
+                        <header class="slds-modal__header">
+                            <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" 
+                            title="Close" 
+                            onclick={closeModal}>
+                                <lightning-icon icon-name="utility:close"
+                                alternative-text="close"
+                                size="small" ></lightning-icon>
+                                <span class="slds-assistive-text">Close</span>
+                            </button>
+                        </header>
+                        <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-4">
+                            <div class="slds-text-align_center slds-text-heading_medium">
+                                <b>Are you sure you want to Delete ? </b>
+                            </div>
+                        </div>
+                        <div class="exampleHolder" if:true={handdleSpinner}>
+                            <lightning-spinner 
+                            alternative-text="Loading" 
+                            size="large"></lightning-spinner>
+                        </div>
+                        <footer class="slds-modal__footer">
+                            <button 
+                            class="slds-button slds-button_neutral" 
+                            onclick={closeModal} 
+                            title="Cancel">Cancel</button>
+                            <button 
+                            class="slds-button slds-button_brand" 
+                            onclick={handleDeleteRecord} 
+                            title="OK">OK</button>
+                        </footer>
+                    </div>
+                </section>
+                <div class="slds-backdrop slds-backdrop_open"></div>
+            </template>     
+    </lightning-card>   
+</template>
+
+

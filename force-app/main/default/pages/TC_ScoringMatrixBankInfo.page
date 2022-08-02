@@ -1,0 +1,20 @@
+<apex:page standardController="Bank_Info__c" title="Daily Balances" sidebar="false" showHeader="false" standardStylesheets="false" docType="html-5.0"> 
+    <apex:includeLightning />
+    
+    <div id="scoringApp" class="cp">
+        
+    </div>
+    
+    <script type="text/javascript">
+    var bankInfoId = "{!$CurrentPage.parameters.id}";
+    $Lightning.use("c:ScoringMatrixBankInfoApp", function() {
+        $Lightning.createComponent ("c:ScoringMatrixBankInfoCmp", { "bankInfoId" : bankInfoId },
+                                    "scoringApp", 
+                                    function(cmp) {
+                                        console.log("{!$CurrentPage.parameters.id}");
+                                    });
+    });    
+    </script>
+    
+    
+</apex:page>
