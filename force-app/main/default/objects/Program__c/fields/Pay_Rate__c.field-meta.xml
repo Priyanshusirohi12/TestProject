@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Pay_Rate__c</fullName>
+    <externalId>false</externalId>
+    <label>Pay Rate</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Flat rate</fullName>
+                <default>false</default>
+                <label>Flat rate</label>
+            </value>
+            <value>
+                <fullName>Gift Cart</fullName>
+                <default>false</default>
+                <label>Gift Cart</label>
+            </value>
+            <value>
+                <fullName>Other fill in text</fullName>
+                <default>false</default>
+                <label>Other fill in text</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

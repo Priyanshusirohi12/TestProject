@@ -1,0 +1,40 @@
+<apex:page sidebar="false" showHeader="false" title="Hello ibirds"> 
+        <apex:form >
+            <apex:pageBlock title="Master Class">
+                <apex:pageBlockSection title="Container Section" Columns="3" collapsible="false">
+                    <apex:outputLabel >
+                        All is well                    
+                    </apex:outputLabel>
+                    <apex:outputLabel >
+                        This my first visual force class                   
+                    </apex:outputLabel>
+                    <apex:outputLabel >
+                        Display the list                     
+                    </apex:outputLabel>	
+                </apex:pageBlockSection>
+                <apex:pageBlockSection title="Container Section 2" collapsible="false">
+                    <apex:pageBlockSectionItem >
+                    	<apex:outputLabel >Enter a Name</apex:outputLabel>
+                    <apex:inputText />
+                    </apex:pageBlockSectionItem>
+                    <apex:pageBlockSectionItem >
+                    	<apex:outputLabel >Enter a LastName</apex:outputLabel>
+                    <apex:inputText />
+                    </apex:pageBlockSectionItem>
+                    <apex:pageBlockSectionItem >
+                    	<apex:outputLabel >Enter a Email</apex:outputLabel>
+                    <apex:inputText />
+                    </apex:pageBlockSectionItem>
+                     <apex:pageBlockSectionItem >
+                    	<apex:outputLabel >Action</apex:outputLabel>
+                         <apex:commandButton value="save"/>
+                    </apex:pageBlockSectionItem>
+                </apex:pageBlockSection>
+                <apex:pageBlockButtons location="Bottom">
+                    <apex:commandButton value="Save"/>
+                    <apex:commandButton value="Quick save"/>
+                    <apex:commandButton value="Cancel"/>
+                </apex:pageBlockButtons>
+                </apex:pageBlock>
+        </apex:form>
+    </apex:page>

@@ -3,9 +3,4 @@
     <apiVersion>51.0</apiVersion>
     <description>Default Lightning Platform site footer component</description>
     <label>SiteFooter</label>
-    <packageVersions>
-        <majorNumber>1</majorNumber>
-        <minorNumber>24</minorNumber>
-        <namespace>TCRE</namespace>
-    </packageVersions>
 </ApexComponent>

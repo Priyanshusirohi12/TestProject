@@ -1,0 +1,18 @@
+<template>
+   <lightning-card title="CheckBox">
+    <div class="slds-m-horizontal_x-small">
+        <lightning-checkbox-group label ="Hobbies"
+        value = {defaultChecked}
+        options = {fillCheckbox}
+        onchange= {changeHandler}
+       >
+        </lightning-checkbox-group>
+    </div>
+    <template if:true={selectCheckboxValue.length}>
+        <p>Selected Hobbies : {selectCheckboxValue}</p>
+    </template>
+    <template if:false={selectCheckboxValue.length}>
+        <p>Selected Hobbies : none</p>
+    </template>
+   </lightning-card> 
+</template>

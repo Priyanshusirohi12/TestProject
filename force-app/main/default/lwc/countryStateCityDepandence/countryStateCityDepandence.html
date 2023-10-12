@@ -1,0 +1,32 @@
+<template>
+    <lightning-card title="Country Depandancy">
+            <div class="slds-m-horizontal_x-small">
+                <lightning-combobox label="Select Country" 
+                options= {selectCountry} 
+                value= {country}
+                onchange = {changeHandlerOnState}
+                > </lightning-combobox>
+
+                <lightning-combobox label ="Select State" 
+                value= {state}
+                options= {selectState}
+                onchange= {changeHandlerOnCity}
+                ></lightning-combobox>
+
+                <lightning-combobox label ="Select City" 
+                value= {city}
+                options= {selectCity}
+                onchange= {changeHandlerOnPincode}
+                ></lightning-combobox>
+
+                <template if:false = {pincode.length}>
+                    <p>Pincode is : none</p>
+                </template>
+
+                <template if:true = {pincode.length}>
+                    <p>Pincode is : {pincode}</p>
+                </template>
+
+            </div>
+    </lightning-card>
+</template>

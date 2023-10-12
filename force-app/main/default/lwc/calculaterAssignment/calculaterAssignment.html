@@ -1,0 +1,22 @@
+<template>
+    <lightning-card title="Calculate Value">
+        <div class="slds-p-around_medium lgc-bg">
+            <lightning-input type="Number" step=".00001" value={firstValue} name="firstValue" label="Enter First Value" onchange={changeHandler} ></lightning-input>
+            <lightning-input type="Number" step=".00001" value={secondValue} name="secondValue" label="Enter Second Value" onchange={changeHandler}></lightning-input>
+            </div>
+            <div class="slds-box slds-theme_shade">
+                <b>Output Value: </b>
+                <p>{thirdValue}</p>
+            </div>
+            <div class="slds-p-around_medium lgc-bg" >
+            <lightning-button title="+" label="(+)" disabled={enableButton}  variant="base" onclick={applyOpprator} class="slds-p-horizontal_x-small"></lightning-button>
+            <lightning-button title="-" label="(-)" disabled={enableButton} onclick={applyOpprator} class="slds-p-horizontal_x-small"></lightning-button>
+            <lightning-button title="*" label="(*)" disabled={enableButton} onclick={applyOpprator} variant="brand" class="slds-p-horizontal_x-small"></lightning-button>
+            <lightning-button title="/" label="(/)"  disabled={enableButton} onclick={applyOpprator} variant="destructive" class="slds-p-horizontal_x-small"></lightning-button>
+            <lightning-button title="%" label="(%)" disabled={enableButton} onclick={applyOpprator} variant="success" class="slds-p-horizontal_x-small"></lightning-button>
+            </div>
+           <!--<lightning-input value={thirdValue}  name="thirdValue" label="Answer"></lightning-input>-->
+           
+    
+    </lightning-card>
+</template>

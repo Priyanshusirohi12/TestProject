@@ -1,0 +1,69 @@
+<template>
+    <lightning-card title = "Search Contacts" icon-name = "customer:customer105">
+        <div class = "slds-m-around_medium">     
+            <div  class = "slds-grid slds-gutters slds-m-around_medium slds-clearfix">
+                
+                <div class = "slds-float_left slds-size_1-4">
+                    <lightning-input placeholder = "Search Name Or Email"
+                    class = "input" onchange = {handleStringValue}>
+                </lightning-input>
+                </div>
+
+                <div class = "slds-col slds-m-top_medium">
+                    <lightning-button label = "Search" onclick = {searchContacts}
+                    variant  = "brand"></lightning-button>
+                </div>
+
+                <div class = "slds-float-right slds-size_1-of-7">
+                    <lightning-combobox  options = {options} 
+                    value = {pageSize} onchange = {handlePageSize}>
+                    </lightning-combobox>
+                </div>
+
+            </div>
+            <table class = "slds-table slds-table_cell-buffer slds-table_bordered">
+                <thead>
+                    <tr class = "slds-line-height_reset">
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Account Name</th>
+                        <th>Phone</th>
+                        <th>Type</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <template for:each = {contactList} for:item = "contact">
+                        <tr key = {contact} class="slds-line-height_reset">
+                            <td>{contact.Name}</td>
+                            <td>
+                                <lightning-icon icon-name="standard:email"></lightning-icon> 
+                                &nbsp; {contact.Email}
+                            </td>
+                            <td>{contact.AccountName}</td>
+                            <td>{contact.Phone}</td>
+                            <td>{contact.Type__c}</td>
+                        </tr>
+                    </template>
+                </tbody>
+            </table>
+            
+            <table class = "slds-clearfix">
+                <tr class = "slds-float_right">
+                   <td class = "hye">
+                        <lightning-button style = "margin:5px;" onclick = {handleFirst} label = "First" 
+                        variant = "brand" disabled = {disableFirstPrevious}></lightning-button>
+
+                        <lightning-button style="margin:5px;" onclick={handlePrevious} label= "Previous" 
+                        variant="brand" disabled={disableFirstPrevious}> </lightning-button>
+
+                        <lightning-button style="margin:5px;" onclick={handleNext} label= "Next" 
+                        variant="brand" disabled={disableNextLast}> </lightning-button>
+
+                        <lightning-button style="margin:5px;" onclick={handleLast} label= "Last" 
+                        variant="brand" disabled={disableNextLast}> </lightning-button>
+                   </td>     
+                </tr>
+            </table>
+        </div>
+    </lightning-card>
+</template>

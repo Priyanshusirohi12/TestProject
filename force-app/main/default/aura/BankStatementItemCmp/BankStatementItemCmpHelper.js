@@ -1,5 +1,0 @@
-({
-	doSomething : function(cmp) {
-		
-	}
-})

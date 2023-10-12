@@ -5,9 +5,4 @@
     <confirmationTokenRequired>false</confirmationTokenRequired>
     <description>Default Salesforce Sites Login page</description>
     <label>SiteLogin</label>
-    <packageVersions>
-        <majorNumber>1</majorNumber>
-        <minorNumber>24</minorNumber>
-        <namespace>TCRE</namespace>
-    </packageVersions>
 </ApexPage>

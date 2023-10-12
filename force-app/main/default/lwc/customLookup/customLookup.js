@@ -7,5 +7,3 @@ export default class CustomLookup extends LightningElement {
         console.log( JSON.stringify ( event.detail) )
     }
 }
-
-

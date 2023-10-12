@@ -1,0 +1,35 @@
+<apex:page title="Send Email" controller="SendEmailController" >
+    <apex:form id="test">
+        
+        <apex:actionFunction name="checkValue" action="{!checkValue}" />
+    	<apex:pageBlock >
+            <apex:pageMessages ></apex:pageMessages>
+        	<apex:pageBlockSection collapsible="false" title="Send Email" columns="1">
+                <apex:pageBlockSectionItem >
+                	<apex:outputLabel >To</apex:outputLabel>
+                <apex:inputText value="{!emailValue}"/>
+                </apex:pageBlockSectionItem>
+                 <apex:pageBlockSectionItem >
+                	<apex:outputLabel >CC</apex:outputLabel>
+                <apex:inputText value="{!ccEmail}"/>
+                </apex:pageBlockSectionItem>
+                 <apex:pageBlockSectionItem >
+                	<apex:outputLabel >BCC</apex:outputLabel>
+                <apex:inputText value="{!bccEmail}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                	<apex:outputLabel >Subject</apex:outputLabel>
+                <apex:inputText value="{!subject}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                	<apex:outputLabel >Body</apex:outputLabel>
+                <apex:inputTextarea richText="{!check}" value="{!body}" cols="50" rows="15" style="resize: none"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:inputCheckbox value="{!check}" onchange="checkValue();" />
+                	<apex:commandButton value="Send" action="{!sendMail2}"/>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

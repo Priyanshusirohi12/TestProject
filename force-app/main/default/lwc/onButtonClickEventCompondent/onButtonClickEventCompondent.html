@@ -1,0 +1,11 @@
+<template>
+  <lightning-card title="Change Event Example">
+    <div class="slds-p-around_medium lgc-bg">
+        Hello {name}
+    </div>
+    <div class="slds-p-around_medium lgc-bg">
+        <lightning-input type="text" value={name} name="Name" label="Enter some text" onchange={changeHeand}></lightning-input>
+        <lightning-button value="Click Me" label="Click Me" onclick={clickHeand}></lightning-button>
+    </div>
+  </lightning-card>  
+</template>

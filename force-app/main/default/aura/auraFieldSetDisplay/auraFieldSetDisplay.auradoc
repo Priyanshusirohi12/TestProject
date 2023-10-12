@@ -1,3 +1,0 @@
-<aura:documentation>
-    <aura:description>This component takes the object name and field set parameters and uses that data to display the fields defined in that objects field set</aura:description>
-</aura:documentation>

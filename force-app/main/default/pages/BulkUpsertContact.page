@@ -1,0 +1,25 @@
+<apex:page sidebar="false" tabStyle="Contact" title="Bulk Upsert and Delete value" controller="BulkUpsertContactController">
+    <apex:pageMessages />
+    <apex:form id="test">
+        <apex:pageMessages />
+    	<apex:pageBlock >
+        	<apex:pageBlockButtons >
+            	<apex:commandButton value="Add" action="{!addContactButton}"/>
+                <apex:commandButton value="Delete" action="{!deleteContactButton}" reRender="test"/>
+                <apex:commandButton value="Save" action="{!saveContactButton}"/>
+                <apex:commandButton value="Cancel" action="{!cancelContactButton}"/>
+            </apex:pageBlockButtons>
+           	<apex:pageBlockTable value="{!contactList}" var="contact">
+            	<apex:column headerValue="First Name">
+                    <apex:inputField value="{!contact.FirstName}"/>
+                </apex:column>
+                <apex:column headerValue="Last Name">
+                    <apex:inputField value="{!contact.LastName}" required="false"/>
+                </apex:column>
+                <apex:column headerValue="Account">
+                    <apex:inputField value="{!contact.AccountId}"/>
+                </apex:column>
+      			</apex:pageBlockTable>           	
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

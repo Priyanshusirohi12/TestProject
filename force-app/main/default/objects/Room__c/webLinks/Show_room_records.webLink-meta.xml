@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebLink xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Show_room_records</fullName>
+    <availability>online</availability>
+    <displayType>button</displayType>
+    <linkType>javascript</linkType>
+    <masterLabel>Show room records</masterLabel>
+    <openType>onClickJavaScript</openType>
+    <protected>false</protected>
+    <url>alert(&apos;Your room id is:- {!Room__c.Id} &lt;br/&gt; Room Name is :- {!Room__c.Room_Name__c} &lt;br/&gt; Room type:- {!Room__c.Price__c} &apos;);</url>
+</WebLink>

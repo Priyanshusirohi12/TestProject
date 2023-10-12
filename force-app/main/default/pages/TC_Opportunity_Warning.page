@@ -1,9 +1,0 @@
-<apex:page standardController="Opportunity">
-<apex:outputPanel rendered="{!Opportunity.Opportunity_Status__c == 'Re-Approve'}">
-<div style="background-color:red;font-weight:bold;align:middle;">
-<center style="color:#FFFFFF">
-Re-Approval Required
-</center>
-</div>
-</apex:outputPanel>
-</apex:page>

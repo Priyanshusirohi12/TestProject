@@ -1,0 +1,14 @@
+<template>
+    <lightning-card title="Cloth Quantity ">{quantity}
+        <div class="slds-m-around_medium" >
+            <template for:each={product} for:item="products">
+                <div key={products}>
+                <lightning-input type="checkbox" label={products.productName} checked={products.check} onchange={handleOncheckbox} value={products.id}>{quantity}</lightning-input>
+                </div>
+            </template>
+        </div>
+        <div class="slds-m-around_medium">
+            <c-child-component-product onsimpleevent ={handelSimpleEvent}></c-child-component-product>
+        </div>
+    </lightning-card>
+</template>

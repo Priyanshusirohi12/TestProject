@@ -1,0 +1,12 @@
+<apex:page showHeader="false" standardController="Brand_Product__c"> 
+	<style>
+    	.product{
+        	height : 200px;
+        	width:200px;
+        	border :  1px solid red;
+        }
+    </style>
+    <apex:repeat value="{!Brand_Product__c.Attachments}" var="attach">
+        <img src="{!$Site.prefix}/servlet/servlet.FileDownload?file={!attach.Id}" class ='product'/>
+    </apex:repeat>
+</apex:page>

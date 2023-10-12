@@ -1,0 +1,40 @@
+<apex:page title="Country" showHeader="false" controller="CountryController">
+    <apex:form id="con" >
+        <apex:actionFunction name="onChangeCountry" action="{!onChange}" reRender="con"/>
+        <apex:actionFunction name="onChangeCountry" action="{!onChange2}" reRender="con"/>
+        <apex:actionFunction name="onChangeCountry" action="{!onChange3}" reRender="con"/>
+        
+        <apex:pageBlock >
+    	<apex:pageBlockSection >
+        	<apex:pageBlockSectionItem >
+            	<apex:selectList size="1" value="{!countryName}" onchange="onCountry (this.value);">
+                	<apex:selectOptions value="{!setCountry}"></apex:selectOptions>
+                </apex:selectList>
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+            	<apex:selectList size="1" value="{!stateName}" onchange="onCountry(this.value);">
+                	<apex:selectOptions value="{!setState}"></apex:selectOptions>
+                </apex:selectList>
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+            	<apex:selectList size="1" value="{!cityName}" onchange="onCountry(this.value);">
+                	<apex:selectOptions value="{!setCity}"></apex:selectOptions>
+                </apex:selectList>
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+            	<!--<apex:selectList value="{!pinCodeName}" >
+                	<apex:selectOptions value="{!setPincode}"></apex:selectOptions>
+                </apex:selectList>-->
+                <apex:outputLabel >Pincode</apex:outputLabel>
+                <apex:outputText >{!pincodeName}</apex:outputText>
+            </apex:pageBlockSectionItem>
+        </apex:pageBlockSection>
+  		</apex:pageBlock>
+    </apex:form>
+	<script>
+    function onCountry(selectItem)
+    {
+        onChangeCountry();
+    }
+</script>
+</apex:page>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>In_Progress__c</fullName>
+    <externalId>false</externalId>
+    <formula>today() ==  Booking_Date__c &amp;&amp; (Show_Time__c &gt;=  TIMEVALUE(&apos;03:00:00.000Z&apos;) || Show_Time__c &lt;=  TIMEVALUE(&apos;06:00:00.000Z&apos;))</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>In Progress</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

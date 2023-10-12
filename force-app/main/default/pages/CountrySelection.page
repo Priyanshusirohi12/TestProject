@@ -1,0 +1,60 @@
+<apex:page title="Country " showHeader="False" controller="formPage">	
+    <html>
+        <head>
+            
+        </head>
+  		<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.5.0-beta4/html2canvas.js"></script>
+        <body>
+            <div id="capture" style="padding: 10px; background: #f5da55">
+                <h4 style="color: #000; ">Hello world!</h4>
+            </div>
+            <button onclick="screenShort()">
+                click
+            </button>
+        </body>
+    <script>
+    	function screenShort(){
+        	html2canvas(document.querySelector("#capture")).then(canvas => {
+    			document.body.appendChild(canvas)
+			});    
+        }
+    </script>
+ </html>
+    <apex:form id="frm">
+        <apex:actionFunction name="onName" action="{!setName}" reRender="frm"/>
+    	<apex:pageBlock >
+            <apex:pageBlockButtons >
+            	<apex:commandButton value="ShowCity" />
+                <apex:commandButton value="ShowName" />
+            </apex:pageBlockButtons>
+			<apex:pageBlockSection >
+            	<apex:pageBlockSectionItem >
+                    <apex:outputLabel >City</apex:outputLabel>
+                    <apex:selectList size="1" value="{!City}">
+                    <apex:selectOption itemLabel="--None--" itemValue=""></apex:selectOption>
+                    	<apex:selectOption itemLabel="Ajmer" itemValue="305001"> </apex:selectOption>
+                        <apex:selectOption itemLabel="Jaipur" itemValue="Jaipur"> </apex:selectOption>
+                        <apex:selectOption itemLabel="Kota" itemValue="305003"> </apex:selectOption>
+                        <apex:selectOption itemLabel="Udaipur" itemValue="305004"> </apex:selectOption>
+                    </apex:selectList>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                	<apex:outputLabel >City</apex:outputLabel>
+                    <apex:outputText >{!City}</apex:outputText>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+                <apex:pageBlockSection >
+                	<apex:pageBlockSectionItem >
+                        <apex:outputLabel >Name</apex:outputLabel>
+                    	<apex:selectList value="{!Name}" size="1" onchange="onName(this.value)">
+                        	<apex:selectOptions value="{!setName}"></apex:selectOptions>
+                        </apex:selectList>
+                    </apex:pageBlockSectionItem>
+                    <apex:pageBlockSectionItem >
+                    	<apex:outputLabel >Name</apex:outputLabel>
+                        <apex:outputText >{!Name}</apex:outputText>
+                    </apex:pageBlockSectionItem>
+                </apex:pageBlockSection>        	
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

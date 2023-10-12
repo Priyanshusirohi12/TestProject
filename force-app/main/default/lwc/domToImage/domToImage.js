@@ -1,4 +1,4 @@
-import { LightningElement } from 'lwc';
+import { LightningElement, track } from 'lwc';
 //import { loadStyle, loadScript } from 'lightning/platformResourceLoader';
 //import domToImg from '@salesforce/resourceUrl/domToImage';
 

@@ -1,0 +1,57 @@
+<template>
+    <lightning-card variant="Narrow" title="Account List" icon-name="standard:account">
+       
+        <div class="slds-m-around_medium">
+            <div class="slds-grid slds-gutters slds-m-around_medium slds-clearfix">
+                <div class="slds-float_left slds-size_1-4">
+                    <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon_right">
+                        <lightning-icon size="x-small"
+                            class="slds-icon slds-input__icon slds-input__icon_right slds-icon-text-default"
+                            icon-name="utility:search"></lightning-icon>
+                        <input type="text" onchange={search} value={searchValue} placeholder="Search Text Here" class="slds-input" />
+                    </div>
+                </div>
+
+                <div class="slds-col slds-m-top_medium" style="margin-top:1px">
+                    <lightning-button label="Search" onclick={searchAccounts} variant="brand" ></lightning-button>
+                </div>
+             </div>
+
+            <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_color-bordered slds-table_bordered">
+                <thead>
+                    <tr>
+                        <th align="center">Action</th>
+                        <th>Name</th>
+                        <th>Phone</th>
+                        <th>Rating</th>
+                        <th>Email</th>
+                        <th>Total Contact</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <template for:each={allAccountList} for:item="account">
+                        <tr key={account}>
+                            <td>
+                                <lightning-button variant="brand" onclick={handleDetail} value={account.Id} label="Details" style="padding:4px"></lightning-button>
+                                <lightning-button variant="brand" onclick={handleDelete} name={account.Id} label="Delete"></lightning-button>
+                            </td>
+                            <td>{account.Name}</td>
+                            <td><lightning-formatted-phone value={account.Phone}></lightning-formatted-phone></td>
+                            <td>{account.Rating}</td>
+                            <td><lightning-formatted-email value={account.Email__c}></lightning-formatted-email></td>
+                            <template if:true={account.Contacts}>
+                            <td>
+                                  {account.Contacts.length}
+                            </td>
+                            </template>
+                            <template if:false={account.Contacts}>
+                            <td>0</td>
+                            </template>
+                        </tr>
+                    </template>
+                </tbody>
+            </table>
+            
+        </div>
+    </lightning-card>
+</template>

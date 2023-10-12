@@ -1,0 +1,13 @@
+<template>
+    <lightning-card title="parent to child">
+        <div class="slds-m-around_medium">
+          
+          <c-child-custom-event username={username} userid={userid}></c-child-custom-event>
+        </div>
+        <div>
+            <lightning-input label="Enter userId" type="number" class="user"></lightning-input>
+            <lightning-input label="Enter UserName" type="text" class="user"></lightning-input>
+            <lightning-button label="Save" variant="success" onclick={handleSend}></lightning-button>
+        </div>
+    </lightning-card>
+</template>

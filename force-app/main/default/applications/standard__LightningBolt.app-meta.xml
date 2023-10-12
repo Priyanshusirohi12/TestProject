@@ -6,6 +6,17 @@
     <label>LightningBolt</label>
     <navType>Standard</navType>
     <tabs>standard-LightningBoltHome</tabs>
-    <!-- <tabs>Gantt</tabs> -->
+    <tabs>GanttLink__c</tabs>
+    <tabs>GanttTask__c</tabs>
+    <tabs>Sprint__c</tabs>
+    <tabs>Gantt_Project__c</tabs>
+    <tabs>Movie__c</tabs>
+    <tabs>Seat_Category__c</tabs>
+    <tabs>Seat__c</tabs>
+    <tabs>Movie_Booking__c</tabs>
+    <tabs>Program__c</tabs>
+    <tabs>Email_Customer__c</tabs>
+    <tabs>Creator_Email__c</tabs>
+    <tabs>Stimulus_Deal__c</tabs>
     <uiType>Lightning</uiType>
 </CustomApplication>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ConnectedApp xmlns="http://soap.sforce.com/2006/04/metadata">
+    <contactEmail>fardinibirds1234@gmail.com</contactEmail>
+    <label>AccountConnectedApp</label>
+    <oauthConfig>
+        <callbackUrl>https://jainpvtltd-dev-ed.my.salesforce.com/services/authcallback/Salesforce_OrgC</callbackUrl>
+        <consumerKey>3MVG9fe4g9fhX0E746jl3ghFpKxSdmydbD99atTPTFATZ3mRsx4tKxDkxyYpICSh2koKIJq2A7OzpI.POUt8W</consumerKey>
+        <scopes>Basic</scopes>
+        <scopes>Full</scopes>
+        <scopes>Chatter</scopes>
+        <scopes>CustomApplications</scopes>
+        <scopes>RefreshToken</scopes>
+        <scopes>OpenID</scopes>
+        <scopes>CustomPermissions</scopes>
+        <scopes>Wave</scopes>
+        <scopes>Eclair</scopes>
+        <scopes>Lightning</scopes>
+        <scopes>Content</scopes>
+    </oauthConfig>
+</ConnectedApp>

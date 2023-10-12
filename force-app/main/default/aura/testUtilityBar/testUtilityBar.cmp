@@ -1,0 +1,56 @@
+<aura:component description="Aura_Communication" implements="flexipage:availableForAllPageTypes,lightning:availableForFlowScreens" access="global">
+	<!--The onsenddata is what handles the custom event we made in our LWC-->
+    <!--<c:subscribePlatformEvent aura:id="childlwc" name="childlwc" ></c:subscribePlatformEvent>-->
+	<!--<lightning:input aura:id="dataToPass" />
+	<lightning:button label="Pass data to LWC" onclick="{!c.passDataToLWC}"/>
+    <c:subscribePlatformEvent aura:id="childlwc" name="childlwc" ></c:subscribePlatformEvent>-->
+    
+    <aura:attribute name="dataReceived" type="String"/>
+    <c:subscribePlatformEvent onsendData="{!c.receiveLWCData}" aura:id="childlwc" name="childlwc"></c:subscribePlatformEvent>
+    
+    <aura:if isTrue="{!v.dataReceived !=null}">
+      <p>This is the data receieved from our LWC: {!v.dataReceived}</p>
+      <aura:set attribute="else">
+        Content when false
+      </aura:set>
+    </aura:if>
+    
+    <lightning:input aura:id="dataToPass" />
+	<lightning:button label="Pass data to LWC" onclick="{!c.passDataToLWC}"/>
+    <!--
+    <aura:attribute  name="messageText" type="String" />
+     
+    <lightning:messageChannel type="MyMessageChannel__c"
+                          aura:id="SMC" 
+                          scope="APPLICATION"
+                          onMessage="{!c.handleReceiveMessage}"
+     />
+    <aura:if isTrue="{!v.messageText !=null}">
+  <div>{!v.messageText}</div>
+  <aura:set attribute="else">
+    Content when false
+  </aura:set>
+</aura:if>-->
+    <aura:attribute name="SearchString" type="String" default="hello" access="global"/>
+ <aura:attribute name="isValid" type="String" default="false" access="global"/>
+    <aura:attribute name="limit" default="5" type="Integer" />
+    <aura:handler event="lightning:tabCreated" action="{!c.onTabCreated}" />
+    <lightning:workspaceAPI aura:id="workspace" />
+    
+    <lightning:utilityBarAPI aura:id="utilitybar" />
+    //<aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <lightning:empApi aura:id="empApi" />-->
+	
+    Auto Open Utility
+</aura:component>
+
+
+
+<!--<aura:component implements="flexipage:availableForAllPageTypes" access="global" >
+    <lightning:utilityBarAPI aura:id="utilitybar" />
+    <lightning:utilityBarAPI aura:id="UtilityBarEx"	/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <lightning:empApi aura:id="empApi" />
+	
+    Auto Open Utility
+</aura:component>-->

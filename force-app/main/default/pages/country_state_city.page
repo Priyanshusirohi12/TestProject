@@ -1,0 +1,107 @@
+<apex:page showHeader="false" title="Country Values" controller="CountryStateCityController" tabStyle="Country__c">
+    	<apex:sectionHeader title="Countries" subtitle="Country Details"/>
+        <apex:form id="test">
+            <apex:actionFunction name="selectState" action="{!selectState}" reRender="test" status="demo"/>
+            <apex:actionFunction name="selectCity" action="{!selectCity}" reRender="test"  status="demo"/>
+            <apex:actionFunction name="selectpinCode" action="{!selectpinCode}" reRender="test" status="demo"/>
+            <apex:pageBlock >
+                <apex:actionStatus id="demo">
+                    <apex:facet name="start">
+                        <center><img src="/img/loading.gif"/>
+                        <span>Please Wait...</span>
+                        </center>
+                    </apex:facet>
+                </apex:actionStatus>
+                
+                <apex:pageBlockSection >
+                    <apex:pageBlockSectionItem >
+                        <apex:outputLabel >Country</apex:outputLabel>
+                        <apex:selectList size="1" value="{!countryValue}" onchange="selectState();">
+                            <apex:selectOption itemLabel="--none--" itemValue=""></apex:selectOption>
+                            <apex:selectOptions value="{!SelectCountry}"></apex:selectOptions>
+                        </apex:selectList>
+                    </apex:pageBlockSectionItem>
+                    
+                    <apex:pageBlockSectionItem >
+                        <apex:outputLabel >State</apex:outputLabel>
+                        <apex:selectList size="1" value="{!stateValue}" onchange="selectCity();">
+                            <apex:selectOption itemLabel="--none--" itemValue=""></apex:selectOption>
+                            <apex:selectOptions value="{!showState}"></apex:selectOptions>
+                        </apex:selectList>   
+                    </apex:pageBlockSectionItem>
+                    
+                    <apex:pageBlockSectionItem >
+                        <apex:outputLabel >City</apex:outputLabel>
+                        <apex:selectList size="1" value="{!cityValue}" onchange="selectpinCode();">
+                            <apex:selectOption itemLabel="--none--" itemValue=""></apex:selectOption>
+                            <apex:selectOptions value="{!showCity}"></apex:selectOptions>
+                        </apex:selectList>
+                    </apex:pageBlockSectionItem>
+                    
+                    <apex:pageBlockSectionItem >
+                        <apex:outputLabel >Pincode</apex:outputLabel>
+                        <apex:outputText >{!pinCodeValue}</apex:outputText>
+                    </apex:pageBlockSectionItem>
+                </apex:pageBlockSection>
+                <apex:pageBlockSection title="Selected Country" collapsible="false" columns="1">
+                    <!-- <apex:pageBlockSection columns="6">
+                        <apex:outputLabel >Country</apex:outputLabel>
+                        <apex:outputLabel >State</apex:outputLabel>
+                        <apex:outputLabel >City</apex:outputLabel>
+                        <apex:outputLabel >Pinode</apex:outputLabel>
+                    
+                    </apex:pageBlockSection>-->
+                    <apex:dataTable value="{!countryMap}" var="country">
+                        <apex:column headerValue="Country" width="300"/>
+                        <apex:column headerValue="State" width="300"/>
+                        <apex:column headerValue="City" width="300"/>
+                        <apex:column headerValue="Pincode" width="300"/>
+                    </apex:dataTable>
+                    <apex:dataTable value="{!countryMap}" var="country">
+                        <apex:column value="{!country}"  width="300" /> 
+                        <apex:column >       
+                            <apex:dataTable value="{!countryMap[country]}" var="State"  >
+                            <apex:column value="{!State}" width="300"/>
+                                <apex:column >
+                                    <apex:dataTable value="{!countryMap[country][State]}" var="City">
+                                    <apex:column value="{!City}"  width="300"/>
+                                        <apex:column >
+                                            <apex:dataTable value="{!countryMap[country][State][City]}" var="Pincode" width="200">
+                                            <apex:column value="{!Pincode}" width="300"/>
+                                            </apex:dataTable>
+                                        </apex:column>
+                                    </apex:dataTable>
+                                </apex:column>
+                            </apex:dataTable>
+                        </apex:column>
+                    </apex:dataTable>
+                   <!-- <apex:pageBlockSection columns="6">
+                        <apex:outputLabel >Country</apex:outputLabel>
+                        <apex:outputLabel >State</apex:outputLabel>
+                        <apex:outputLabel >City</apex:outputLabel>
+                        <apex:outputLabel >Pinode</apex:outputLabel>
+                </apex:pageBlockSection>-->
+                   <!-- <apex:pageBlockTable value="{!countryMap}" var="Country">
+                    <apex:column value="{!Country}" headerValue="Country" width="300"/>
+                    <apex:column headerValue="State">
+                    <apex:pageBlockTable value="{!countryMap[Country]}" var="State">
+                    <apex:column value="{!State}"  width="300"/> 
+                        <apex:column headerValue="City">
+                            <apex:pageBlockTable value="{!countryMap[Country][State]}" var="City">
+                                <apex:column value="{!City}" width="300"/>
+                                    <apex:column headerValue="Pincode">
+                                    <apex:pageBlockTable value="{!countryMap[Country][State][City]}" var="Pincode">
+                                        <apex:column value="{!Pincode}" width="300"/>
+                                    </apex:pageBlockTable>
+                                </apex:column>
+                                    
+                            </apex:pageBlockTable>
+                        </apex:column>
+                    </apex:pageBlockTable>
+                 </apex:column>
+                 </apex:pageBlockTable>-->
+         
+                </apex:pageBlockSection>
+            </apex:pageBlock>
+        </apex:form>
+    </apex:page>

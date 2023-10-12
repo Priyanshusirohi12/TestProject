@@ -1,0 +1,40 @@
+<apex:page showHeader="false" > 
+    <apex:slds />
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>  
+   
+    <style>
+        .main-div{
+        //background: url(https://i.pcmag.com/imagery/articles/00tLYTqwmgFvacZlYPc5ecO-8..1583853669.jpg);//add your image refrence url
+        background-color:black;  
+        height:500px; 
+        } 
+        @media screen and (max-width: 900px) and (max-width: 600px), (max-width: 1100px) {
+        div.main-div {
+            height:900px;
+      }}
+         @media screen and (max-width: 900px) and (min-width: 600px), (min-width: 1100px) {
+        div.main-div {
+            height:600px;
+      }}
+    </style>
+     </head>
+    <apex:form > 
+        <div class="main-div" style="background-color:rgba(0,0,0,0); " align="center" height="500px"> 
+            <div Style="border:2px solid white; width:268px; position:relative; top:160px">
+                <p Style="color:white; font-size: 22px; " >Username</p>
+                <input Style="width: 260px; height:25px; " />
+                <p Style="color:white; font-size: 22px; " >Password </p>
+                <input Style="width: 260px; height:25px; " />
+                <br/> 
+                <apex:commandButton value="Login" style="width: 265px; height:30px; margin-top:15px; " />
+                <br/> 
+                <apex:inputCheckbox style="float:left; margin-top: 12px; " label="Remember me" /> 
+                <p Style="color:white" > 
+                    Remember me 
+                </p>
+                <a href="" style="color: lightgreen" > Forget Your Password ?  </a> 
+            </div>
+        </div> 
+    </apex:form>
+</apex:page>

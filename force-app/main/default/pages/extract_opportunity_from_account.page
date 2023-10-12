@@ -1,0 +1,20 @@
+<apex:page title="Extract Opportunity" controller="DisplayOpportunityFromAccount">
+    <apex:form >
+    	<apex:pageBlock >
+        	<apex:pageBlockSection >
+                
+            	<apex:pageBlockTable value="{!accountList}" var="accountDetails">
+                	<apex:column value="{!accountDetails.Name}"/>
+                    <apex:column headervalue="Opportunity Count">
+                        <apex:variable value="{!0}" var="count"/>
+                        <apex:repeat value="{!accountDetails.Opportunities}" var="ValueCount">
+                        	<apex:variable value="{!count+1}" var="count"/>
+                        </apex:repeat>
+                        
+                        {!count}
+                    </apex:column>
+                </apex:pageBlockTable>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

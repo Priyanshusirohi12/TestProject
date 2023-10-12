@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>W_H_name_must_be_empty_if_married_is_F</fullName>
+    <active>true</active>
+    <errorConditionFormula>Married_Status__c ==false &amp;&amp; (!ISBLANK( Wife_Name__c )||!ISBLANK(  Husband_Name__c  ))</errorConditionFormula>
+    <errorMessage>Wife, Hansband name must be empty if married is false</errorMessage>
+</ValidationRule>

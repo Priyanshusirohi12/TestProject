@@ -165,10 +165,10 @@ export default class GanttView extends LightningElement {
             loadScript(this, RGBColor),
             loadStyle(this, GanttFiles + '/dhtmlxgantt.css'),
             loadScript(this, CanvgJS),
-            loadScript(this, JSPdf2)
+            //loadScript(this, JSPdf2),
 
         ]).then(() => {
-            //console.log('exportToPdf ',exportToPdf);
+            console.log('exportToPdf ',exportToPdf);
             this.handdleSpinner = true
             this.initializeUI();
         }).catch(error => {
@@ -984,7 +984,7 @@ export default class GanttView extends LightningElement {
         var nodesToRemove = []
         var svgs = $(targetElem).find('svg');
         console.log('canvas 1 ',svgs);
-        svgs.each(function(index, node) {
+        /*svgs.each(function(index, node) {
             console.log('node ', node);
             console.log('node.parentNode ', node.parentNode);
             console.log('parentNode.innerHTML ', node.parentNode.innerHTML);
@@ -1009,7 +1009,7 @@ export default class GanttView extends LightningElement {
             })
             console.log('canvas 4',canvas);
             parentNode.appendChild(canvas)
-        })
+        })*/
         
         if(this.taskList.length >0){
             html2canvas(targetElem, {

@@ -1,0 +1,89 @@
+<apex:page controller="KsCode" standardStylesheets="false" lightningStylesheets="true">
+    <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <style>
+            .waitingDescription{
+            	font-weight: 500;
+            }
+        </style>
+        <apex:slds /> 
+        <div class="slds-scope">
+            <div class="slds-page-header">
+                <div class="slds-page-header__row">
+                    <div class="slds-page-header__col-title">
+                        <div class="slds-media">
+                            <div class="slds-media__figure">
+                                <span class="slds-icon_container slds-icon-standard-contact" title="Contact">
+                                    <svg class="slds-icon slds-page-header__icon" aria-hidden="true">
+                                        <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/standard-sprite/svg/symbols.svg#contact')}"></use>
+                                    </svg>
+                                </span>
+                            </div>
+                            <div class="slds-media__body">
+                                <div class="slds-page-header__name">
+                                    <div class="slds-page-header__name-title">
+                                        <h1>
+                                            <span class="slds-page-header__title slds-truncate" title="Contacts">Contacts</span>
+                                        </h1>
+                                    </div>
+                                </div>
+                                <p class="slds-page-header__name-meta">Search</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <apex:form id="mainBlock">
+            <apex:outputpanel >
+                <apex:actionstatus id="actStatusId">
+                    <apex:facet name="start">
+                        <div class="waitingSearchDiv" id="el_loading" style="background-color: #c9cbd4;
+                                                                             height: 100%;opacity:0.8;width:100%;"> 
+                            <div class="waitingHolder" style="top: 74.2px; width: 91px;">
+                                <img class="waitingImage" src="/img/loading.gif" title="Please Wait..." />
+                                <span class="waitingDescription">Loading</span>
+                            </div>
+                        </div>
+                    </apex:facet>
+                </apex:actionstatus>
+    		</apex:outputpanel>
+            <apex:actionFunction name="pageSizeLimit" action="{!changePageSize}" reRender="mainBlock" status="actStatusId"/>
+            <apex:pageBlock >
+                <apex:pageBlockSection columns="2">
+                    <apex:pageBlockSectionItem >
+                        <apex:inputText html-placeholder="search text here" value="{!searchFieldValue}"/>
+                        <apex:commandButton value="Search" action="{!searchContact}"/>
+                    </apex:pageBlockSectionItem>
+                    <apex:pageBlockSectionItem >
+                        <apex:selectList size="1" value="{!pageSize}" onchange="pageSizeLimit(); return false;">
+                            <apex:selectOptions value="{!PageSizeOptions}"/>
+                        </apex:selectList>
+                    </apex:pageBlockSectionItem>
+                </apex:pageBlockSection>
+                
+                <apex:pageBlockTable value="{!ContactList}" var="contact" styleClass="slds-table_cell-buffer">
+                    <apex:column headerValue="Name">
+                        {!contact.Name}
+                    </apex:column>
+                    <apex:column headerValue="Email">
+                        {!contact.Email}
+                    </apex:column>
+                    <apex:column headerValue="Account Name">
+                        {!contact.Account.Name}
+                    </apex:column>
+                    <apex:column headerValue="Phone">
+                        {!contact.Phone}
+                    </apex:column>
+                    <apex:column headerValue="Type">
+                    </apex:column>
+                </apex:pageBlockTable>
+               	<apex:outputPanel layout="block" html-align="right">
+                    <apex:commandbutton value="First" action="{!firstPage}" disabled="{!Previous}" styleclass="slds-m-right_x-small slds-button slds-button_neutral" reRender="mainBlock"/>  
+                    <apex:commandButton value="Previous" action="{!previousPage}"  disabled="{!Previous}"  styleclass="slds-m-right_x-small slds-button slds-button_neutral" reRender="mainBlock"/>  
+                    <apex:commandButton value="Next" action="{!nextPage}" disabled="{!Next}"  styleclass="slds-m-right_x-small slds-button slds-button_neutral" reRender="mainBlock"/>  
+                    <apex:commandButton value="Last" action="{!lastPage}"  disabled="{!Next}" styleclass="slds-m-right_x-small slds-button slds-button_neutral" reRender="mainBlock"/> 
+                </apex:outputPanel>
+            </apex:pageBlock>
+        </apex:form> 
+        </div>
+    </html>
+</apex:page>

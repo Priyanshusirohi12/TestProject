@@ -1,0 +1,48 @@
+<apex:page title="Search Contacts" controller="SearchContactController" showHeader="true" sidebar="false" tabStyle="Contact">
+    <apex:form id="search">
+        <apex:actionFunction name="fillSelectedListSize" action="{!fillSelectedListSize}" Rerender="search"/>
+        <apex:sectionHeader title="Search" subtitle="Contacts"/>
+        <apex:pageBlock >
+            <apex:pageBlockSection collapsible="false">
+                <apex:pageBlockSectionItem >
+                    <apex:inputText value="{!inputSearch}" />
+                    <apex:commandButton value="Search" action="{!search}" reRender="search"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:selectList size="1" value="{!listSize}" onchange="fillSelectedListSize();"
+                    style="width:10.9%; float:right;">
+                        <apex:selectOptions value="{!FillList}"></apex:selectOptions>
+                    </apex:selectList>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+            <apex:variable value="{!first}" var="indexNo"/>
+            <apex:pageBlockSection columns="1" collapsible="false" title="Contact List">
+                <apex:pageBlockTable value="{!contactList}" var="contact" >
+                    <apex:column headerValue="#" >
+                        <apex:variable value="{!indexNo+1}" var="indexNo"/>
+                        {!indexNo}
+                        
+                    </apex:column>
+                    <apex:column value="{!contact.Name}"/>
+                    <apex:column value="{!contact.Email}"/>
+                    <apex:column value="{!contact.AccountId}"/>
+                    <apex:column value="{!contact.Phone}"/>
+                    <apex:column value="{!contact.Type__c}"/>
+                </apex:pageBlockTable>
+            </apex:pageBlockSection>
+                <apex:pageBlockButtons location="Bottom" html-align="right">                    
+                    <apex:commandButton value="First"  action="{!first}" reRender="search" 
+                    disabled="{!IF(first==0,true,false)}"/>
+                    
+                    <apex:commandButton value="Previous" action="{!previous}" reRender="search" 
+                    disabled="{!IF(first==0,true,false)}"/>
+                    
+                    <apex:commandButton value="Next" action="{!next}" reRender="search" 
+                    disabled="{!IF(AllContactList.size==contactList.size || last==AllContactList.size,true,false)}"/>
+                    
+                    <apex:commandButton value="Last" action="{!last}" reRender="search" 
+					disabled="{!IF(AllContactList.size==contactList.size || last==AllContactList.size,true,false)}"/>
+                </apex:pageBlockButtons>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

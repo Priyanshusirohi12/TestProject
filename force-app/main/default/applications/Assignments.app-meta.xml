@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomApplication xmlns="http://soap.sforce.com/2006/04/metadata">
+    <brand>
+        <headerColor>#0070D2</headerColor>
+        <shouldOverrideOrgTheme>false</shouldOverrideOrgTheme>
+    </brand>
+    <formFactors>Small</formFactors>
+    <formFactors>Large</formFactors>
+    <isNavAutoTempTabsDisabled>false</isNavAutoTempTabsDisabled>
+    <isNavPersonalizationDisabled>false</isNavPersonalizationDisabled>
+    <label>Assignments</label>
+    <navType>Standard</navType>
+    <tabs>Project__c</tabs>
+    <tabs>Project_Task__c</tabs>
+    <tabs>Route__c</tabs>
+    <tabs>Route_Station__c</tabs>
+    <tabs>GanttLink__c</tabs>
+    <tabs>GanttTask__c</tabs>
+    <tabs>Sprint__c</tabs>
+    <tabs>Gantt_Project__c</tabs>
+    <tabs>Movie__c</tabs>
+    <tabs>Seat_Category__c</tabs>
+    <tabs>Seat__c</tabs>
+    <tabs>Movie_Booking__c</tabs>
+    <tabs>Program__c</tabs>
+    <tabs>Email_Customer__c</tabs>
+    <tabs>Creator_Email__c</tabs>
+    <tabs>Stimulus_Deal__c</tabs>
+    <uiType>Lightning</uiType>
+    <utilityBar>Assignments_UtilityBar</utilityBar>
+</CustomApplication>

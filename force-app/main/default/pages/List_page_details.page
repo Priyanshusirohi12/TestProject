@@ -1,0 +1,27 @@
+<apex:page title="Account List View" showHeader="false" standardController="Account" recordSetVar="Account">
+  <apex:form >
+    	<apex:sectionHeader title="Account" subtitle="Home" />
+      	<apex:pageBlock title="Recent Accounts" mode="edit">
+            <apex:pageBlockButtons >
+            	<apex:commandButton value="Next" action="{!next}"/>
+                <apex:commandButton value="Previous" action="{!previous}"/>
+     			<apex:commandButton value="Last" action="{!last}"/>
+                <apex:commandButton value="First" action="{!first}"/>
+            </apex:pageBlockButtons>
+            		<apex:variable var="rowNo" value="{!0}"/>
+         			<apex:pageBlockSection columns="1" title="Account List" collapsible="false">
+                <apex:pageBlockTable value="{!Account}" var="acc">
+                    <apex:column headerValue="SL.No">
+                    <apex:variable var="rowNo" value="{!rowNo+1}"/>
+                     {!rowNo}
+                        </apex:column>
+                    <apex:column value="{!acc.Name}" />
+                    <apex:column value="{!acc.BillingCity}"/>
+                    <apex:column value="{!acc.Phone}"/>
+                   
+                </apex:pageBlockTable>
+            </apex:pageBlockSection>
+   
+              </apex:pageBlock>
+    </apex:form>
+</apex:page>

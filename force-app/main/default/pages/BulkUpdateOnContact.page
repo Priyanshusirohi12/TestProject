@@ -1,0 +1,27 @@
+<apex:page title="Bulk Contact Update" controller="BulkUpdateOnContact" showHeader="false" tabStyle="Contact">
+        <apex:form id="testId">
+            <apex:sectionHeader title="Edit Contact" subtitle="Record Update"/>
+            <apex:pageBlock title="Edit Contact">
+                              <apex:pageBlockSection columns="1" title="Contact List" collapsible="false">
+                    <apex:pageBlockTable value="{!contactList}" var="Contact">
+                        <apex:column headerValue="First Name">
+                            <apex:inputField value="{!Contact.FirstName}"/>
+                        </apex:column>
+                        <apex:column headerValue="Last Name" >
+                            <apex:inputField value="{!Contact.LastName}" >
+                            </apex:inputField>
+                        </apex:column>
+                        <apex:column headerValue="Account">
+                            <apex:inputField value="{!Contact.AccountId}"/>
+                        </apex:column>
+                   </apex:pageBlockTable>
+                            </apex:pageBlockSection>
+                    <apex:pageBlockButtons >
+                             <apex:commandButton value="Save"  reRender="testId" action="{!updateRecords}">
+                        </apex:commandButton>
+                          <apex:commandButton value="Cancel" reRender="testId" action="{!cancelRecords}"/>   	
+                    
+                    </apex:pageBlockButtons>
+               </apex:pageBlock>
+        </apex:form>
+    </apex:page>

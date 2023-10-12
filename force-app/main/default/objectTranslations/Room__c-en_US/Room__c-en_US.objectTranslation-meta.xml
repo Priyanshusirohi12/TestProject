@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>Room</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Rooms</value>
+    </caseValues>
+    <layouts>
+        <layout>Room Layout</layout>
+        <sections>
+            <label></label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <startsWith>Consonant</startsWith>
+    <validationRules>
+        <errorMessage></errorMessage>
+        <name>Price_must_be_between_1000_to_10000</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage></errorMessage>
+        <name>Room_should_be_start_from_RM_lessthen_8</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage></errorMessage>
+        <name>Room_type_should_not_be_empty</name>
+    </validationRules>
+    <webLinks>
+        <label></label>
+        <name>Show_room_records</name>
+    </webLinks>
+</CustomObjectTranslation>

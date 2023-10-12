@@ -1,5 +1,0 @@
-<aura:event type="COMPONENT" description="tc_dealEntryNavigate_evt">
-    <aura:attribute name="tabDirection" type="String"
-                    required="true"
-                    description="Used to determine next tab in Deal Entry Wizard"/>
-</aura:event>

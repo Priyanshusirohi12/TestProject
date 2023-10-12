@@ -1,0 +1,16 @@
+<template>
+    <lightning-card title="Subscribe Component" icon-name="customer:customer101">
+        <div class="slds-m-around_medium">
+            {message}
+        </div>
+        <div class="slds-m-around_medium">
+           <p>Name : {details.Name} </p>
+           <p>FatherName : {details.FatherName}</p>
+           <p>MotherName : {details.MotherName}</p>
+           <p>Email : {details.Email}</p>
+        </div>
+        <div class="slds-m-around_medium">
+            <lightning-button label ="SendList" onclick={handleList} variant=brand></lightning-button>
+        </div>
+    </lightning-card>
+</template>

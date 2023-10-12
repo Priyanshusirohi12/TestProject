@@ -1,8 +1,0 @@
-<!--
- - Created  on 12/19/17.
- -->
-
-<aura:event type="APPLICATION" description="tc_quoteCalculations_evt">
-    <aura:attribute name="data" type="Object" default="{}"/>
-
-</aura:event>

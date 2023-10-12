@@ -1,0 +1,34 @@
+<template>
+    <lightning-card title ="Subscriber" icon-name="customer:customer105">
+        <div class="slds-m-around_medium">
+            <table border="2px" class="hye">
+                <thead>
+                    <tr>
+                        <td>S.no</td>
+                        <td>Name</td>
+                        <td>Qty</td>
+                        <td>Amount</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <template for:each={getRecords} for:item="record"> 
+                            <tr key={record}>
+                                <td>{record.id}</td>
+                                <td>{record.product}</td>
+                                <td>{record.quantity}</td>
+                                <td>{record.price}</td>
+                            </tr>
+                    </template>
+                </tbody>
+            </table>
+            <br/>
+            <table class="hi">
+                <tr>
+                    <td colspan="2">Grand Total</td>
+                    <td>{totalAmount}</td>
+                </tr>
+            </table>
+            
+        </div>
+    </lightning-card>
+</template>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Price_must_be_between_1000_to_10000</fullName>
+    <active>true</active>
+    <errorConditionFormula>Price__c &lt;1000 ||  Price__c &gt;10000</errorConditionFormula>
+    <errorDisplayField>Price__c</errorDisplayField>
+    <errorMessage>Price must be between 1000 to 10000</errorMessage>
+</ValidationRule>

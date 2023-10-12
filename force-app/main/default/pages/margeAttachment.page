@@ -1,0 +1,95 @@
+<apex:page title="Marge Attachment" showHeader="false" controller="MargeAttachmentConttroller">
+    
+    <style type='text/css'>
+.customPopup{
+    background-color: lightgrey;
+    border-style: solid;
+    border-radius: 10px;
+    border-width: 1px;
+    left: 55%;
+    position: fixed;
+    padding: 5px;
+    box-shadow: 0px 3px 7px rgba(1, 1, 1, 5);
+    background: #fff;
+    width: 600px;
+    margin-left: -200px;
+    top: 10px;
+    max-width: 700px;
+}
+    </style>
+    
+    <apex:form id="test">
+        <apex:actionFunction name="setSelectedRecord" action="{!setSelectedRecord}" reRender="test"/>
+        <apex:actionFunction name="putAttachment" action="{!putAttachment}" reRender="test"/>
+        <apex:actionFunction name="setCheckboxValue" action="{!setCheckboxValue}" reRender="test"/>
+        <apex:sectionHeader title="Marge Attachments"/>
+    	<apex:pageBlock >
+            <apex:pageBlockSection collapsible="false" title="Select Image"> 
+            <apex:pageBlockSectionItem >
+                <apex:selectList size="1" value="{!objectValue}" onchange="putAttachment();">
+                    <apex:selectOption itemValue="" itemLabel="-- None --"></apex:selectOption>
+                    <apex:selectOption itemValue="Account" itemLabel="Account"></apex:selectOption>
+                    <apex:selectOption itemValue="Contact" itemLabel="Contact"></apex:selectOption>
+                    <apex:selectOption itemValue="Case" itemLabel="Case"></apex:selectOption>
+                    <apex:selectOption itemValue="Opportunity" itemLabel="Opportunity"></apex:selectOption>
+                </apex:selectList>	
+ 			</apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:commandButton value="Marge" action="{!showButtonOnClick}" rendered="{!showButton}" />
+            </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+        	
+            <apex:variable value="{!0}" var="indexNumber"/>
+            <apex:pageBlockSection title="{!objectValue} List" collapsible="false" columns="1" rendered="{!IF(objectValue != null,true,false)}">
+                <apex:pageBlockTable value="{!attachmentWrapperList}" var="Attachments" >
+                   	<apex:column headerValue="#">
+                        <apex:variable value="{!indexNumber+1}" var="indexNumber"/>
+                        <apex:param value="{!indexNumber}" assignTo="{!takeIndex}"/>
+                        {!indexNumber}
+                    </apex:column>
+                    <apex:column >
+                         <apex:facet name="header">
+                         	<apex:inputCheckbox value="{!checkAll}" onchange="setSelectedRecord();"/>
+                         </apex:facet>
+                        <apex:inputCheckbox value="{!Attachments.CheckboxValue}" onChange="setCheckboxValue();"/>
+                    </apex:column>
+                    <apex:column value="{!Attachments.attachment.Name}" />
+                    <apex:column headerValue="Images">
+                        <apex:image url="{!URLFOR($Action.Attachment.Download, Attachments.Attachment.id)}" width="50" height="50" />
+                    </apex:column>
+            	</apex:pageBlockTable>
+            </apex:pageBlockSection>
+        	
+        	<apex:outputPanel styleClass="customPopup" layout="block" rendered="{!displayPopup}">
+        <apex:actionFunction name="sObjectRecords" action="{!sObjectRecords}"/>      
+    	
+            <apex:variable value="{!0}" var="indexNo"/>
+                <apex:pageBlockSection title="Select Object"  collapsible="false">
+                	<apex:pageBlockSectionItem >
+                        <apex:selectList size="1" value="{!objectValuePopup}" onchange=" sObjectRecords(); ">
+                        <apex:selectOption itemValue="" itemLabel="-- None --"></apex:selectOption>
+                        <apex:selectOption itemValue="Account" itemLabel="Account"></apex:selectOption>
+                        <apex:selectOption itemValue="Contact" itemLabel="Contact"></apex:selectOption>
+                        <apex:selectOption itemValue="Case" itemLabel="Case"></apex:selectOption>
+                        <apex:selectOption itemValue="Opportunity" itemLabel="Opportunity"></apex:selectOption>
+                        </apex:selectList>
+                    	<apex:commandButton value="Copy" action="{!fillsObject}" />
+                    </apex:pageBlockSectionItem>
+                    </apex:pageBlockSection>
+                   <apex:pageBlockSection columns="1" collapsible="false" title="{!objectValuePopup} List" rendered="{!IF(objectValuePopup != null,true,false)}">
+                <apex:pageBlockTable value="{!onClickPopupWrapperList}" var="WrapperRecords" >
+                    <apex:column headerValue="#">
+                        <apex:variable value="{!indexNo+1}" var="indexNo"/>
+                        {!indexNo}
+                    </apex:column>
+                    <apex:column >  
+                    <apex:inputCheckbox value="{!WrapperRecords.checkBoxpopUp}"/>
+                    </apex:column>
+                    <apex:column value="{!WrapperRecords.tempValue}"/>
+                </apex:pageBlockTable>
+            </apex:pageBlockSection>
+        
+            </apex:outputPanel>
+</apex:pageBlock>
+    </apex:form>
+</apex:page>

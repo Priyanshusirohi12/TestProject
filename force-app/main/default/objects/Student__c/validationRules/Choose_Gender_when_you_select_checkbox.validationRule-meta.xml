@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Choose_Gender_when_you_select_checkbox</fullName>
+    <active>true</active>
+    <errorConditionFormula>(ISPICKVAL( Gender__c , &apos;&apos;) &amp;&amp;  Married_Status__c ==true)</errorConditionFormula>
+    <errorDisplayField>Gender__c</errorDisplayField>
+    <errorMessage>Must Choose Gender when married status is selected</errorMessage>
+</ValidationRule>

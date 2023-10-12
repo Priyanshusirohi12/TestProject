@@ -1,0 +1,83 @@
+<template>
+    <lightning-card title="Account List">
+        <div class="slds-m-around_medium">
+            <lightning-button label="Get Account" onclick={handleOnAccount} varient="brand"></lightning-button>
+        </div>
+        <div class="slds-m-around_medium">
+              <table>
+                <thead>
+                    <tr>
+                        <td>Id</td>
+                        <td>Name</td>
+                        <td>AccountNumber</td>
+                        <td>Email</td>
+                        <td>Phone</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <template for:each={accounts} for:item="account">
+                        <tr key={account}>
+                            <td>{account.Id}</td>
+                            <td>{account.Name}</td>
+                            <td>{account.AccountNumber}</td>
+                            <td>{account.Email__c}</td>
+                            <td>{account.Phone}</td>
+                        </tr>
+                    </template>
+                </tbody>
+            </table>
+        </div>
+    </lightning-card>
+    <lightning-card title="Contact details">
+        <div class="slds-m-around_medium">
+            <table>
+                <thead>
+                    <tr>
+                        <td>Id</td>
+                        <td>Name</td>
+                        <td>Phone</td>
+                        <td>Fax</td>
+                        <td>Email</td>
+                        <td>AccountId</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <template for:each={contacts} for:item=contact>
+                        <tr key={contact}>
+                            <td>{contact.Id}</td>
+                            <td>{contact.Name}</td>
+                            <td>{contact.Phone}</td>
+                            <td>{contact.Fax}</td>
+                            <td>{contact.Email}</td>
+                            <td>{contact.AccountId}</td>
+                        </tr>
+                    </template>
+                </tbody>
+            </table>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Fax</th>
+                        <th>Account Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <template for:each={contacts} for:item="contact">
+                        <tr key={contact}>
+                            <td>{contact.Id}</td>
+                            <td>{contact.Name}</td>
+                            <td>{contact.Email}</td>
+                            <td>{contact.Phone}</td>
+                            <td>{contact.Fax}</td>
+                            <td>{contact.AccountId}</td>
+                        </tr>
+                    </template>
+                </tbody>
+            </table>
+        </div>
+    </lightning-card>
+</template>

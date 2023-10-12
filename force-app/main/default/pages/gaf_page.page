@@ -1,0 +1,447 @@
+<apex:page title="Convert Pdf" showHeader="false" sidebar="false" renderAs="pdf" applyHtmlTag="false" standardStylesheets="false" >
+    <html>
+        <head>
+            <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />   
+            <style type="text/css" media="print">              
+                /*
+                @page {   
+                size: A4 landscape; 
+                } 
+                */
+                @page {   
+                    margin-top: 180px;
+                	margin-left:10px;
+                    padding:0px;
+                    margin-bottom: 30px; 
+                    @top-left {
+                        content: element(header);
+                    }  
+                    @bottom-left {   
+                        content: element(footer);
+                    } 
+                } 
+             	 div.footer {                    
+                    position: running(footer);
+                    width: 100%;
+                	text-align:center;
+                	border:1px solid white;
+                }
+               .pagenumber:before {
+                                content: counter(page);
+               }
+                           .pagecount:before {
+                     content: counter(pages);
+                }
+                .paraText{
+                text-align : right;		
+                }
+                #header{
+                 	margin-top:10px;
+                    position: running(header);
+                    width: 100%;
+                    margin-right: 10px;
+                }
+                
+                #header div{
+                display:inline-block 
+                }
+                
+                #header_left{
+                width:48%;
+                }
+                #header_right{
+                	width:48%;
+                	vertical-align:top
+                }
+                #status_details{
+                    width:100%;
+                }
+                #status_details div{
+                    margin-top:10px;
+                    font-size:12px;
+                    width:30%;
+                    display:inline-block
+                }
+                
+                #table_div_row div{
+                	/*width:48%;*/
+                    display:inline-block;
+                }
+                
+                
+                #table_div_row_roof_assembly{
+                width:50%
+                display:inline-block;
+                }
+                .column {
+                display:inline-block;
+                width: 52%;
+                padding: 10px;
+                
+                }
+                body{
+                    font-size:7pt;
+                    font-family: SansSerif;
+                    margin:0px;
+                    padding:0px
+                }
+                 .repeatTableHeader{-fs-table-paginate: paginate;}
+            </style>
+        </head>
+        <body>     
+            <div class="footer" >
+                <div>Guarantee Services | 1 Campus Drive, NJ 07054 | Toll Free 877.423.7663 | SGuarantee@GAF.com</div>
+            	<div>Page <span class="pagenumber"/> OF <span class="pagecount"/></div>
+            </div>
+             
+            <div id="header">
+                <div id="header_left">
+                    <img height="100px" src='https://mcgrawimages.buildingmedia.com/CE/download_images/GAF_logo.png' alt='salesforce'/>
+                </div>
+                
+                <div id="header_right">
+                    <span>
+                        <p class='paraText'>
+                            Guarantee Services Department
+                        </p>
+                        <p class='paraText'>
+                            1 Campus Drive
+                        </p >
+                        <p class='paraText'>
+                            Parsippany, NJ 07054  
+                        </p>
+                    </span>
+                </div>   
+                 <div style="text-align:center; width:100%">
+                    <h3>
+                        ASPHALTIC NOTICE OF AWARD CONFIRMATION
+                    </h3>
+                </div> 
+                
+                <div id="status_details">
+                    <div ><b >Status: </b> Guarantee Issued</div>
+                    <!--<div style='font-size: 20px; align:center;'><b>Status as of: <b/></div>-->
+                    <div ><b>Status as of:</b>11/22/21</div>
+                    <div align="right"><b>GAF File No: </b>G2020-00000604</div>
+                </div>
+                <hr/>
+            </div>
+            
+            <div id="table_div_row">
+                <div style="width:48%; vertical-align:top">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>1. BUILDING NAME, ADDRESS, PHONE:</th>
+                            </tr>
+                            <tr>
+                                <td style ='padding-left:20px'>ET ENGINEERING NORTH MOORING</td>
+                            </tr>
+                            <tr>
+                                <td style ='padding-left:20px'>600 8 A VENUE SOUTHEAST</td>
+                            </tr>
+                            <tr>
+                                <td style ='padding-left:20px'>ST. PETERSBURG, FL 33701</td>
+                            </tr>
+                            <tr>
+                                <td style ='padding-left:20px'>Contact: JASON TEST</td>
+                                <td>Email: jtest@aol.com</td>
+                            </tr>
+                            <tr>
+                                <td style ='padding-left:20px'>Phone: 444-444-4456</td>
+                            	<td>Fax: 444-444-4457</td>
+                            </tr>                            
+                        </thead>
+                    </table>
+                </div>
+                <div style="width:48%; text-align-right;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th colspan="2">2. ROOFING CONTRACTOR'S NAME, ADDRESS, PHONE:</th>
+                            </tr>
+                            <tr>
+                                <td style ='padding-left:20px'>EAGLE TRADING INTERNATIONAL CORP</td>
+                            </tr>
+                            <tr>
+                                <td style ='padding-left:20px'>6255 W Howard  </td>
+                            </tr>
+                            <tr>
+                                <td style ='padding-left:20px'>St Niles, IL, 60714</td>
+                            </tr>
+                            <tr>
+                                <td style ='padding-left:20px'>Contact: TOM DAWSON </td>
+                                <td style='padding-left:20px'>tom.dawson@roofingsource.com</td>
+                            </tr>
+                            <tr>
+                                <td style ='padding-left:20px'>Phone: 407-592-8363</td>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+            <hr/>
+            <div id="table_div_row">
+                <div style="width:48%; vertical-align:top">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>3. BUILDING OWNER'S NAME, ADDRESS, PHONE:</th>
+                            </tr>
+                            <tr>
+                                <td style ='padding-left:20px'>USCGC SECTOR ST PETERSBURG USCG CEUP</td>
+                            </tr>
+                            <tr>
+                                <td style ='padding-left:20px'>600 8TH A VENUE SOUTHEAST</td>
+                            </tr>
+                            <tr>
+                                <td style ='padding-left:20px'>ST.PETERSBURG, FL 33701</td>
+                            </tr>
+                            <tr>
+                                <td style ='padding-left:20px'>CONTACT: LARRY ANTONUCCI</td>
+                            </tr>
+                            <tr>
+                                <td style ='padding-left:20px'>PHONE: 727-824-7609 </td>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+                <div style="width:48%; text-align-right;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th colspan="2">4. SPECIFIER'S NAME, ADDRESS, PHONE:</th>
+                            </tr>
+                            <tr>
+                                <td style ='padding-left:20px'>SP INC</td>
+                            </tr>
+                            <tr>
+                                <td style ='padding-left:20px'>26 MAIN STREET  </td>
+                            </tr>
+                            <tr>
+                                <td style ='padding-left:20px'>TAMPA, FL 33634</td>
+                            </tr>
+                            <tr>
+                                <td style ='padding-left:20px'>Contact: JACK SP </td>
+                                <td style='padding-left:20px'>Email: sp@sp.com</td>
+                            </tr>
+                            <tr>
+                                <td style ='padding-left:20px'>Phone: 777-777-7777</td>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+
+            <hr/>
+            <div id="table_div_row">
+                <div style="width:48%; vertical-align:top">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>5. GENERAL CONTRACTOR'S NAME, ADDRESS, PHONE:</th>
+                            </tr>
+                            <tr>
+                                <td style ='padding-left:20px'>GC INC</td>
+                            </tr>
+                            <tr>
+                                <td style ='padding-left:20px'>25 MAIN STRRET</td>
+                            </tr>
+                            <tr>
+                                <td style ='padding-left:20px'>TAMPA,FL 33634</td>
+                            </tr>
+                            <tr>
+                                <td style ='padding-left:20px'>CONTACT: JOE GC</td>
+                                <td>Email: gc@gc.com</td>
+                            </tr>
+                            <tr>
+                                <td style ='padding-left:20px'>PHONE: 666-666-6666</td>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+                <div style="width:48%; text-align-right;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th colspan="2">6. ROOFING CONSULTANT'S NAME, ADDRESS, PHONE:</th>
+                            </tr>
+                            <tr>
+                                <td style ='padding-left:20px'>RC INC</td>
+                            </tr>
+                            <tr>
+                                <td style ='padding-left:20px'>27 MAIN STREET  </td>
+                            </tr>
+                            <tr>
+                                <td style ='padding-left:20px'>TAMPA, FL 33634</td>
+                            </tr>
+                            <tr>
+                                <td style ='padding-left:20px'>Contact: JILL RC </td>
+                                <td style='padding-left:20px'>Email: sp@sp.com</td>
+                            </tr>
+                            <tr>
+                                <td style ='padding-left:20px'>Phone: 888-888-8888</td>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+
+            <hr/>
+            <div id="table_div_row">
+                <div style="width:33%; vertical-align:top">
+                    <div><b>PROJECT DETAILS:</b></div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <td style ='padding-left:20px'>Type of Guarantee : GAFGLAS DIAMOND PLEDGE 20</td>
+                            </tr>
+                            <tr>
+                                <td style ='padding-left:20px'>Addendums: Coating</td>
+                            </tr>
+                            <tr>
+                                <td style ='padding-left:20px'></td>
+                            </tr>
+                            <tr>
+                                <td style ='padding-left:20px'>Usage: OFFICE</td>
+                            </tr>
+                            <tr>
+                                <td style ='padding-left:20px'>Start Date: 01/27/20</td>
+                            </tr>
+                            <tr>
+                                <td style ='padding-left:20px'>Completion Date: 05/15/20</td>
+                            </tr>
+                            <tr>
+                                <td style ='padding-left:20px'>Issue Date: 04/26/21</td>
+                            </tr>
+                            <tr>
+                                <td style ='padding-left:20px'>Expiration Date: 05/15/40</td>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+                <div style="width:33%; text-align-right; vertical-align:top">
+                    <table>
+                        <thead>
+                            
+                            <tr>
+                                <td style ='padding-left:20px'>Low-Slope Squares:</td>
+                                <td>46.00</td>
+                            </tr>
+                            <tr>
+                                <td style ='padding-left:20px'>Specification #:I0325/HGPFR(C)</td>
+                            </tr>
+                            <tr>
+                                <td style ='padding-left:20px'> </td>
+                            </tr>
+                            <tr>
+                                <td style ='padding-left:20px'>Roof Slope: 1/4"</td>
+                            </tr>
+                            <tr>
+                                <td style ='padding-left:20px'>Height: 12</td>
+                            </tr>
+                            <tr>
+                                <td style ='padding-left:20px'>Length: 90</td>
+                            </tr>
+                            <tr>
+                                <td style ='padding-left:20px'>Width: 80</td>
+                            </tr>
+                            <tr>
+                                <td style ='padding-left:20px'>Roof Access: LADDER</td>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+                <div style="width:33%; text-align-right;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <td> </td>
+                            </tr>
+                            <tr>
+                                <td style ='padding-left:20px'>Project Type: Complete Tear-off</td>
+                            </tr>
+                            <tr>
+                                <td style ='padding-left:20px'>Recover Exiting Assembly: </td>
+                            </tr>
+                            <tr>
+                                <td style ='padding-left:20px'> </td>
+                            </tr>
+                            <tr>
+                                <td style ='padding-left:20px'>Deck Type: Structural Concrete</td>
+                            </tr>
+                            <tr>
+                                <td style ='padding-left:20px'>Deck Thickness/Gauge: </td>
+                            </tr>
+                            <tr>
+                                <td style ='padding-left:20px'>Multiple Deck: No</td>
+                            </tr>
+                            <tr>
+                                <td style ='padding-left:20px'>Moisture Scan Completed: No</td>
+                            </tr>
+                            <tr>
+                                <td style ='padding-left:20px'>Other Deck Or Comments: OLYBOND ADHESIVE FOR ALL LAYES</td>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+            <hr/>
+            <div class =''>
+                <div class ='column'  >
+                    <b>Roof Assembly:</b>
+                    <table width="100%">
+                        <tr>
+                            <td><b>Vaper Barrier:</b> Yes</td>
+                        </tr>
+                        <tr>
+                            <td> <b>Barrier Type and Attachment:</b>VP01 </td>
+                        </tr>
+                        <tr>
+                            <td><b>Top Side Vending: </b> PERIMETER</td>
+                        </tr>
+                        <tr>
+                            <td><b>Base sheet Type: </b>RUBEROID HW 15</td><td>Attachment: TORCH APPLIED</td>
+                        </tr>
+                    </table> 
+                    <b>GAF Interply:</b>
+                    <table width="100%">
+                        <tr><td>Number of Ply's: 1 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Product:RUBEROID HW SMOOTH</td></tr>
+                        <tr><td>Attachment: TORCH APPLIED</td></tr>
+                        <tr>
+                            <td><b>Membrane Cap Sheet: </b>RUBBEROID HW PLUS</td>
+                            <td>Attachment: TORCHED/HEAT-WE GRANULE FR</td>
+                        </tr>
+                        <tr><td><b>Membrane Adhesive: </b>Matrix 102 SBS Membrane Adhesive</td></tr>
+                        <tr><td><b>Surfacing: </b>COATING</td></tr>
+                        <tr><td colspan="2"><b>Asphalt: </b>Anchor Matcon-22 &nbsp;&nbsp; Type:Not| &nbsp;&nbsp;Code:22&nbsp;&nbsp;&nbsp;&nbsp;WT(LBS):&nbsp;&nbsp; 0</td></tr>
+                        <tr><td><b>Base Flashing:</b></td></tr>
+                    </table>
+                </div>
+                <div  style ='float:right; red;width:44%' >
+                    <div><b>Insulation Adhesive: </b>OlyBond 500</div>
+                    <b>Insulation Layer1: </b>
+                    <table width="100%">
+                        <tr><td>Product Type: EnergyGuard Polyiso Insulation</td></tr>
+                        <tr><td>Thickness: 2.1  &nbsp; &nbsp; &nbsp; &nbsp;Size 4'x4'</td></tr>
+                        <tr><td>Attachment: Adheard</td></tr>
+                        <tr><td>Fastener: </td></tr>
+                        <tr><td>Field: &nbsp;&nbsp;&nbsp;&nbsp; Perimeter &nbsp;&nbsp;&nbsp;&nbsp; Corner </td></tr>
+                        <tr><td>Field Spacing: 12" &nbsp;&nbsp; Perimeter Spacing: 6" </td></tr>
+                    </table>
+                    <b>Insulation Layer2: </b>
+                    <table width="100%">
+                        <tr><td>Product Type: EnergyGuard Polyiso Insulation</td></tr>
+                        <tr><td>Thickness: 2.1  &nbsp; &nbsp; &nbsp; &nbsp;Size 4'x4'</td></tr>
+                        <tr><td>Attachment: Adheard</td></tr>
+                        <tr><td>Fastener: </td></tr>
+                        <tr><td>Field: &nbsp;&nbsp;&nbsp;&nbsp; Perimeter &nbsp;&nbsp;&nbsp;&nbsp; Corner </td></tr>
+                        <tr><td>Field Spacing: 12" &nbsp;&nbsp; Perimeter Spacing: 6" </td></tr>
+                    </table>
+            	</div>  
+            </div>
+            <div style="page-break-after:always;"></div>
+        </body>
+    </html>
+    
+</apex:page>

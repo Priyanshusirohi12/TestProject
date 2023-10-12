@@ -1,0 +1,140 @@
+<template>
+    <lightning-card title="Student List">
+        <div class="slds-m-around_medium">
+            
+            <template if:true={status}>
+
+                <template if:true={disable}>
+                    <lightning-layout>
+                        <table>
+                            <tr>
+                                <td>
+                                    <lightning-input label=" First Name" type="text" value={fisrtName} disabled="true" class="customer"></lightning-input>
+                                </td>
+                                <td>
+                                    <lightning-combobox label ="Is Married" options={isMarriedList} disabled="true" value={isMarried} class="customer"></lightning-combobox>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <lightning-input label=" Last Name" type="text" value={lastName} disabled="true" class="customer"></lightning-input>
+                                </td>
+                                <td>
+                                    <lightning-radio-group label ="Gender" options={genderRadio} value={gender} disabled="true" class="customer"></lightning-radio-group>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <lightning-combobox label="City" options={cityList} value={city} disabled="true" class="customer"></lightning-combobox>
+                                </td>
+                                <td>
+                                    <lightning-input label ="Phone" type="number" value={phone} disabled="true" class="customer"></lightning-input>
+                                </td>
+                            </tr> 
+                            <tr>
+                                <td>
+                                    <lightning-input label ="Email" type="email" value={email} disabled="true" class="customer"></lightning-input>
+                                </td>
+                            </tr>  
+                            <tr>
+                                <td align="center">
+                                    <lightning-button label="back" onclick={backButton} variant="brand"></lightning-button>
+                                </td>
+                            </tr>                     
+                        </table>
+                    </lightning-layout>
+                </template>
+
+                <template if:false={disable}>
+                    <lightning-card>
+                        <table>
+                            <tr>
+                                <td>
+                                    <lightning-input label=" First Name" type="text" value={fisrtName} class="customer"></lightning-input>
+                                </td>
+                                <td>
+                                    <lightning-combobox label ="Is Married" options={isMarriedList} value={isMarried} class="customer"></lightning-combobox>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <lightning-input label=" Last Name" type="text" value={lastName} class="customer"></lightning-input>
+                                </td>
+                                <td>
+                                    <lightning-radio-group label ="Gender" options={genderRadio} value={gender} class="customer"></lightning-radio-group>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <lightning-combobox label="City" options={cityList} value={city} class="customer"></lightning-combobox>
+                                </td>
+                                <td>
+                                    <lightning-input label ="Phone" type="number" value={phone} class="customer"></lightning-input>
+                                </td>
+                            </tr> 
+                            <tr>
+                                <td>
+                                    <lightning-input label ="Email" type="email" value={email} class="customer"></lightning-input>
+                                </td>
+                            </tr>  
+                            <tr>
+                                <td>
+                                    <lightning-button label="Save" onclick={SaveButton} variant="brand"></lightning-button>
+                                </td>
+                                <td>
+                                    <lightning-button label="Cancel" onclick={backButton} variant="nutral"></lightning-button>
+                                </td>
+                            </tr>                     
+                        </table>
+                    </lightning-card>
+                </template>
+            </template>
+
+            <template if:false={status}>
+            <table>
+                <thead>
+                    <tr>                      
+                        <td>Edit</td>
+                        <td>Delete</td>
+                        <td>Clone</td>
+                        <td>View</td>
+                        <td>First Name</td>
+                        <td>Last Name</td>
+                        <td>Email</td>
+                        <td>Gender</td>
+                        <td>City</td>
+                        <td>Contact</td>
+                    </tr>
+                </thead>
+            <tbody>
+            <template for:each={customerDetails} for:item="customer">
+                <tr key={customer} >
+                    <td>
+                        <lightning-button value={customer.Id} onclick={handleIdOnEdit} label="Edit" variant="brand"></lightning-button>
+                    </td>
+                    <td>
+                        <lightning-button value={customer.Id} label="Delete" onclick={deleteOnClick} variant="brand"></lightning-button>
+                        <br/>
+                    </td>
+                    <td>
+                        <lightning-button value={customer.Id} label="Clone" onclick={copyOnClick} variant="brand"></lightning-button>
+                        <br/>
+                    </td>
+                    <td>
+                        <lightning-button  value={customer.Id} onclick={handleIdOnView} label="View" variant="brand"></lightning-button>
+                        <br/>
+                    </td>
+                    <td>{customer.First_Name__c}</td>
+                    <td>{customer.Last_Name__c}</td>
+                    <td>{customer.Email__c}</td>
+                    <td>{customer.Gender__c}</td>
+                    <td>{customer.City__c}</td>
+                    <td>{customer.Phone__c}</td>
+                </tr>
+            </template>
+        </tbody>
+    </table>
+    </template>
+        </div>
+    </lightning-card>
+</template>

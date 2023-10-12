@@ -1,7 +1,0 @@
-<!--
- - Created  on 12/23/17.
- -->
-
-<aura:event type="APPLICATION" description="tc_checkboxTileGroupChange_evt">
-    <aura:attribute name="selectedValues" type="List"/>
-</aura:event>

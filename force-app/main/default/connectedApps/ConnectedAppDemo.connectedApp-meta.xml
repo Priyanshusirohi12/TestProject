@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ConnectedApp xmlns="http://soap.sforce.com/2006/04/metadata">
+    <contactEmail>Priyanshusirohi12@gmail.com</contactEmail>
+    <label>ConnectedAppDemo</label>
+    <oauthConfig>
+        <callbackUrl>https://www.salesforce.com</callbackUrl>
+        <consumerKey>3MVG9fe4g9fhX0E746jl3ghFpK3qgjzvlswvbf2BLZk3mdw0bz04SNXFdTyp5xSC8daDyEEvE43urrpH4LzKA</consumerKey>
+        <scopes>Basic</scopes>
+        <scopes>Api</scopes>
+        <scopes>Web</scopes>
+        <scopes>Full</scopes>
+        <scopes>Chatter</scopes>
+        <scopes>CustomApplications</scopes>
+        <scopes>RefreshToken</scopes>
+        <scopes>OpenID</scopes>
+        <scopes>CustomPermissions</scopes>
+        <scopes>Wave</scopes>
+        <scopes>Eclair</scopes>
+        <scopes>Pardot</scopes>
+        <scopes>Lightning</scopes>
+        <scopes>Content</scopes>
+    </oauthConfig>
+</ConnectedApp>

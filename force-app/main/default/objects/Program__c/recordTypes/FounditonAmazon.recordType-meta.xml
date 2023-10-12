@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RecordType xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>FounditonAmazon</fullName>
+    <active>true</active>
+    <label>FounditonAmazon</label>
+    <picklistValues>
+        <picklist>Brand_VOC__c</picklist>
+        <values>
+            <fullName>Negative</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Neutral</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Positive</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Pay_Rate__c</picklist>
+        <values>
+            <fullName>Flat rate</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Gift Cart</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Other fill in text</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+</RecordType>

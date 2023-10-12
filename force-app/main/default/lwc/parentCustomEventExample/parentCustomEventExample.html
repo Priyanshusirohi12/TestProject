@@ -1,0 +1,14 @@
+<template>
+    <lightning-card title="parent component">
+    <div class="slds-m-around_medium">
+        <p><b>Id : {id}</b></p>
+        <p><b>Name : {name}</b></p>
+        <p><b>Email :{studentDetails.email}</b></p>
+        <p><b>contact :{studentDetails.contact} </b></p>
+        
+    </div>
+    <div class="slds-m-around_medium">
+        <c-child-custom-event-example onsimpleevent={handelSimpleEvent}></c-child-custom-event-example>
+    </div>
+    </lightning-card>
+</template>

@@ -1,0 +1,26 @@
+<apex:page showHeader="false">
+    <apex:form >
+    <apex:pageBlock title="User Form">
+         <div style="border:2px solid black; width:268px; position:relative; top:160px">
+            <apex:outputLabel style="color:black; font-size: 22px; " >First Name</apex:outputLabel>
+            <input style="width: 260px; height:25px; " />
+            <apex:outputLabel style="color:black; font-size: 22px;">Last Name</apex:outputLabel>
+            <input style="width: 260px; height:25px; " />
+            <br/> 
+            <apex:outputLabel style="color:black; font-size: 22px; ">Father Name</apex:outputLabel>
+            <input style ="width: 260px; height:25px"/>
+            <br/> 
+            <apex:outputLabel style="color:black; font-size:22px;">Email Address</apex:outputLabel>
+            <input style ="width: 260px; height:25px"/>
+            <apex:inputCheckbox style="float:left; margin-top: 12px;" label="Remember me" /> 
+                <p Style="color:white" > 
+                    Remember me 
+                </p>
+                <a href="" style="color: blue" > Forget Your Password ?  </a> 
+            </div>
+        <apex:pageBlockButtons >
+            <apex:commandButton action="{! save }" value="Save" />
+        </apex:pageBlockButtons>
+    </apex:pageBlock>
+    </apex:form>
+</apex:page>

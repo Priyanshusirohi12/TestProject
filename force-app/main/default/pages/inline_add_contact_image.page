@@ -1,0 +1,26 @@
+<apex:page title="Inline Images on contact" standardController="Contact" extensions="InlineAddContactController" showHeader="false">
+    <apex:form >
+    	<apex:pageBlock >
+        	<apex:pageBlockSection title="Contact Images" collapsible="false" columns="4">
+            	<apex:repeat value="{!attachmentList}" var="imgId">
+                        <apex:image url="{!URLFOR($Action.Attachment.Download, imgId.id)}" width="200" height="200"/>
+                
+                </apex:repeat>
+                
+                
+                
+                <!--<apex:pageBlockTable value="{!attachmentList}" var="Attachments">
+                    <apex:column value="{!Attachments.ContentType}"/>
+                    <apex:column value="{!Attachments.Name}"/>
+                	<apex:column headerValue="Images"/>
+                    <apex:outputPanel >
+                        <apex:image url="{!URLFOR($Action.Attachment.Download, Attachment.id)}" width="200" height="200"/>
+                   		<apex:image url="/servlet/servlet.FileDownload?file={!Attachment.id}"  width="200" height="200"/>
+                    </apex:outputPanel>
+                    
+                </apex:pageBlockTable>-->
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
+    
+</apex:page>

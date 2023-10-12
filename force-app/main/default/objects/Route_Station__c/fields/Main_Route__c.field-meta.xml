@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Main_Route__c</fullName>
+    <externalId>false</externalId>
+    <label>Main Route</label>
+    <referenceTo>Route__c</referenceTo>
+    <relationshipLabel>Route Stations</relationshipLabel>
+    <relationshipName>Route_Stations</relationshipName>
+    <relationshipOrder>0</relationshipOrder>
+    <reparentableMasterDetail>true</reparentableMasterDetail>
+    <trackTrending>false</trackTrending>
+    <type>MasterDetail</type>
+    <writeRequiresMasterRead>false</writeRequiresMasterRead>
+</CustomField>

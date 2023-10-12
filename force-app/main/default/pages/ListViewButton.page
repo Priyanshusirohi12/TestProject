@@ -1,0 +1,35 @@
+<apex:page title="Account detail Page" 
+   standardController="Account"
+           extensions="managePickListClass"
+           recordSetVar="Accounts"
+           showHeader="false"
+           sidebar="false"
+             
+           >
+    
+    
+     
+      <apex:includeLightning /> 
+    <div id="lightning" />  
+	
+    <apex:outputPanel id="popup" layout="block">
+       
+<script >
+    var accordRecordId = '{!recordIds}';
+    console.log('accont ID ', accordRecordId);
+     $Lightning.use("c:SeatimeSchedulerBookingAPP", function() {    
+                $Lightning.createComponent("c:TestingAuraComponent",
+                                           {
+                                               AccountrecordId :accordRecordId
+                                           },
+                                           
+                                           "lightning",  
+                                           function(cmp) {
+                                               console.log('Component Loaded', accordRecordId);
+                                                
+                                           });
+                
+            });
+    </script>
+    </apex:outputPanel>
+</apex:page>

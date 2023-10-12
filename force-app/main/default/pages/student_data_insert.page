@@ -1,0 +1,25 @@
+<apex:page title="Insert Bulk Record" controller="StudentBullDataInsertionController" showHeader="false" tabStyle="Student__c">
+    <apex:pageMessages />
+    <apex:form id="testId">
+        <apex:sectionHeader title="Edit Students" subtitle="Insert Bulk Record"/>
+        <apex:pageBlock title="">
+        <apex:pageBlockButtons >
+                 <apex:commandButton value="Save" action="{!multipleInsertion}" reRender="testId"/>
+              	<apex:commandButton value="Cancel" reRender="testId" action="{!clearAllValues}"/>   	  
+       	</apex:pageBlockButtons>  
+   	    <apex:pageBlockSection columns="1" title="Insert Student" collapsible="false">
+			<apex:pageBlockTable value="{!studentList}" var="Student">
+               	<apex:column headerValue="First Name">
+                    <apex:inputField value="{!Student.Name}"/>
+                </apex:column>
+                <apex:column headerValue="Last Name" >
+                    <apex:inputField value="{!Student.Last_Name__c}" required="false" />
+                </apex:column>
+                <apex:column headerValue="Course">
+     	            <apex:inputField value="{!Student.Course__c}"/>
+                </apex:column>
+             </apex:pageBlockTable>
+          </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

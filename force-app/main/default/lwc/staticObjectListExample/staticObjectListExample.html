@@ -1,0 +1,26 @@
+<template>
+    <lightning-card title="Student Details">
+        <div class ="Slds-m-around_medium">
+            <table>
+                <thead>
+                    <tr>
+                        <td>Name</td>
+                        <td>Last Name</td>
+                        <td>Email</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <template for:each={studentDetails} for:item="student">
+                        <tr key={student}>
+                            <td><lightning-formatted-text value={student.fields.Name.value}></lightning-formatted-text></td>
+                            <td>{student.fields.Last_Name__c.value}</td>
+                            <td><lightning-formatted-email value={student.fields.Email__c.value}></lightning-formatted-email></td>
+                            <td><lightning-formatted-phone value={student.fields.Course__c.value}></lightning-formatted-phone></td>
+                            <td>{student.fields.Date_of_Birth__c.value}</td>                             -->
+                        </tr>
+                    </template>
+                </tbody>
+            </table>
+        </div>
+    </lightning-card>
+</template>

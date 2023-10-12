@@ -1,0 +1,17 @@
+.hye{
+    border-style : outset;
+    border-width: 10px;
+    border-color: rgb(10, 10, 9);
+}
+.hi{
+    border-style : double;
+    border-width: 5px;
+}
+tr{
+    padding : 20px;
+    margin : 20px;
+
+}
+td{
+    margin : 20px;
+}

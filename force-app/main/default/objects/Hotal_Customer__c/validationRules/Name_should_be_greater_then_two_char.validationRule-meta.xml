@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Name_should_be_greater_then_two_char</fullName>
+    <active>true</active>
+    <errorConditionFormula>LEN( First_Name__c )   &lt;= 2</errorConditionFormula>
+    <errorDisplayField>First_Name__c</errorDisplayField>
+    <errorMessage>First name should be greater then two Characters</errorMessage>
+</ValidationRule>

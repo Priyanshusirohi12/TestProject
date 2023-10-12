@@ -1,0 +1,26 @@
+<apex:page showHeader="false" tabStyle="Contact" title="Bulk Insert" controller="BulkInsertionContactController">
+    <apex:sectionHeader title="Contact Edit" subtitle="New Contacts"/>
+    <apex:pageMessages ></apex:pageMessages>
+    <apex:form id="test">
+        <apex:pageBlock title="EditContact">
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Add" action="{!addContactButton}" reRender="test"/>
+                <apex:commandButton value="Cancel" action="{!cancelContactButton}"/>
+                <apex:commandButton value="Save" action="{!saveContactButton}"/>
+            </apex:pageBlockButtons>
+            <apex:pageBlockSection columns="1" collapsible="false" title="Insert ">
+                <apex:pageBlockTable value="{!contactList}" var="contact">
+                    <apex:column headerValue="First Name" >
+                    	<apex:inputText value="{!contact.FirstName}"/>
+                    </apex:column>
+                    <apex:column headerValue="Last Name" >
+                    	<apex:inputText value="{!contact.LastName}"/>
+                    </apex:column>
+                    <apex:column headerValue="Account" >
+                    	<apex:inputField value="{!contact.AccountId}"/>
+                    </apex:column>
+                </apex:pageBlockTable>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

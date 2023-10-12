@@ -1,0 +1,14 @@
+<template>
+    <lightning-card title="Product Details">
+        <div class ="slds-m-around_medium">
+            <p>{productName}</p>
+            <img src={productImage}>
+        </div>
+        <div class ="slds-m-around_medium">
+            <lightning-button variant="brand" label="Add" onclick={countOfProduct}></lightning-button>
+            <h4 style="width : 50px; background:blue; color : white;">{price}</h4>
+       </div>
+        <lightning-textarea value={productDecription}></lightning-textarea>
+    </lightning-card>
+    
+</template>

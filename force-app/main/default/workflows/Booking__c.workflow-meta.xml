@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workflow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <alerts>
+        <fullName>To_send_email_to_customer_when_his_status_is_Confirmed</fullName>
+        <description>To send email to customer when his status is  Confirmed</description>
+        <protected>false</protected>
+        <recipients>
+            <field>Email__c</field>
+            <type>email</type>
+        </recipients>
+        <senderType>CurrentUser</senderType>
+        <template>unfiled$public/Confirm_booking_for_customer_template</template>
+    </alerts>
+    <alerts>
+        <fullName>send_bill_via_email_to_customer_when_status_is_checkout</fullName>
+        <description>send bill via email to customer when status is checkout</description>
+        <protected>false</protected>
+        <recipients>
+            <field>Email__c</field>
+            <type>email</type>
+        </recipients>
+        <senderType>CurrentUser</senderType>
+        <template>unfiled$public/Email_Template_for_Send_Bill_to_Customer</template>
+    </alerts>
+    <fieldUpdates>
+        <fullName>Copy_customer_email_in_booking_email</fullName>
+        <field>Email__c</field>
+        <formula>Hotel_Customer__r.Email__c</formula>
+        <name>Copy customer email in booking email</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Formula</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>true</reevaluateOnChange>
+    </fieldUpdates>
+    <rules>
+        <fullName>Copy customer email if booking email is empty</fullName>
+        <actions>
+            <name>Copy_customer_email_in_booking_email</name>
+            <type>FieldUpdate</type>
+        </actions>
+        <active>true</active>
+        <criteriaItems>
+            <field>Booking__c.Email__c</field>
+            <operation>equals</operation>
+            <value></value>
+        </criteriaItems>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+    </rules>
+    <rules>
+        <fullName>customer booking confirm</fullName>
+        <actions>
+            <name>To_send_email_to_customer_when_his_status_is_Confirmed</name>
+            <type>Alert</type>
+        </actions>
+        <active>true</active>
+        <criteriaItems>
+            <field>Booking__c.Status__c</field>
+            <operation>equals</operation>
+            <value>Confirmed</value>
+        </criteriaItems>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+    </rules>
+    <rules>
+        <fullName>send bill via email to customer when status is checkout</fullName>
+        <actions>
+            <name>send_bill_via_email_to_customer_when_status_is_checkout</name>
+            <type>Alert</type>
+        </actions>
+        <active>true</active>
+        <criteriaItems>
+            <field>Booking__c.Status__c</field>
+            <operation>equals</operation>
+            <value>Check Out</value>
+        </criteriaItems>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+    </rules>
+</Workflow>

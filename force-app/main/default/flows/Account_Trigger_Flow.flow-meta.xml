@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <interviewLabel>Account Trigger Flow {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Account Trigger Flow</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>FREE_FORM_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordUpdates>
+        <description>Update Account Field</description>
+        <name>UpdateAccount</name>
+        <label>UpdateAccount</label>
+        <locationX>584</locationX>
+        <locationY>335</locationY>
+        <inputAssignments>
+            <field>Phone__c</field>
+            <value>
+                <stringValue>1234567890</stringValue>
+            </value>
+        </inputAssignments>
+        <inputReference>$Record</inputReference>
+    </recordUpdates>
+    <startElementReference>UpdateAccount</startElementReference>
+    <status>Draft</status>
+</Flow>

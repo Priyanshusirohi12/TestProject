@@ -1,0 +1,44 @@
+<apex:page title="Account Attachment" controller="AccountAttachment" showHeader="false">
+    <apex:form >
+        <apex:pageBlock >
+    	<apex:pageBlockSection >
+        	<apex:pageBlockTable value="{!accountList}" var="AccountRecords">
+            	
+                <apex:column value="{!AccountRecords.Name}"/>
+                <apex:column value="{!AccountRecords.Email__c}"/>
+                <apex:column headerValue="Attachments">
+                    <!--<apex:repeat value="{!AccountRecords.Attachments}" var="Attach" >
+                    <apex:image url="/servlet/servlet.FileDownload?file={!Attach.id}"/>
+                       <apex:image url="{!URLFOR($Action.Attachment.Download, Attach)}" width="50" height="50"/>
+                    </apex:repeat> -->
+                    
+                    <apex:outputPanel rendered="{!AccountRecords.Attachments.size == 0}">
+                        <apex:image url="{!URLFOR($Resource.default)}" width="50" height="50"/>
+                    </apex:outputPanel>
+                    
+           			 <apex:outputPanel rendered="{!AccountRecords.Attachments.size >0  &&
+                    AccountRecords.Attachments[0].ContentType == 'text/html'}">
+                        <apex:image url="{!URLFOR($Resource.doc)}" width="50" height="50"/>
+                    </apex:outputPanel>
+                    
+                    <apex:outputPanel rendered="{!AccountRecords.Attachments.size >0  &&
+                    AccountRecords.Attachments[0].ContentType == 'application/vnd.ms-excel'}">
+                        <apex:image url="{!URLFOR($Resource.excel)}" width="50" height="50"/>
+                    </apex:outputPanel>
+                    
+                    <apex:outputPanel rendered="{!AccountRecords.Attachments.size >0  &&
+                     AccountRecords.Attachments[0].ContentType == 'application/pdf'}">
+                        <apex:image url="{!URLFOR($Resource.pdf)}" width="50" height="50"/>
+                    </apex:outputPanel>
+                    
+                    <apex:outputPanel rendered="{!AccountRecords.Attachments.size >0  && 
+                    AccountRecords.Attachments[0].ContentType == 'image/png'}">
+                    	 <apex:image url="{!URLFOR($Action.Attachment.Download,
+                         AccountRecords.Attachments[0].id)}" width="50" height="50"/>
+                    </apex:outputPanel>
+             </apex:column>
+            </apex:pageBlockTable>
+        </apex:pageBlockSection>
+            </apex:pageBlock>
+    </apex:form>
+</apex:page>

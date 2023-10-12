@@ -1,0 +1,18 @@
+<template>
+    <lightning-card title="Run Condition">
+        <template if:true={messages}>
+            <lightning-formatted-text value={messages}></lightning-formatted-text>
+            <p>
+                {messages}
+            </p>
+        </template>
+        <template if:false={error}>
+            <p>shoe error</p>
+            </template>
+            <template for:each={Cities} for:item="City" for:index="index">
+                <p key={City}>
+                    {Index} &nbsp; {City}
+                </p>
+            </template>
+        </lightning-card>
+        </template>

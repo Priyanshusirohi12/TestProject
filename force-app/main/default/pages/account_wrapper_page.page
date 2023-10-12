@@ -1,0 +1,42 @@
+<apex:page title="Account Details" showHeader="false" controller="AccountCheckbox" tabStyle="Account">
+    <apex:form id="test">
+        <apex:actionFunction name="setAllCheckBoxSelected"  action="{!setAllCheckBoxSelected}" Rerender="test,msg"/> 
+        <apex:actionFunction name="setUnselectHearderCheckbox"  action="{!setUnselectHearderCheckbox}" Rerender="test,msg"/> 
+        <apex:sectionHeader subtitle="Account" title="Account Records"/>
+    	<apex:pageBlock >
+            <apex:pageMessages id="msg"/>
+        	<apex:pageBlockSection columns="1" collapsible="false" title="Account Details">
+                <apex:variable value="{!0}" var="srno"/>
+            	<apex:pageBlockTable value="{!accountWrapperList}" var="AccountWrapper">
+                    <apex:column headerValue="#">
+                        <apex:variable value="{!srno+1}" var="srno"/>
+                        {!srno}
+                    </apex:column>
+                    <apex:column headerValue="CheckIt">
+                        <apex:facet name="header">
+                        	<apex:inputCheckbox value="{!checkAllAccount}" onchange="setAllCheckBoxSelected();"/>
+                        </apex:facet>
+                        <apex:inputCheckbox value="{!AccountWrapper.accountIsCheck}" id="checkbox" onchange="setUnselectHearderCheckbox();"/>
+                    </apex:column>
+                   <apex:column value="{!AccountWrapper.account.Name}"/>
+                    <apex:column value="{!AccountWrapper.account.Type}"/>
+                    <apex:column value="{!AccountWrapper.account.city__c}"/>
+                    <apex:column value="{!AccountWrapper.account.Account_Type__c}"/>
+                    <apex:column value="{!AccountWrapper.account.Rating}"/>
+                </apex:pageBlockTable>
+            </apex:pageBlockSection>
+            <apex:pageBlockSection >
+                <apex:pageBlockTable value="{!fillAccountWrapperList}" var="AccountWrapper">
+                     <apex:column value="{!AccountWrapper.account.Name}"/>
+                    <apex:column value="{!AccountWrapper.account.Type}"/>
+                    <apex:column value="{!AccountWrapper.account.city__c}"/>
+                    <apex:column value="{!AccountWrapper.account.Account_Type__c}"/>
+                    <apex:column value="{!AccountWrapper.account.Rating}"/>	
+                </apex:pageBlockTable>
+            </apex:pageBlockSection>
+            <apex:pageBlockButtons >
+            	<apex:commandButton value="Select Student" action="{!fillTable}" reRender="test"/>
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+   </apex:form>
+</apex:page>

@@ -1,3 +1,0 @@
-<aura:event type="APPLICATION" description="Fired when a user needs to add a statement." access="global">
-	<aura:attribute name="bankInfoId" type="String"/>
-</aura:event>

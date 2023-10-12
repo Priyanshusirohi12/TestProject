@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <layouts>
+        <layout>Household Lightning Layout</layout>
+        <sections>
+            <label></label>
+            <section>Address</section>
+        </sections>
+        <sections>
+            <label></label>
+            <section>Donation Information</section>
+        </sections>
+        <sections>
+            <label></label>
+            <section>Donation Totals</section>
+        </sections>
+        <sections>
+            <label></label>
+            <section>Fields</section>
+        </sections>
+        <sections>
+            <label></label>
+            <section>Membership Information</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Organization Lightning Layout</layout>
+        <sections>
+            <label></label>
+            <section>Address</section>
+        </sections>
+        <sections>
+            <label></label>
+            <section>Donation Information</section>
+        </sections>
+        <sections>
+            <label></label>
+            <section>Donation Totals</section>
+        </sections>
+        <sections>
+            <label></label>
+            <section>Fields</section>
+        </sections>
+        <sections>
+            <label></label>
+            <section>Grantmaking Information</section>
+        </sections>
+        <sections>
+            <label></label>
+            <section>Matching Gift Information</section>
+        </sections>
+        <sections>
+            <label></label>
+            <section>Membership Information</section>
+        </sections>
+    </layouts>
+    <quickActions>
+        <label></label>
+        <name>Create_Contact</name>
+    </quickActions>
+    <quickActions>
+        <label></label>
+        <name>w</name>
+    </quickActions>
+    <recordTypes>
+        <label></label>
+        <name>Brand</name>
+    </recordTypes>
+    <recordTypes>
+        <label></label>
+        <name>College</name>
+    </recordTypes>
+    <recordTypes>
+        <description>Ein Account, der einen Haushalt mit mindestens einer Einzelperson enthält</description>
+        <label>Haushalt-Account</label>
+        <name>HH_Account</name>
+    </recordTypes>
+    <recordTypes>
+        <description>Ein Account, der für eine Organisation steht</description>
+        <label>Organisation</label>
+        <name>Organization</name>
+    </recordTypes>
+    <recordTypes>
+        <label></label>
+        <name>Shop</name>
+    </recordTypes>
+    <validationRules>
+        <errorMessage></errorMessage>
+        <name>Require_Delivery_Time_if_Color_is_red</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage></errorMessage>
+        <name>Require_color_if_phone_is_iphone</name>
+    </validationRules>
+    <webLinks>
+        <label></label>
+        <name>Billing</name>
+    </webLinks>
+    <webLinks>
+        <label></label>
+        <name>Bulk_Insert_Account</name>
+    </webLinks>
+</CustomObjectTranslation>

@@ -1,0 +1,38 @@
+<apex:page title="Marge Contact" controller="MargeAccountController" showHeader="false">
+    <apex:form >
+        <apex:actionFunction name="setEnable" action="{!setEnable}"/>account
+    	<apex:pageBlock >
+        	<apex:pageBlockSection columns="1" collapsible="false">
+                		<apex:pageBlockSectionItem >
+                			
+                        <apex:selectList size="1" value="{!accountId}" onchange="setEnable();">
+                            <apex:selectOption itemLabel="--none--" itemValue=""></apex:selectOption>
+                            <apex:selectOptions value="{!accountSelectOption}"></apex:selectOptions>
+                        </apex:selectList>  
+                            <apex:commandButton value="Marge" action="{!selectContactRecord}" disabled="{!IF(accountId == null,true,false)}"/>
+                		</apex:pageBlockSectionItem>
+                	 <apex:pageBlockTable value="{!account}" var="AccountRecords">
+                    <apex:column value="{!AccountRecords.Name}"/>
+                    <apex:column value="{!AccountRecords.Email__c}"/>
+                    <apex:column value="{!AccountRecords.city__c}"/>
+                    <apex:column value="{!AccountRecords.Rating}"/>
+                
+                </apex:pageBlockTable>
+                    <apex:variable value="{!0}" var="srno"/>
+            	<apex:pageBlockTable value="{!contactWrapperList}" var="ContactRecord">
+                    <apex:column headerValue="#">
+                        <apex:variable value="{!srno+1}" var="srno"/>
+                        {!srno}      
+                    </apex:column>
+                	<apex:column >
+                 <apex:inputCheckbox value="{!ContactRecord.isChecked}"/>
+                    </apex:column>
+                    <apex:column value="{!ContactRecord.contact.Name}"/>
+                    <apex:column value="{!ContactRecord.contact.Email}"/>
+                    <apex:column value="{!ContactRecord.contact.Phone}"/>
+                </apex:pageBlockTable>
+            </apex:pageBlockSection>
+            
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

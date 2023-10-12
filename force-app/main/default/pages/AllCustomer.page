@@ -1,0 +1,44 @@
+<apex:page showHeader="false" title="Customer Detail Page" controller="CustomerController" tabStyle="Hotal_Customer__c">
+            <apex:sectionHeader title="Hotal Customer" subtitle="Home"/>
+            <apex:form id="testId">
+                <apex:pageBlock title="Recent Hotal Customer">
+                    <apex:pageBlockButtons location="top">
+                       <apex:commandButton value="New" action="/apex/NewCustomer"/>
+                    </apex:pageBlockButtons>
+                    <apex:pageBlockSection columns="1">
+                     <apex:variable var="SrNo" value="{!0}"/>
+                    <apex:pageBlockTable value="{!customerList}" var="Customer">
+                        <apex:column headerValue="#">
+                        <apex:variable var="SrNo" value="{!SrNo+1}"/>
+                     	{!SrNo}   
+                        </apex:column>
+                        <apex:column >
+                        <apex:commandButton value="Edit" action="{!editValues}" reRender="testId">
+                            <apex:param name="Customer" value="{!Customer.Id}" assignTo="{!editRecordId}"/>
+                        </apex:commandButton>    
+                        <apex:commandButton value="View" action="{!viewValues}" reRender="testId">
+                                <apex:param name="" value="{!Customer.Id}" assignTo="{!viewRecordId}"/>
+                            </apex:commandButton>
+                        <apex:commandButton value="Delete" action="{!deleteValues}" reRender="testId" onclick="confirm('Do you want to Delete your record ?')">
+                                <apex:param name="" value="{!Customer.Id}" assignTo="{!editId}"/>
+                            </apex:commandButton>
+                        <apex:commandButton value="Clone" action="{!cloneValues}" reRender="testId">
+                            <apex:param name="" value="{!Customer.Id}" assignTo="{!cloneRecordId}"/>
+                            </apex:commandButton>
+                        </apex:column>
+                            <apex:column headerValue="Customer Name">
+                                <apex:commandLink action="https://ibirds29-dev-ed.my.salesforce.com/{!Customer.Id}" value="{!Customer.Full_Name__c}"/> 
+                        </apex:column>
+                        <!--<apex:column value="{!Customer.Last_Name__c}"/>-->
+                        <apex:column value="{!Customer.Gender__c}"/>
+                        <apex:column value="{!Customer.City__c}"/>
+                        <apex:column value="{!Customer.Email__c}"/>
+                        <apex:column value="{!Customer.Is_Married__c}"/>
+                        
+                        
+                        </apex:pageBlockTable>
+                        
+                    </apex:pageBlockSection>
+                </apex:pageBlock>
+            </apex:form>
+</apex:page>

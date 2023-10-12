@@ -1,0 +1,72 @@
+<apex:page title="Student Details" showHeader="false" controller="StudentCheckboxWithActionController">
+    <apex:form id="test">
+        <apex:actionFunction name="selectAllCheckbox"  action="{!selectAllCheckbox}" Rerender="test"/> 
+        <apex:actionFunction name="changeCheckboxValue"  action="{!changeCheckboxValue}" Rerender="test"/> 
+        <apex:sectionHeader subtitle="Student" title="Student Records"/>
+    	<apex:pageBlock >
+            <apex:pageMessages ></apex:pageMessages>
+        	<apex:pageBlockSection columns="1" collapsible="false" title="Student Details">
+                <apex:variable value="{!0}" var="srno"/>
+            	<apex:pageBlockTable value="{!studentDataList}" var="studentWrapper">
+                    <apex:column headerValue="#">
+                        <apex:variable value="{!srno+1}" var="srno"/>
+                            {!srno}
+                        
+                    </apex:column>
+                    <apex:column headerValue="CheckIt">
+                        <apex:facet name="header">
+                        	<apex:inputCheckbox value="{!checkAll}" onchange="selectAllCheckbox();"/>
+                        </apex:facet>
+                        <apex:inputCheckbox value="{!studentWrapper.isCheckStudent}" id="checkbox" onchange="changeCheckboxValue();"/>
+                    </apex:column>
+                    <apex:column >
+                        <apex:commandLink value="Delete" action="{!deleteRecords}" reRender="test">
+                      		<apex:param name="" value="{!srno}" assignTo="{!takeIndexOf}"/>
+                          <!--  <apex:param name="" value="{!studentWrapper.student.Id}" assignTo="{!studentId}"/>-->
+                        </apex:commandLink>
+                    </apex:column>
+                    <apex:column >
+                        <apex:commandLink value="Add" action="{!addNewRecords}" reRender="test">
+                      		<apex:param name="" value="{!srno}" assignTo="{!takeIndexOf}"/>
+                        </apex:commandLink>
+                    </apex:column>
+                    <apex:column headerValue="First Name">
+                        <apex:outputText value="{!studentWrapper.student.Name}" rendered="{!!studentWrapper.isCheckStudent}"></apex:outputText>
+                    	<apex:inputField value="{!studentWrapper.student.Name}" rendered="{!studentWrapper.isCheckStudent}"/>
+                    </apex:column>
+                    <apex:column headerValue="Gender">
+                    	<apex:inputField value="{!studentWrapper.student.Gender__c}" rendered="{!studentWrapper.isCheckStudent}"/>
+                        <apex:outputText value="{!studentWrapper.student.Gender__c}" rendered="{!!studentWrapper.isCheckStudent}" />
+                    </apex:column>
+                    <apex:column headerValue="Email">
+                        <apex:outputText value="{!studentWrapper.student.Email__c}" rendered="{!!studentWrapper.isCheckStudent}"/>
+                    	<apex:inputField value="{!studentWrapper.student.Email__c}" rendered="{!studentWrapper.isCheckStudent}"/>
+                    </apex:column>
+                    <apex:column headerValue="Last Name">
+                    	<apex:inputField value="{!studentWrapper.student.Last_Name__c}" rendered="{!studentWrapper.isCheckStudent}" required="false"/>
+                        <apex:outputText value="{!studentWrapper.student.Last_Name__c}" rendered="{!!studentWrapper.isCheckStudent}"/>
+                    </apex:column>
+                     <apex:column headerValue="Married Status">
+                    	<apex:inputField value="{!studentWrapper.student.Married_Status__c}" rendered="{!studentWrapper.isCheckStudent}"/>
+                        <apex:outputText value="{!studentWrapper.student.Married_Status__c}" rendered="{!!studentWrapper.isCheckStudent}"/>
+                    </apex:column>
+                    <apex:column headerValue="Husband Name">
+                    	<apex:inputField value="{!studentWrapper.student.Husband_Name__c}" rendered="{!studentWrapper.isCheckStudent}"/>
+                        <apex:outputText value="{!studentWrapper.student.Husband_Name__c}" rendered="{!!studentWrapper.isCheckStudent}"/>
+                    </apex:column>
+                    <apex:column headerValue="Wife Name">
+                    	<apex:inputField value="{!studentWrapper.student.Wife_Name__c}" rendered="{!studentWrapper.isCheckStudent}"/>
+                        <apex:outputText value="{!studentWrapper.student.Wife_Name__c}" rendered="{!!studentWrapper.isCheckStudent}"/>
+                    </apex:column>
+                   
+                </apex:pageBlockTable>
+            </apex:pageBlockSection>
+            <apex:pageBlockButtons >
+            	<apex:commandButton value="Save" action="{!saveRecords}">
+                    
+                </apex:commandButton>
+                <!--<apex:commandButton value="Add" action="{!addRow}"/>-->
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+   </apex:form>
+</apex:page>

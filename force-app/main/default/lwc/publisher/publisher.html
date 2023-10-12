@@ -1,0 +1,16 @@
+<template>
+    <lightning-card title=" publisher component" icon-name="custom:coustom101">
+        <div class ="slds-m-around_medium">
+            <lightning-button label="Send" onclick={handleClick} variant="Success"></lightning-button>
+        </div>
+        <div class ="slds-m-around_medium">
+            <lightning-button label="Send Record" onclick={handleRecord} variant="Success"></lightning-button>
+        </div>
+        <div class ="slds-m-around_medium">
+            <p>Name : {list.Name} </p>
+           <p>Age : {list.Age}</p>
+           <p>Email : {list.Email}</p>
+           <p>Phone : {list.Phone}</p>
+        </div>
+    </lightning-card>
+</template>

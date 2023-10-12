@@ -1,0 +1,9 @@
+th,td{
+    padding : 8px;
+}
+/*tr:nth-child(even){
+    background-color: rgb(220, 212, 241);
+}*/
+.hye{
+    background-color: rgb(255, 255, 255);
+}

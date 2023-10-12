@@ -1,0 +1,39 @@
+<apex:page title="Student Details" showHeader="false" controller="StudentCheckbox">
+    <apex:form id="test">
+        <apex:actionFunction name="setAllCheckBoxSelected"  action="{!setAllCheckBoxSelected}" Rerender="test"/> 
+        <apex:actionFunction name="setUnselectHearderCheckbox"  action="{!setUnselectHearderCheckbox}" Rerender="test"/> 
+        <apex:sectionHeader subtitle="Student" title="Student Records"/>
+    	<apex:pageBlock >
+        	<apex:pageBlockSection columns="1" collapsible="false" title="Student Details">
+                <apex:variable value="{!0}" var="srno"/>
+            	<apex:pageBlockTable value="{!studentDataList}" var="studentWrapper">
+                    <apex:column headerValue="#">
+                        <apex:variable value="{!srno+1}" var="srno"/>
+                        {!srno}
+                    </apex:column>
+                    <apex:column headerValue="CheckIt">
+                        <apex:facet name="header">
+                        	<apex:inputCheckbox value="{!checkAll}" onchange="setAllCheckBoxSelected();"/>
+                        </apex:facet>
+                        <apex:inputCheckbox value="{!studentWrapper.isCheckStudent}" id="checkbox" onchange="setUnselectHearderCheckbox();"/>
+                    </apex:column>
+                    <apex:column value="{!studentWrapper.student.Name}"/>
+                    <apex:column value="{!studentWrapper.student.Gender__c}"/>
+                    <apex:column value="{!studentWrapper.student.Email__c}"/>
+                    <apex:column value="{!studentWrapper.student.Last_Name__c}"/>
+                </apex:pageBlockTable>
+            </apex:pageBlockSection>
+            <apex:pageBlockSection >
+                <apex:pageBlockTable value="{!fillStudentDataList}" var="StudentWrapper">
+                     <apex:column value="{!StudentWrapper.student.Name}"/>
+                     <apex:column value="{!StudentWrapper.student.Gender__c}"/>
+                     <apex:column value="{!StudentWrapper.student.Email__c}"/>
+                     <apex:column value="{!StudentWrapper.student.Last_Name__c}"/>	
+                </apex:pageBlockTable>
+            </apex:pageBlockSection>
+            <apex:pageBlockButtons >
+            	<apex:commandButton value="Select Student" action="{!fillTable}" reRender="test"/>
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+   </apex:form>
+</apex:page>

@@ -1,0 +1,93 @@
+<template>
+    <lightning-card  variant="Narrow"  title="Detail" icon-name="standard:account">
+        <div class="slds-m-around_medium">
+            <!--<template if:true={loader}>
+                <div class="slds-p-around_large">
+                    <lightning-spinner alternative-text="Loading" size="large"></lightning-spinner>
+                </div>
+            </template>-->
+            <template if:true={showtable}>
+                <template if:true={checkEdit}>
+                    <table class = "slds-table slds-table_cell-buffer slds-table_bordered">
+                        <tr class = "slds-line-height_reset">
+                            <th> Name : </th>
+                            <td> 
+                                <lightning-input label="Name" type="text" value={Name} class="account"></lightning-input>    
+                            </td>
+                        </tr>
+                        <tr class = "slds-line-height_reset">
+                            <th> Phone :  </th>
+                            <td> 
+                                <lightning-input label="Phone" type="Number" value={Phone} class="account"></lightning-input>
+                            </td>
+                        </tr>
+                        <tr class = "slds-line-height_reset">
+                            <th> Rating : </th>
+                            <td>
+                                <lightning-input label="Rating" type="text" value={Rating} class="account"></lightning-input>    
+                            </td>
+                        </tr>
+                        <tr class = "slds-line-height_reset">
+                            <th> Email : </th>
+                            <td>
+                                <lightning-input label="Email" type="Email" value={Email} class="account"></lightning-input>
+                            </td>
+                        </tr>
+                    </table>
+            </template>
+            <template if:false={checkEdit}>
+                    <table class = "slds-table slds-table_cell-buffer slds-table_bordered">
+                        <tr class = "slds-line-height_reset">
+                            <th> Name : </th>
+                            <td> 
+                                {Name}    
+                            </td>
+                        </tr>
+                        <tr class = "slds-line-height_reset">
+                            <th> Phone :  </th>
+                            <td> 
+                                {Phone}
+                            </td>
+                        </tr>
+                        <tr class = "slds-line-height_reset">
+                            <th> Rating : </th>
+                            <td>
+                                {Rating}    
+                            </td>
+                        </tr>
+                        <tr class = "slds-line-height_reset">
+                            <th> Email : </th>
+                            <td>
+                                {Email}
+                            </td>
+                        </tr>
+                    </table>
+                </template>
+                <div class="slds-align_absolute-center" >
+                        <lightning-button variant="brand" label="Edit" onclick={handleEdit} style="margin:5px" disabled={hideEdit} ></lightning-button>
+                        <lightning-button variant="brand" label="Update" onclick={handleUpdate} style="margin:5px" disabled={hideUpdate} ></lightning-button>   
+                </div>
+                <table class = "slds-table slds-table_cell-buffer slds-table_bordered">
+                    <thead>
+                        <tr class = "slds-line-height_reset">
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Account Name</th>
+                            <th>Phone</th>
+                            <th>Type</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <template for:each = {contactList} for:item = "contact">
+                            <tr key = {contact} class="slds-line-height_reset">
+                                <td>{contact.Name}</td>
+                                <td> <lightning-formatted-email value={contact.Email}></lightning-formatted-email></td>
+                                <td><lightning-formatted-phone value={contact.Phone}></lightning-formatted-phone></td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+            </template>
+        </div>
+    </lightning-card>
+</template>

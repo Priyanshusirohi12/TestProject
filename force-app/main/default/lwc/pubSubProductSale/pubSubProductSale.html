@@ -1,0 +1,21 @@
+<template>
+    <lightning-card title="Publisher" icon-name="customer:customer101">
+        <lightning-layout>
+            <lightning-layout-item padding="around-small">
+                <lightning-combobox options={productsList} class="productValue"></lightning-combobox>
+            </lightning-layout-item>
+            <lightning-layout-item padding="around-small">
+                <lightning-combobox options={quantityList} class="quantityValue"></lightning-combobox>
+            </lightning-layout-item>   
+            <lightning-layout-item padding="around-small">
+                <lightning-input type="number" label ="price" class="priceValue"></lightning-input>
+            </lightning-layout-item>
+        </lightning-layout>
+        
+            <div class ="slds-clearfix">
+                    <lightning-button class="slds-float_right" label= "Add" onclick={handler} variant="brand"> </lightning-button>
+            </div>
+           
+       
+    </lightning-card>
+</template>

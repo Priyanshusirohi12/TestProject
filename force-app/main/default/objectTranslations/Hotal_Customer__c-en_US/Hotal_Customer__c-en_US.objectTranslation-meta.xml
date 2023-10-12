@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>Hotal Customer</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Hotal Customers</value>
+    </caseValues>
+    <layouts>
+        <layout>Hotal Customer Layout</layout>
+        <sections>
+            <label></label>
+            <section>Contact Details</section>
+        </sections>
+        <sections>
+            <label></label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <startsWith>Consonant</startsWith>
+    <validationRules>
+        <errorMessage></errorMessage>
+        <name>Gender_should_not_be_empty</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage></errorMessage>
+        <name>Name_should_be_greater_then_two_char</name>
+    </validationRules>
+</CustomObjectTranslation>

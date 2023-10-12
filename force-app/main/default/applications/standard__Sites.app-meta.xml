@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomApplication xmlns="http://soap.sforce.com/2006/04/metadata">
+    <defaultLandingTab>standard-home</defaultLandingTab>
+    <isNavAutoTempTabsDisabled>false</isNavAutoTempTabsDisabled>
+    <isNavPersonalizationDisabled>false</isNavPersonalizationDisabled>
+    <tabs>standard-Chatter</tabs>
+    <tabs>Contact__c</tabs>
+    <tabs>Student__c</tabs>
+    <tabs>Teach__c</tabs>
+    <tabs>Registration__c</tabs>
+    <tabs>Booking__c</tabs>
+    <tabs>Hotal_Customer__c</tabs>
+    <tabs>Room__c</tabs>
+    <tabs>Students</tabs>
+    <tabs>Countries</tabs>
+    <tabs>Hire_Form__c</tabs>
+    <tabs>Brand_Product__c</tabs>
+    <tabs>Search_Contacts</tabs>
+    <tabs>GanttLink__c</tabs>
+    <tabs>GanttTask__c</tabs>
+    <tabs>Sprint__c</tabs>
+    <tabs>Gantt_Project__c</tabs>
+    <tabs>Movie__c</tabs>
+    <tabs>Seat_Category__c</tabs>
+    <tabs>Seat__c</tabs>
+    <tabs>Movie_Booking__c</tabs>
+    <tabs>Program__c</tabs>
+    <tabs>Email_Customer__c</tabs>
+    <tabs>Creator_Email__c</tabs>
+    <tabs>Stimulus_Deal__c</tabs>
+</CustomApplication>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label></label>
+    <name>Phone__c</name>
+    <picklistValues>
+        <masterLabel>Iphone 14</masterLabel>
+        <translation></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Sumsang S23</masterLabel>
+        <translation></translation>
+    </picklistValues>
+</CustomFieldTranslation>
